@@ -1,0 +1,2 @@
+# encom
+entity-component
