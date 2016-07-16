@@ -28,6 +28,16 @@ export default class World
     this.entityList.add(entity);
   }
 
+  removeEntity(id)
+  {
+    this.entityList.remove(id);
+  }
+
+  destroyEntity(id)
+  {
+    this.entityList.destroy(id);
+  }
+
   getEntities(...componentNames)
   {
     return this.signatureList.findOrCreate(componentNames).entities;

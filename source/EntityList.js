@@ -58,12 +58,25 @@ export default class EntityList extends Emitter
     return false;
   }
 
-  remove(entity)
+  remove(id)
   {
-    if (this.has(entity.id)) {
-      this.entities.delete(entity.id);
-
+    if (this.has(id)) {
+      let entity = this.entities.get(id);
+      this.entities.delete(id);
       this.emit('entity-removed', entity);
+      return true;
+    }
+
+    return false;
+  }
+
+  destroy(id)
+  {
+    if (this.has(id)) {
+      let entity = this.entities.get(id);
+      this.remove(id);
+      entity.destroy();
+      this.emit('entity-destroyed', entity);
       return true;
     }
 

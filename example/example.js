@@ -15,5 +15,13 @@ world.update(2);
 world.update(2);
 world.update(2);
 
-console.log(car.position.x);
+console.log(world.serialize());
+
+world.removeEntity(car.id);
+world.addEntity(car);
+
+console.log(world.serialize());
+
+world.destroyEntity(car.id);
+
 console.log(world.serialize());

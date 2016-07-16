@@ -62,5 +62,6 @@ export default class Entity extends Emitter
       this.removeComponent(component);
       component.destroy();
     });
+    this.emit('entity-destroyed');
   }
 }
