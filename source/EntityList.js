@@ -1,10 +1,10 @@
 'use strict';
 
 import Entity from './Entity';
-import EventEmitter from 'event-emitter-es6';
+import Emitter from './Emitter';
 
 
-export default class EntityList extends EventEmitter
+export default class EntityList extends Emitter
 {
   constructor()
   {
@@ -40,7 +40,7 @@ export default class EntityList extends EventEmitter
         this.onComponentRemoved(entity, component);
       });
 
-      this.emitSync('entity-added', entity);
+      this.emit('entity-added', entity);
       return true;
     }
 
@@ -52,7 +52,7 @@ export default class EntityList extends EventEmitter
     if (this.has(entity.id)) {
       this.entities.delete(entity.id);
 
-      this.emitSync('entity-removed', entity);
+      this.emit('entity-removed', entity);
       return true;
     }
 
@@ -61,11 +61,11 @@ export default class EntityList extends EventEmitter
 
   onComponentAdded(entity, component)
   {
-    this.emitSync('component-added', entity, component);
+    this.emit('component-added', entity, component);
   }
 
   onComponentRemoved(entity, component)
   {
-    this.emitSync('component-removed', entity, component);
+    this.emit('component-removed', entity, component);
   }
 }

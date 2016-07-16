@@ -3,11 +3,11 @@
 import World from './World';
 import Entity from './Entity';
 import System from './System';
+import Emitter from './Emitter';
 import Library from './Library';
 import Component from './Component';
 import EntityList from './EntityList';
 import SignatureList from './SignatureList';
-
 
 let entityList = new EntityList();
 let signatureList = new SignatureList(entityList);

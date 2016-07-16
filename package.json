@@ -8,7 +8,7 @@
     "start": "node build/main.js"
   },
   "dependencies": {
-    "event-emitter-es6": "^1.1.5"
+    "event-emitter": "^0.3.4"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
