@@ -9,21 +9,37 @@ export default class SignatureList
   {
     this.signatures = new Map();
     this.entityList = entityList;
-    this.entityList.on('entity-added', this.onEntityAdd.bind(this));
-    this.entityList.on('entity-destroyed', this.onEntityDestroy.bind(this));
+    this.entityList.on('entity-added', this.onEntityAdded.bind(this));
+    this.entityList.on('entity-destroyed', this.onEntityDestroyed.bind(this));
+    this.entityList.on('component-added', this.onComponentAdded.bind(this));
+    this.entityList.on('component-removed', this.onComponentRemoved.bind(this));
   }
 
-  onEntityAdd(entity)
+  onEntityAdded(entity)
   {
-    for (let signature of this.signatures) {
+    for (let [hash, signature] of this.signatures) {
       signature.addEntityIfMatches(entity);
     }
   }
 
-  onEntityDestroy(entity)
+  onEntityDestroyed(entity)
   {
-    for (let signature of this.signatures) {
+    for (let [hash, signature] of this.signatures) {
       signature.removeEntity(entity);
+    }
+  }
+
+  onComponentAdded(entity, component)
+  {
+    for (let [hash, signature] of this.signatures) {
+      signature.addEntityIfMatches(entity);
+    }
+  }
+
+  onComponentRemoved(entity, component)
+  {
+    for (let [hash, signature] of this.signatures) {
+      signature.onComponentRemoved(entity, component);
     }
   }
 
@@ -36,16 +52,17 @@ export default class SignatureList
   {
     let hash = this.hash(componentNames);
 
-    let signature = this.signatures[hash];
+    let signature = this.signatures.get(hash);
+
 
     if (!signature) {
-      signature = new Signature(componentNames, hash);
+      signature = new Signature(componentNames);
 
-      for (let [id, entity] of this.entityList.entities) {
+      for (let [id, entity] of this.entityList.all()) {
         signature.addEntityIfMatches(entity);
       }
 
-      this.signatures[hash] = signature;
+      this.signatures.set(hash, signature);
     }
 
     return signature;

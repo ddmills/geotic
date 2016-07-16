@@ -24,7 +24,7 @@ export default class World
     this.entityList.add(entity);
   }
 
-  getEntities(componentNames)
+  getEntities(...componentNames)
   {
     return this.signatureList.findOrCreate(componentNames).entities;
   }

@@ -22,6 +22,6 @@ npm run dev
 - **entity** A unique ID and a collection of components and tags
 - **system** Logic that acts on entities with specific components
 - **component** simple logic-less data container
-- **tag** simple logical grouping of entities
+- **tag** used to group any entities together
 - **signature** a set of entities grouped by component types
 - **world** Maintains list of active entities and systems

@@ -6,4 +6,9 @@ export default class Component
   {
     return this.constructor.name;
   }
+
+  destroy()
+  {
+
+  }
 }

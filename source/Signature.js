@@ -25,6 +25,19 @@ export default class Signature
     this.entities.delete(entity.id);
   }
 
+  onComponentRemoved(entity, component)
+  {
+    if (!this.hasEntity(entity)) {
+      return;
+    }
+
+    for (let name of this.componentNames) {
+      if (component.name === name) {
+        this.removeEntity(entity);
+      }
+    }
+  }
+
   matches(entity)
   {
     for (let name of this.componentNames) {

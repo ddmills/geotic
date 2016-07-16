@@ -9,24 +9,41 @@ export default class Entity extends EventEmitter
   {
     super();
     this.id = id;
-    this.components = [];
+    this.components = new Map();
   }
 
   addComponent(component)
   {
-    this.components.push(component);
-    component.entity = this;
-    this.emit('component-added', component);
+    if (!this.hasComponent(component.name)) {
+      this.components.set(component.name, component);
+      component.entity = this;
+      this.emitSync('component-added', component);
+      return true;
+    }
+    return false;
+  }
+
+  removeComponent(component)
+  {
+    if (this.hasComponent(component.name)) {
+      this.components.delete(component.name);
+      this.emitSync('component-removed', component);
+      return true;
+    }
+
+    return false;
+  }
+
+  destroy()
+  {
+    this.components.forEach((component) => {
+      this.removeComponent(component);
+      component.destroy();
+    });
   }
 
   hasComponent(name)
   {
-    for (let component of this.components) {
-      if (component.name == name) {
-        return true;
-      }
-    }
-
-    return false;
+    return this.components.has(name);
   }
 }
