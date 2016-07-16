@@ -32,4 +32,11 @@ export default class World
   {
     return this.signatureList.findOrCreate(componentNames).entities;
   }
+
+  serialize()
+  {
+    return {
+      entities: this.entityList.serialize()
+    };
+  }
 }

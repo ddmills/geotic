@@ -7,6 +7,20 @@ export default class Component
     this.name = name;
   }
 
+  serialize()
+  {
+    let props = Object.getOwnPropertyNames(this);
+
+    let serializedComponent = {};
+
+    for (let prop of props) {
+      if (prop == 'entity') continue;
+      serializedComponent[prop] = this[prop];
+    }
+
+    return serializedComponent;
+  }
+
   destroy()
   {
   }

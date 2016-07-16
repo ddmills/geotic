@@ -16,3 +16,4 @@ world.update(2);
 world.update(2);
 
 console.log(car.position.x);
+console.log(world.serialize());

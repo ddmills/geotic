@@ -12,6 +12,20 @@ export default class Entity extends Emitter
     this.components = new Map();
   }
 
+  serialize()
+  {
+    let serializedComponents = [];
+
+    for (let [name, component] of this.components) {
+      serializedComponents[name] = component.serialize();
+    }
+
+    return {
+      id: this.id,
+      components: serializedComponents
+    };
+  }
+
   hasComponent(name)
   {
     return this.components.has(name);

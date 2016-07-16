@@ -12,6 +12,17 @@ export default class EntityList extends Emitter
     this.entities = new Map();
   }
 
+  serialize()
+  {
+    let serializedEntities = {};
+
+    for (let [id, entity] of this.entities) {
+      serializedEntities[id] = entity.serialize();
+    }
+
+    return serializedEntities;
+  }
+
   has(id)
   {
     return this.entities.has(id);
