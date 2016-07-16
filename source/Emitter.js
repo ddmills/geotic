@@ -2,13 +2,8 @@
 
 import { methods } from 'event-emitter';
 
-export default class Emitter
-{
-  constructor()
-  {
-  }
-}
+export default class Emitter { }
 
 for (let method in methods) {
-  Emitter.prototype[method] = methods[method];
+  Object.defineProperty(Emitter.prototype, method, { value: methods[method] });
 }
