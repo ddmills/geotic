@@ -10,12 +10,37 @@
     "start": "node build/index.js",
     "example": "babel-node example/example.js"
   },
-  "dependencies": {
-    "event-emitter": "^0.3.4"
-  },
   "devDependencies": {
+    "event-emitter": "^0.3.4",
     "babel-cli": "^6.10.1",
     "babel-preset-es2015": "^6.9.0",
     "nodemon": "^1.9.2"
-  }
+  },
+  "directories": {
+    "example": "example",
+    "lib": "build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddmills/geotic.git"
+  },
+  "keywords": [
+    "Entity",
+    "Component",
+    "System",
+    "ES6",
+    "Class",
+    "Javascript",
+    "Game",
+    "Engine",
+    "ecs",
+    "ec",
+    "js"
+  ],
+  "author": "Dalton Mill <mills.dalton@gmail.com> (http://www.ddmills.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ddmills/geotic/issues"
+  },
+  "homepage": "https://github.com/ddmills/geotic#readme"
 }
