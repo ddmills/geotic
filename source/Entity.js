@@ -12,10 +12,17 @@ export default class Entity extends Emitter
     this.components = new Map();
   }
 
+  hasComponent(name)
+  {
+    return this.components.has(name);
+  }
+
   addComponent(component)
   {
     if (!this.hasComponent(component.name)) {
       this.components.set(component.name, component);
+      this[component.name] = component;
+
       component.entity = this;
       this.emit('component-added', component);
       return true;
@@ -26,6 +33,7 @@ export default class Entity extends Emitter
   removeComponent(component)
   {
     if (this.hasComponent(component.name)) {
+      this[component.name] = undefined;
       this.components.delete(component.name);
       this.emit('component-removed', component);
       return true;
@@ -40,10 +48,5 @@ export default class Entity extends Emitter
       this.removeComponent(component);
       component.destroy();
     });
-  }
-
-  hasComponent(name)
-  {
-    return this.components.has(name);
   }
 }

@@ -1,22 +1,26 @@
 'use strict';
 
+import EntityList from './EntityList';
+import SignatureList from './SignatureList';
+
 export default class World
 {
-  constructor(entityList, signatureList)
+  constructor()
   {
-    this.entityList = entityList;
-    this.signatureList = signatureList;
+    this.entityList = new EntityList();
+    this.signatureList = new SignatureList(this.entityList);
     this.systems = [];
   }
 
   addSystem(system)
   {
     this.systems.push(system);
+    system.world = this;
   }
 
-  update()
+  update(time)
   {
-    this.systems.forEach(sys => sys.update(this));
+    this.systems.forEach(sys => sys.update(this, time));
   }
 
   addEntity(entity)

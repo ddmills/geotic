@@ -2,13 +2,12 @@
 
 export default class Component
 {
-  get name()
+  constructor(name)
   {
-    return this.constructor.name;
+    this.name = name;
   }
 
   destroy()
   {
-
   }
 }

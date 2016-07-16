@@ -1,11 +1,14 @@
 {
   "name": "encom",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "entity-component-system",
+  "main": "build/index.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node source/main.js --source-maps inline",
+    "dev": "nodemon --exec babel-node source/index.js",
     "build": "babel source --out-dir build",
-    "start": "node build/main.js"
+    "prepublish": "npm run build",
+    "start": "node build/index.js",
+    "example": "babel-node example/example.js"
   },
   "dependencies": {
     "event-emitter": "^0.3.4"
