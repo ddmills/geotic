@@ -1,5 +1,5 @@
 {
-  "name": "encom",
+  "name": "geotic",
   "version": "0.1.0",
   "description": "entity-component-system",
   "main": "build/index.js",
