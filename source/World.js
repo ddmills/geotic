@@ -4,7 +4,6 @@ export default class World
 {
   constructor(entityList, signatureList)
   {
-    this.families = {};
     this.entityList = entityList;
     this.signatureList = signatureList;
     this.systems = [];
@@ -13,13 +12,16 @@ export default class World
   addSystem(system)
   {
     this.systems.push(system);
-    system.world = this;
-    system.onAttach(this);
+  }
+
+  update()
+  {
+    this.systems.forEach(sys => sys.update(this));
   }
 
   addEntity(entity)
   {
-    this.entityList.addEntity(entity);
+    this.entityList.add(entity);
   }
 
   getEntities(componentNames)

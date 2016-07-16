@@ -15,9 +15,11 @@ let signatureList = new SignatureList(entityList);
 let world = new World(entityList, signatureList);
 let entity = new Entity(25);
 let component = new Component();
+let system = new System();
 
 entity.addComponent(component);
 world.addEntity(entity);
+world.addSystem(system);
 
-let system = new System();
-system.update(world);
+
+world.update();
