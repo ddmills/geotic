@@ -7,6 +7,7 @@ export default class Signature extends Emitter
 {
   constructor(componentNames)
   {
+    super();
     this.entities = new Map();
     this.componentNames = componentNames;
   }
