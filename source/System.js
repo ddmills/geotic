@@ -11,7 +11,7 @@ export default class System
     return {};
   }
 
-  onAdd(world)
+  onAttach(world)
   {
   }
 }

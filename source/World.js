@@ -40,7 +40,7 @@ export default class World
 
   getEntities(...componentNames)
   {
-    return this.getSignature(componentNames).entities;
+    return this.getSignature.apply(this, componentNames).entities;
   }
 
   getSignature(...componentNames)

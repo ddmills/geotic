@@ -45,7 +45,7 @@ export default class SignatureList
 
   hash(componentNames)
   {
-    return componentNames.join('$');
+    return componentNames.sort((a, b) => { return a > b }).join('$');
   }
 
   findOrCreate(componentNames)
