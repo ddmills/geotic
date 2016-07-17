@@ -3,25 +3,19 @@ import CarFactory from './CarFactory';
 import MovementSystem from './MovementSystem';
 
 let id = 0;
-
-let car = CarFactory.create(id);
+let car = CarFactory.create(++id);
 let world = new World();
 
 world.addSystem(new MovementSystem);
-
 world.addEntity(car);
 
-world.update(2);
-world.update(2);
-world.update(2);
 
-console.log(world.serialize());
+let now = Date.now();
 
-world.removeEntity(car.id);
-world.addEntity(car);
+setInterval(() => {
+  let prev = now;
+  now = Date.now();
 
-console.log(world.serialize());
-
-world.destroyEntity(car.id);
-
-console.log(world.serialize());
+  world.update(now - prev);
+  console.log(car.position.serialize());
+}, 1000);

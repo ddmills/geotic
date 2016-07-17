@@ -7,7 +7,10 @@
 - **system** logic that acts on entities with specific components
 - **world** maintains list of active entities and systems
 
+[example](https://github.com/ddmills/geotic/blob/master/example/example.js)
+
 `npm install geotic`
+
 
 
 #### development

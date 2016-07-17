@@ -8,7 +8,7 @@ export default class CarFactory
   {
     let car = new Entity(++id);
     car.addComponent(new PositionComponent());
-    car.addComponent(new VelocityComponent(3, 0, 0));
+    car.addComponent(new VelocityComponent(.2, 0, -.1));
     return car;
   }
 }

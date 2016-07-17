@@ -4,8 +4,6 @@ export default class MovementSystem extends System
 {
   update(world, delta)
   {
-    // the movement system will update entities who have
-    // a Position and a Velocity component
     let entities = world.getEntities('position', 'velocity');
 
     for (let [id, entity] of entities) {
