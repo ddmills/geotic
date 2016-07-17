@@ -15,7 +15,7 @@ export default class World
   addSystem(system)
   {
     this.systems.push(system);
-    system.world = this;
+    system.onAttach(world);
   }
 
   update(time)
@@ -40,7 +40,12 @@ export default class World
 
   getEntities(...componentNames)
   {
-    return this.signatureList.findOrCreate(componentNames).entities;
+    return this.getSignature(componentNames).entities;
+  }
+
+  getSignature(...componentNames)
+  {
+    return this.signatureList.findOrCreate(componentNames);
   }
 
   serialize()

@@ -1,5 +1,8 @@
 'use strict';
 
+import Emitter from './Emitter';
+
+
 export default class Signature
 {
   constructor(componentNames)
@@ -17,12 +20,16 @@ export default class Signature
   {
     if (this.matches(entity)) {
       this.entities.set(entity.id, entity);
+      this.emit('entity-added', entity);
     }
   }
 
   removeEntity(entity)
   {
-    this.entities.delete(entity.id);
+    if (this.hasEntity(entity)) {
+      this.entities.delete(entity.id);
+      this.emit('entity-removed', entity);
+    }
   }
 
   onComponentRemoved(entity, component)
