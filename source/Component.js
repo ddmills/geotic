@@ -5,6 +5,25 @@ export default class Component
   constructor(name)
   {
     this.name = name;
+    this.tags = [];
+  }
+
+  tag(tag)
+  {
+    this.tags.push(tag);
+  }
+
+  removeTag(tag)
+  {
+    let index = this.tags.indexOf(tag);
+    if (index >= 0) {
+      this.tags.splice(index, 1);
+    }
+  }
+
+  hasTag(tag)
+  {
+    return this.tags.includes(tag);
   }
 
   serialize()

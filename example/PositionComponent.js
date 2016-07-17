@@ -6,8 +6,8 @@ export default class PositionComponent extends Component
   {
     super('position');
 
-    this.x = x,
-    this.y = y,
-    this.z = z
+    this.x = x;
+    this.y = y;
+    this.z = z;
   }
 }

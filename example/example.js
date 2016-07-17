@@ -9,7 +9,6 @@ let world = new World();
 world.addSystem(new MovementSystem);
 world.addEntity(car);
 
-
 let now = Date.now();
 
 setInterval(() => {

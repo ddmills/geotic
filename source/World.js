@@ -2,14 +2,16 @@
 
 import EntityList from './EntityList';
 import SignatureList from './SignatureList';
+import TagList from './TagList';
 
 export default class World
 {
   constructor()
   {
-    this.entityList = new EntityList();
-    this.signatureList = new SignatureList(this.entityList);
     this.systems = [];
+    this.entityList = new EntityList();
+    this.tagList = new TagList(this.entityList);
+    this.signatureList = new SignatureList(this.entityList);
   }
 
   addSystem(system)
@@ -46,6 +48,16 @@ export default class World
   getSignature(...componentNames)
   {
     return this.signatureList.findOrCreate(componentNames);
+  }
+
+  getTag(...tagNames)
+  {
+    return this.tagList.findOrCreate(tagNames);
+  }
+
+  getTagged(...tagNames)
+  {
+    return this.getTag.apply(this, tagNames).entities;
   }
 
   serialize()

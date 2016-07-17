@@ -3,13 +3,13 @@
 import Emitter from './Emitter';
 
 
-export default class Signature extends Emitter
+export default class Tag extends Emitter
 {
-  constructor(componentNames)
+  constructor(names)
   {
     super();
     this.entities = new Map();
-    this.componentNames = componentNames;
+    this.names = names;
   }
 
   hasEntity(entity)
@@ -33,24 +33,21 @@ export default class Signature extends Emitter
     }
   }
 
-  onComponentRemoved(entity, component)
+  onComponentRemoved(entity)
   {
     if (!this.hasEntity(entity)) {
       return;
     }
 
-    for (let name of this.componentNames) {
-      if (component.name === name) {
-        this.removeEntity(entity);
-        return;
-      }
+    if (!this.matches(entity)) {
+      this.removeEntity(entity);
     }
   }
 
   matches(entity)
   {
-    for (let name of this.componentNames) {
-      if (!entity.hasComponent(name)) {
+    for (let name of this.names) {
+      if (!entity.hasTag(name)) {
         return false;
       }
     }

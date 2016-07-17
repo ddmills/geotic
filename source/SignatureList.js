@@ -51,7 +51,6 @@ export default class SignatureList
   findOrCreate(componentNames)
   {
     let hash = this.hash(componentNames);
-
     let signature = this.signatures.get(hash);
 
 
