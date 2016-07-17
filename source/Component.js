@@ -10,7 +10,17 @@ export default class Component
 
   tag(tag)
   {
-    this.tags.push(tag);
+    if (!this.hasTag(tag)) {
+      this.tags.push(tag);
+    }
+  }
+
+  mount(entity)
+  {
+  }
+
+  unmount(entity)
+  {
   }
 
   removeTag(tag)

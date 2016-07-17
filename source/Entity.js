@@ -58,8 +58,8 @@ export default class Entity extends Emitter
     if (!this.hasComponent(component.name)) {
       this.components.set(component.name, component);
       this[component.name] = component;
-
       component.entity = this;
+      component.mount(this);
       this.emit('component-added', component);
       return true;
     }
@@ -69,6 +69,7 @@ export default class Entity extends Emitter
   removeComponent(component)
   {
     if (this.hasComponent(component.name)) {
+      component.unmount(this);
       this[component.name] = undefined;
       this.components.delete(component.name);
       this.emit('component-removed', component);
