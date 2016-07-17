@@ -15,7 +15,7 @@ export default class World
   addSystem(system)
   {
     this.systems.push(system);
-    system.onAttach(world);
+    system.onAttach(this);
   }
 
   update(time)
