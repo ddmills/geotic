@@ -3,7 +3,7 @@
 import Emitter from './Emitter';
 
 
-export default class Signature
+export default class Signature extends Emitter
 {
   constructor(componentNames)
   {
