@@ -23,6 +23,17 @@ export default class Entity extends Emitter
     return false;
   }
 
+  getComponentsWithTag(tag)
+  {
+    let components = [];
+    for (let [name, component] of this.components) {
+      if (component.hasTag(tag)) {
+        components.push(component);
+      }
+    }
+    return components;
+  }
+
   serialize()
   {
     let serializedComponents = [];
