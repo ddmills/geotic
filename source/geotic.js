@@ -1,32 +1,20 @@
-let id = 0;
-const hash = (n) => n.sort((a, b) => a > b).join('$');
-const remove = (a, v) => a.splice(a.indexOf(v), 1);
-const intersects = (a, b) => {
-  for (let k of a) {
-    if (b.includes(k)) return true;
-  }
-  return false;
+let _id;
+const id = () => {
+  let now = Date.now();
+  if (now <= _id) now++;
+  _id = now;
+  return now;
 }
 
-
-export const withComponents = (...n) => getTag(n).en;
+const hash = (n) => n.sort((a, b) => a > b).join('$');
+const remove = (a, v) => a.splice(a.indexOf(v), 1);
+const getComponent = (n) => components.get(n) || newComponent(n);
 
 const tags = new Map();
 const entities = [];
 const components = new Map();
 
-export const getTag = (n) => {
-  let h = hash(n);
-  return tags.has(h) ? tags.get(h) : makeTag(n, h);
-}
-
-const makeTag = (n, h) => {
-  const t = new tag(n);
-  tags.set(h, t);
-  return t;
-}
-
-class tag {
+class Tag {
   constructor(n) {
     this.na = n;
     this.en = [];
@@ -43,55 +31,48 @@ class tag {
     c in this.na && this.en.push(e);
   }
   onRem(e, c) {
-    c in this.na && remove(this.en, e);
+    this.na.includes(c) && remove(this.en, e);
+  }
+  static get(n) {
+    let h = hash(n);
+    return tags.has(h) ? tags.get(h) : Tag.make(n, h);
+  }
+  static make(n, h) {
+    const t = new Tag(n);
+    tags.set(h, t);
+    return t;
   }
 }
 
-export const component = (n, d) => {
-  components.set(n, d);
+class Entity {
+  constructor(id) {
+    this.c = {};
+    this.id = id;
+  }
+  add(n, ...a) {
+    this.c[n] = getComponent(n)(this, ...a);
+    this.c[n].mount && this.c[n].mount(this);
+    tags.forEach(t => t.onAdd(this, n));
+    return this.c[n];
+  }
+  remove(n, ...a) {
+    if (!this.c[n]) return;
+    this.c[n].unmount && this.c[n].unmount(this, ...a);
+    delete this.c[n];
+    tags.forEach(t => t.onRem(this, n));
+  }
 }
 
-export const newComponent = (n) => {
+const newComponent = (n) => {
   components.set(n, (entity) => {});
   return c;
 }
 
-export const getComponent = (n) => {
-  if (components.has(n)) {
-    return components.get(n);
-  }
-  return newComponent(n)
-  components.set(c.name, c);
-  return c;
-}
-
-
-const add = (e, n) => {
-  let c = getComponent(n);
-  e.c[n] = c(e);
-  tags.forEach(t => t.onAdd(e, c.name));
-  return e;
-}
-
-export class entity {
-  constructor() { this.c = {} }
-  add(n) {
-    add(this, n);
-    return this;
-  }
-}
-
-export const addEntity = (e) => {
-  e.id = `e${++id}`;
+export const component = (n, d) => components.set(n, d);
+export const findByComponent = (...n) => Tag.get(n).en;
+export const entity = () => {
+  let e = new Entity(id());
   entities.push(e);
   tags.forEach(t => t.match(e));
-}
-
-export const find = {
-  entities: {
-    with: {
-      components: (...n) => getTag(n).en
-    }
-  },
-  tag: (...n) => getTag(n)
+  return e;
 }
