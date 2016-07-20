@@ -2,16 +2,13 @@
   "name": "geotic",
   "version": "0.1.9",
   "description": "entity-component-system",
-  "main": "build/index.js",
+  "main": "build/geotic.js",
   "scripts": {
     "dev": "nodemon --exec babel-node source/index.js",
     "build": "babel source --out-dir build",
     "prepublish": "npm run build",
     "start": "node build/index.js",
-    "example": "babel-node example/example.js"
-  },
-  "dependencies": {
-    "event-emitter": "^0.3.4"
+    "example": "babel-node example/index.js"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",

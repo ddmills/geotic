@@ -1,5 +1,5 @@
-import { entity, component } from './geotic';
-import * as geotic from './geotic';
+import { entity, component } from '../source/geotic';
+import geotic from '../source/geotic';
 
 // define components
 component('pos', () => ({ x:0, y:0, z:0 }));

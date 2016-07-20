@@ -1,10 +1,5 @@
-let _id;
-const id = () => {
-  let now = Date.now();
-  if (now <= _id) now++;
-  _id = now;
-  return now;
-}
+let _id = 0;
+const id = () => ++_id;
 
 const hash = (n) => n.sort((a, b) => a > b).join('$');
 const remove = (a, v) => a.splice(a.indexOf(v), 1);
@@ -76,3 +71,5 @@ export const entity = () => {
   tags.forEach(t => t.match(e));
   return e;
 }
+
+export default { entity, component, findByComponent }
