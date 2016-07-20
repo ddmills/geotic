@@ -1,6 +1,6 @@
 {
   "name": "geotic",
-  "version": "0.1.9",
+  "version": "1.0.0-0",
   "description": "entity-component-system",
   "main": "build/geotic.js",
   "scripts": {
