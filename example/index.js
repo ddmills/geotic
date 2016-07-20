@@ -1,17 +1,5 @@
-#### geotic
-
-*adjective* physically concerning land or its inhabitants. `npm install geotic`
-
-- **entity** a unique id and a collection of components
-- **component** simple logic-less data container
-- **system** logic that acts on entities with specific components or tags
-- **world** maintains list of active entities and systems
-
-[example](https://github.com/ddmills/geotic/blob/master/example/example.js)
-
-```js
-import { entity, component } from 'geotic';
-import geotic from 'geotic';
+import { entity, component } from '../source/geotic';
+import geotic from '../source/geotic';
 
 // define components
 component('pos', () => ({ x:0, y:0, z:0 }));
@@ -55,10 +43,3 @@ console.log(geotic.findByComponent('pos', 'hair'));  // [cat, dog]
 cat.remove('hair');
 
 console.log(geotic.findByComponent('pos', 'hair')); // [dog]
-```
-
-#### development
-```
-npm install
-npm run dev
-```
