@@ -5,11 +5,11 @@ const hash = (n) => n.sort((a, b) => a > b).join('$');
 const remove = (a, v) => a.splice(a.indexOf(v), 1);
 const getComponent = (n) => components.get(n) || newComponent(n);
 
-const tags = new Map();
+const signatures = new Map();
 const entities = [];
 const components = new Map();
 
-class Tag {
+class Signature {
   constructor(n) {
     this.na = n;
     this.en = [];
@@ -30,11 +30,11 @@ class Tag {
   }
   static get(n) {
     let h = hash(n);
-    return tags.has(h) ? tags.get(h) : Tag.make(n, h);
+    return signatures.has(h) ? signatures.get(h) : Signature.make(n, h);
   }
   static make(n, h) {
-    const t = new Tag(n);
-    tags.set(h, t);
+    const t = new Signature(n);
+    signatures.set(h, t);
     return t;
   }
 }
@@ -47,14 +47,15 @@ class Entity {
   add(n, ...a) {
     this.c[n] = getComponent(n)(this, ...a);
     this.c[n].mount && this.c[n].mount(this);
-    tags.forEach(t => t.onAdd(this, n));
-    return this.c[n];
+    signatures.forEach(t => t.onAdd(this, n));
+    return this;
   }
   remove(n, ...a) {
     if (!this.c[n]) return;
     this.c[n].unmount && this.c[n].unmount(this, ...a);
     delete this.c[n];
-    tags.forEach(t => t.onRem(this, n));
+    signatures.forEach(t => t.onRem(this, n));
+    return this;
   }
 }
 
@@ -64,12 +65,13 @@ const newComponent = (n) => {
 }
 
 export const component = (n, d) => components.set(n, d);
-export const findByComponent = (...n) => Tag.get(n).en;
+export const findByComponent = (...n) => Signature.get(n).en;
+export const findById = (id) => entities.find(e => e.id === id);
 export const entity = () => {
   let e = new Entity(id());
   entities.push(e);
-  tags.forEach(t => t.match(e));
+  signatures.forEach(t => t.match(e));
   return e;
 }
 
-export default { entity, component, findByComponent }
+export default { entity, component, findByComponent, findById }

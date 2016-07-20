@@ -3,6 +3,7 @@ import geotic from '../source/geotic';
 
 // define components
 component('pos', () => ({ x:0, y:0, z:0 }));
+component('name', (entity, name) => name);
 component('hair', (entity) => {
   return {
     style: 'shaggy',
@@ -11,35 +12,31 @@ component('hair', (entity) => {
   };
 });
 
-// components can be basic
-component('name', (entity, name) => name);
-
-// create entities
-const dog = entity();
-const cat = entity();
-
+// create entities and
 // attach components
-dog.add('name', 'Sam');
-dog.add('hair');
-dog.add('pos');
+const dog = entity()
+  .add('name', 'Sam')
+  .add('hair')
+  .add('pos');
 
-cat.add('name', 'Princess Dilly');
-cat.add('hair');
-cat.add('pos');
+const cat = entity()
+  .add('name', 'Princess Dilly')
+  .add('hair')
+  .add('pos');
 
 // reference coponents by "entity.c[component-name]"
-console.log(`hello ${cat.c.name}`); // "Princess Dilly"
+cat.c.name; // "Princess Dilly"
 
 // set properties on components
 cat.c.pos.x = 20;
 
-// all entities have an id
-console.log(cat.id);
+// all entities have an id (integer)
+cat.id;
 
-// get all entities which have a 'pos' and 'hair' component
-console.log(geotic.findByComponent('pos', 'hair'));  // [cat, dog]
+// get all entities which have a 'name' and 'hair' component
+geotic.findByComponent('name', 'hair');  // [cat, dog]
 
 // remove a component from an entity
 cat.remove('hair');
 
-console.log(geotic.findByComponent('pos', 'hair')); // [dog]
+geotic.findByComponent('name', 'hair'); // [dog]

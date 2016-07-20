@@ -4,7 +4,7 @@
   "description": "entity-component-system",
   "main": "build/geotic.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node source/index.js",
+    "dev": "nodemon --exec babel-node source/geotic.js",
     "build": "babel source --out-dir build",
     "prepublish": "npm run build",
     "start": "node build/index.js",
