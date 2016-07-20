@@ -1,15 +1,10 @@
-import * as ec from './ec';
+import * as ec from './geotic';
 
 let dog = new ec.entity();
 
-let pos = ec.component('pos', {
-  x: 10,
-  y: 15,
-  z: 8
-});
-
-let hair = ec.component('hair', {
-  style: 'shaggy'
+ec.component('pos', entity => ({ x:0, y:0, z:0 }));
+ec.component('hair', (entity) => {
+  return { style: 'shaggy' };
 });
 
 dog.add('pos');

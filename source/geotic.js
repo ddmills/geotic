@@ -48,12 +48,11 @@ class tag {
 }
 
 export const component = (n, d) => {
-  d.name = n;
   components.set(n, d);
 }
 
-export const newComponent = (c) => {
-  components.set(c.name, c);
+export const newComponent = (n) => {
+  components.set(n, (entity) => {});
   return c;
 }
 
@@ -69,7 +68,7 @@ export const getComponent = (n) => {
 
 const add = (e, n) => {
   let c = getComponent(n);
-  e.c[n] = c;
+  e.c[n] = c(e);
   tags.forEach(t => t.onAdd(e, c.name));
   return e;
 }
