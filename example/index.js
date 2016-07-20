@@ -12,19 +12,20 @@ component('hair', (entity) => {
   };
 });
 
-// create entities and
-// attach components
-const dog = entity()
-  .add('name', 'Sam')
-  .add('hair')
+
+const dog = entity() // create a new entity
+  .add('hair') // add a hair component
+  .add('name', 'Sam') // pass arguments to components
+  .tag('animal') // tags can be used for many things
   .add('pos');
 
 const cat = entity()
   .add('name', 'Princess Dilly')
+  .tag('animal')
   .add('hair')
   .add('pos');
 
-// reference coponents by "entity.c[component-name]"
+// reference components by "entity.c[component-name]"
 cat.c.name; // "Princess Dilly"
 
 // set properties on components
@@ -37,6 +38,9 @@ cat.id;
 geotic.findByComponent('name', 'hair');  // [cat, dog]
 
 // remove a component from an entity
-cat.remove('hair');
+cat.add('hair');
 
 geotic.findByComponent('name', 'hair'); // [dog]
+
+// get all entities with given tags
+geotic.findByTag('animal');  // [cat, dog]
