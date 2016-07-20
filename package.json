@@ -19,7 +19,6 @@
     "nodemon": "^1.9.2"
   },
   "directories": {
-    "example": "example",
     "lib": "build"
   },
   "repository": {
@@ -33,6 +32,7 @@
     "ES6",
     "Class",
     "Javascript",
+    "Framework",
     "Game",
     "Engine",
     "ecs",
