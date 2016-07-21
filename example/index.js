@@ -4,6 +4,7 @@ import geotic from '../source/geotic';
 // define components
 component('pos', () => ({ x:0, y:0, z:0 }));
 component('name', (entity, name) => name);
+
 component('hair', (entity) => {
   return {
     style: 'shaggy',
@@ -37,4 +38,8 @@ cat.remove('hair');
 geotic.findByComponent('name', 'hair'); // [dog]
 geotic.findByTag('animal');  // [cat, dog]
 
-geotic.serialize();
+const data = geotic.serialize();
+
+geotic.clear(); // delete all entities and tags
+
+geotic.deserialize(data);

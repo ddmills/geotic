@@ -5,11 +5,11 @@ const hash = (n) => n.sort((a, b) => a > b).join('$');
 const remove = (a, v) => a.splice(a.indexOf(v), 1);
 const getComponent = (n) => components.get(n) || newComponent(n);
 const clone = (o) => JSON.parse(JSON.stringify(o));
-const sigs = new Map();
-const tsigs = new Map();
-const tags = new Map();
-const entities = [];
-const components = new Map();
+let sigs = new Map();
+let tsigs = new Map();
+let tags = new Map();
+let entities = [];
+let components = new Map();
 
 class Signature {
   constructor(n) {
@@ -72,18 +72,37 @@ class Entity {
       id: this.id,
       tags: Object.keys(this.t),
       components: (() => {
-        const s = {};
+        const s = [];
         for (let n of Object.keys(this.c)) {
-          s[n] = this.c[n].serialize ? this.c[n].serialize() : clone(this.c[n]);
+          s.push({
+            name: n,
+            value: (this.c[n].serialize ? this.c[n].serialize() : clone(this.c[n]))
+          });
         }
         return s;
       })()
     }
   }
+  static deserialize(d) {
+    const e = entity(d.id);
+    d.tags.forEach(t => e.tag(t));
+    d.components.forEach(c => {
+      let m = getComponent(c.name);
+      if (m.deserialize) {
+        attachTo(e, c.name, m.deserialize(e, c.value));
+      } else {
+        if (typeof c.value !== 'object') {
+          attachTo(e, c.name, c.value);
+          return
+        }
+        const ins = m(e) || {};
+        Object.assign(ins, c.value);
+        attachTo(e, c.name, ins);
+      }
+    });
+  }
   add(n, ...a) {
-    this.c[n] = getComponent(n)(this, ...a);
-    this.c[n].mount && this.c[n].mount(this);
-    sigs.forEach(s => s.onAdd(this));
+    attachTo(this, n, getComponent(n)(this, ...a));
     return this;
   }
   remove(n, ...a) {
@@ -109,6 +128,12 @@ class Entity {
   }
 }
 
+const attachTo = (e, n, c) => {
+  e.c[n] = c;
+  c.mount && c.mount(e);
+  sigs.forEach(s => s.onAdd(e));
+}
+
 const newComponent = (n) => {
   const c = (entity) => {};
   components.set(n, c);
@@ -122,11 +147,12 @@ const newTag = (n) => {
 }
 
 const szTags = () => {
-  const s = {};
-  for (let [name, tag] of tags) {
-    s[name] = 'serialize' in tag ? tag.serialize() : clone(tag);
-  }
-  return s;
+  return [...tags].map(v => {
+    return {
+      name: v[0],
+      value: v[1].serialize ? v[1].serialize() : clone(v[1])
+    };
+  });
 }
 
 const szEnts = () => entities.map(e => e.serialize());
@@ -136,21 +162,34 @@ export const findByComponent = (...n) => Signature.get(n).en;
 export const findByTag = (...n) => TagSignature.get(n).en;
 export const findById = (id) => entities.find(e => e.id === id);
 export const serialize = () => ({ tags: szTags(), entities: szEnts() });
-export const entity = () => {
-  let e = new Entity(id());
+export const entity = (i = false) => {
+  let e = new Entity(i || id());
   entities.push(e);
   sigs.forEach(t => t.match(e));
   return e;
 }
 
+export const deserialize = (data) => {
+  data.tags.forEach(t => Object.assign(getTag(t.name), t.value));
+  data.entities.forEach(e => Entity.deserialize(e));
+}
 
+export const clear = () => {
+  // TODO: call destroy
+  sigs = new Map();
+  tsigs = new Map();
+  tags = new Map();
+  entities = [];
+}
 
 export default {
+  clear,
   entity,
   getTag,
   findById,
   findByTag,
   serialize,
+  deserialize,
   component,
   findByComponent
 };
