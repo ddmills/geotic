@@ -81,7 +81,7 @@ class Entity {
         }
         return s;
       })()
-    }
+    };
   }
   static deserialize(d) {
     const e = entity(d.id);
@@ -111,6 +111,9 @@ class Entity {
     delete this.c[n];
     sigs.forEach(t => t.onRem(this, n));
     return this;
+  }
+  destroy() {
+    destroy(this);
   }
   tag(n, a = {}) {
     const t = getTag(n);
@@ -174,8 +177,14 @@ export const deserialize = (data) => {
   data.entities.forEach(e => Entity.deserialize(e));
 }
 
+export const destroy = (e) => {
+  for (let n of Object.keys(e.c)) e.remove(n);
+  for (let t of Object.keys(e.t)) e.untag(t);
+  remove(entities, e);
+}
+
 export const clear = () => {
-  // TODO: call destroy
+  entities.forEach(e => e.destroy());
   sigs = new Map();
   tsigs = new Map();
   tags = new Map();
@@ -186,6 +195,7 @@ export default {
   clear,
   entity,
   getTag,
+  destroy,
   findById,
   findByTag,
   serialize,

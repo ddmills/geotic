@@ -31,6 +31,7 @@ cat.c.name; // "Princess Dilly"
 cat.c.pos.x = 20;
 cat.id;
 
+
 geotic.findByComponent('name', 'hair');  // [cat, dog]
 
 cat.remove('hair');
@@ -40,6 +41,7 @@ geotic.findByTag('animal');  // [cat, dog]
 
 const data = geotic.serialize();
 
+cat.destroy(); // delete single entity
 geotic.clear(); // delete all entities and tags
 
 geotic.deserialize(data);
