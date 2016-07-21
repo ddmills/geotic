@@ -4,13 +4,12 @@ const id = () => ++_id;
 const hash = (n) => n.sort((a, b) => a > b).join('$');
 const remove = (a, v) => a.splice(a.indexOf(v), 1);
 const getComponent = (n) => components.get(n) || newComponent(n);
-
+const clone = (o) => JSON.parse(JSON.stringify(o));
 const sigs = new Map();
 const tsigs = new Map();
 const tags = new Map();
 const entities = [];
 const components = new Map();
-
 
 class Signature {
   constructor(n) {
@@ -62,12 +61,24 @@ class TagSignature extends Signature {
   }
 }
 
-
 class Entity {
   constructor(id) {
     this.c = {};
     this.t = {};
     this.id = id;
+  }
+  serialize() {
+    return {
+      id: this.id,
+      tags: Object.keys(this.t),
+      components: (() => {
+        const s = {};
+        for (let n of Object.keys(this.c)) {
+          s[n] = this.c[n].serialize ? this.c[n].serialize() : clone(this.c[n]);
+        }
+        return s;
+      })()
+    }
   }
   add(n, ...a) {
     this.c[n] = getComponent(n)(this, ...a);
@@ -105,15 +116,26 @@ const newComponent = (n) => {
 }
 
 const newTag = (n) => {
-  const t = {};
+  let t = {};
   tags.set(n, t);
   return t;
 }
 
+const szTags = () => {
+  const s = {};
+  for (let [name, tag] of tags) {
+    s[name] = 'serialize' in tag ? tag.serialize() : clone(tag);
+  }
+  return s;
+}
+
+const szEnts = () => entities.map(e => e.serialize());
 export const getTag = (n) => tags.get(n) || newTag(n);
 export const component = (n, d) => components.set(n, d);
 export const findByComponent = (...n) => Signature.get(n).en;
+export const findByTag = (...n) => TagSignature.get(n).en;
 export const findById = (id) => entities.find(e => e.id === id);
+export const serialize = () => ({ tags: szTags(), entities: szEnts() });
 export const entity = () => {
   let e = new Entity(id());
   entities.push(e);
@@ -121,13 +143,14 @@ export const entity = () => {
   return e;
 }
 
-export const findByTag = (...n) => TagSignature.get(n).en;
+
 
 export default {
   entity,
   getTag,
   findById,
   findByTag,
+  serialize,
   component,
   findByComponent
 };

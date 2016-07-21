@@ -17,6 +17,7 @@ const dog = entity()
   .add('hair')
   .add('name', 'Sam') // pass arguments to components
   .tag('animal')
+  .tag('some-tag')
   .add('pos');
 
 const cat = entity()
@@ -34,5 +35,6 @@ geotic.findByComponent('name', 'hair');  // [cat, dog]
 cat.remove('hair');
 
 geotic.findByComponent('name', 'hair'); // [dog]
-
 geotic.findByTag('animal');  // [cat, dog]
+
+geotic.serialize();
