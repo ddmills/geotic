@@ -8,7 +8,7 @@
     "build": "babel source --out-dir build",
     "prepublish": "npm run build",
     "start": "node build/index.js",
-    "example": "babel-node example/index.js"
+    "example": "babel-node example/zombie.js"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",

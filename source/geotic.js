@@ -112,6 +112,9 @@ class Entity {
     sigs.forEach(t => t.onRem(this, n));
     return this;
   }
+  has(n) {
+    return (!!this.c[n]);
+  }
   destroy() {
     destroy(this);
   }

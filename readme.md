@@ -1,63 +1,122 @@
 #### geotic
 
-*adjective* physically concerning land or its inhabitants. `npm install geotic`
+*adjective* physically concerning land or its inhabitants.
 
 - **entity** a unique id and a collection of components
-- **component** simple logic-less data container
+- **tag** a group of entities
+- **component** simple data container
 - **system** logic that acts on entities with specific components or tags
 
-[example](https://github.com/ddmills/geotic/blob/master/example/index.js)
+
+### usage
+`npm install geotic`
 
 ```js
+import geotic from 'geotic'; // or
 import { entity, component } from 'geotic';
-import geotic from 'geotic';
+```
+[example](https://github.com/ddmills/geotic/blob/master/example/index.js)
 
-// define components
+
+### entities
+
+> a unique id and a collection of components
+
+```js
+const zombie = entity()
+  .add('name', 'Donnie')
+  .add('position': {x: 2, y: 0, z: 3} })
+  .add('velocity': {x: 0, y: 0, z: 1} })
+  .add('health', 200)
+  .tag('enemy');
+```
+
+### systems
+```js
+const applyVelocity = (dt) => {
+  const entities = geotic.findByComponent('position', 'velocity');
+  entities.forEach(e => {
+    e.c.position.x += dt * e.c.velocity.x;
+    e.c.position.y += dt * e.c.velocity.y;
+    e.c.position.z += dt * e.c.velocity.z;
+  });
+}
+```
+
+```js
+const removeEnemies = () => {
+  geotic
+    .findByTag('enemy')
+    .forEach(e => e.destroy());
+}
+```
+
+```js
+const saveGame = () => {
+  const data = geotic.serialize();
+  localStorage.setItem('savegame', data);
+}
+```
+
+```js
+const loadGame = () => {
+  const data = localStorage.getItem('savegame');
+  geotic.deserialize(data);
+}
+```
+
+
+### components
+
+> simple data container
+
+Components can be simple or complex
+```js
+component(name, callback);
 component('pos', () => ({ x:0, y:0, z:0 }));
-component('hair', (entity) => {
-  return {
-    style: 'shaggy',
-    mount: (e) => {}, // called on attached to entity
-    unmount: (e) => {} // called on removed from entity
-  };
-});
-
-// components can be basic
 component('name', (entity, name) => name);
-
-// create entities
-const dog = entity();
-const cat = entity();
-
-// attach components
-dog.add('name', 'Sam');
-dog.add('hair');
-dog.add('pos');
-
-cat.add('name', 'Princess Dilly');
-cat.add('hair');
-cat.add('pos');
-
-// reference coponents by "entity.c[component-name]"
-console.log(`hello ${cat.c.name}`); // "Princess Dilly"
-
-// set properties on components
-cat.c.pos.x = 20;
-
-// all entities have an id
-console.log(cat.id);
-
-// get all entities which have a 'pos' and 'hair' component
-console.log(geotic.findByComponent('pos', 'hair'));  // [cat, dog]
-
-// remove a component from an entity
-cat.remove('hair');
-
-console.log(geotic.findByComponent('pos', 'hair')); // [dog]
 ```
 
-#### development
+```js
+class Health {
+  constructor(max = 100) {
+    this.max = max;
+    this.current = max;
+  }
+  reduce(amount) {
+    this.current -= this.current ? amount : 0;
+  }
+  heal(amount) {
+    this.current += amount;
+    if (this.current > this.max) this.current = this.max;
+  }
+  get alive() {
+    return this.current > 0;
+  }
+}
+
+component('health', (entity, max) =>  new Health(max));
 ```
-npm install
-npm run dev
+
+### tags
+
+```js
+const addZombie = (name) => {
+  const zombie = entity()
+    .add('name', name)
+    .add('sprite', 'walker.png')
+    .add('speed', 1)
+    .add('position')
+    .add('velocity')
+    .add('health', Math.random() * 100);
+
+  zombie.tag('lastCreated', { id: zombie.id });
+};
+
+addZombie('bonnie');
+addZombie('greg');
+addZombie('danny');
+
+const id = geotic.getTag('lastCreated').id;
+geotic.findById(id).c.name; // 'danny'
 ```

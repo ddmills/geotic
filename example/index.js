@@ -5,43 +5,32 @@ import geotic from '../source/geotic';
 component('pos', () => ({ x:0, y:0, z:0 }));
 component('name', (entity, name) => name);
 
-component('hair', (entity) => {
-  return {
-    style: 'shaggy',
-    mount: (e) => {}, // called on attached to entity
-    unmount: (e) => {} // called on removed from entity
-  };
-});
+class Health {
+  constructor(max = 100) {
+    this.max = max;
+    this.current = max;
+  }
+  reduce(amount) {
+    this.current -= this.current ? amount : 0;
+  }
+  heal(amount) {
+    this.current += amount;
+    if (this.current > this.max) this.current = this.max;
+  }
+  get alive() {
+    return this.current > 0;
+  }
+}
+
+component('health', (entity, max) =>  new Health(max));
 
 //define entities
 const dog = entity()
-  .add('hair')
-  .add('name', 'Sam') // pass arguments to components
-  .tag('animal')
-  .tag('some-tag')
-  .add('pos');
+  .add('name', 'Sam')
+  .add('health');
 
-const cat = entity()
-  .add('name', 'Princess Dilly')
-  .tag('animal')
-  .add('hair')
-  .add('pos');
-
-cat.c.name; // "Princess Dilly"
-cat.c.pos.x = 20;
-cat.id;
+let data = geotic.serialize();
+let clone = geotic.deserialize(data);
 
 
-geotic.findByComponent('name', 'hair');  // [cat, dog]
-
-cat.remove('hair');
-
-geotic.findByComponent('name', 'hair'); // [dog]
-geotic.findByTag('animal');  // [cat, dog]
-
-const data = geotic.serialize();
-
-cat.destroy(); // delete single entity
-geotic.clear(); // delete all entities and tags
-
-geotic.deserialize(data);
+geotic.findByComponent('health')[1].c.health.reduce(5);
