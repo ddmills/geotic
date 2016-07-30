@@ -1,7 +1,7 @@
 import { entity, component } from '../source/geotic';
 import geotic from '../source/geotic';
 
-const attribute = (e, n) => n;
+const attribute = (e, n) => n || 1;
 component('name', attribute);
 component('health', attribute);
 component('speed', attribute);

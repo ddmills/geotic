@@ -133,6 +133,10 @@ class Entity {
     sigs.forEach(t => t.onRem(this, n));
     return this;
   }
+  mandate(n, ...a) {
+    if (!this[n]) this.add(n, ...a);
+    return this[n];
+  }
   has(n) {
     return (!!this[n]);
   }
