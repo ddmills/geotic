@@ -36,9 +36,9 @@ const zombie = entity()
 const applyVelocity = (dt) => {
   const entities = geotic.findByComponent('position', 'velocity');
   entities.forEach(e => {
-    e.c.position.x += dt * e.c.velocity.x;
-    e.c.position.y += dt * e.c.velocity.y;
-    e.c.position.z += dt * e.c.velocity.z;
+    e.position.x += dt * e.velocity.x;
+    e.position.y += dt * e.velocity.y;
+    e.position.z += dt * e.velocity.z;
   });
 }
 ```
@@ -118,5 +118,5 @@ addZombie('greg');
 addZombie('danny');
 
 const id = geotic.getTag('lastCreated').id;
-geotic.findById(id).c.name; // 'danny'
+geotic.findById(id).name; // 'danny'
 ```

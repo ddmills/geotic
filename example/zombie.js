@@ -15,9 +15,10 @@ const addZombie = (name) => {
   zombie.tag('lastCreated', { id: zombie.id });
 };
 
+
 addZombie('bonnie');
 addZombie('greg');
 addZombie('danny');
 
 const id = geotic.getTag('lastCreated').id;
-geotic.findById(id).c.name; // 'danny'
+geotic.findById(id).name; // 'danny'

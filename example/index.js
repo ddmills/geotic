@@ -33,4 +33,4 @@ let data = geotic.serialize();
 let clone = geotic.deserialize(data);
 
 
-geotic.findByComponent('health')[1].c.health.reduce(5);
+geotic.findByComponent('health')[1].health.reduce(5);

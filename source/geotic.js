@@ -18,7 +18,7 @@ class Signature {
     entities.forEach(e => this.onAdd(e));
   }
   match(e) {
-    let k = Object.keys(e.c);
+    let k = Object.keys(e.components);
     for (let n of this.na) {
       if (!k.includes(n)) return false;
     }
@@ -61,9 +61,22 @@ class TagSignature extends Signature {
   }
 }
 
+const reserve = [
+  't',
+  'id',
+  'serialize',
+  'deserialize',
+  'add',
+  'remove',
+  'has',
+  'destroy',
+  'tag',
+  'untag',
+  'components',
+];
+
 class Entity {
   constructor(id) {
-    this.c = {};
     this.t = {};
     this.id = id;
   }
@@ -73,15 +86,23 @@ class Entity {
       tags: Object.keys(this.t),
       components: (() => {
         const s = [];
-        for (let n of Object.keys(this.c)) {
+        for (let n of Object.keys(this.components)) {
           s.push({
             name: n,
-            value: (this.c[n].serialize ? this.c[n].serialize() : clone(this.c[n]))
+            value: (this[n].serialize ? this[n].serialize() : clone(this[n]))
           });
         }
         return s;
       })()
     };
+  }
+  get components() {
+    let c = {};
+    Object
+      .keys(this)
+      .filter(k => !reserve.includes(k))
+      .forEach(k => c[k] = this[k]);
+    return c;
   }
   static deserialize(d) {
     const e = entity(d.id);
@@ -106,14 +127,14 @@ class Entity {
     return this;
   }
   remove(n, ...a) {
-    if (!this.c[n]) return;
-    this.c[n].unmount && this.c[n].unmount(this, ...a);
-    delete this.c[n];
+    if (!this[n]) return;
+    this[n].unmount && this[n].unmount(this, ...a);
+    delete this[n];
     sigs.forEach(t => t.onRem(this, n));
     return this;
   }
   has(n) {
-    return (!!this.c[n]);
+    return (!!this[n]);
   }
   destroy() {
     destroy(this);
@@ -135,7 +156,7 @@ class Entity {
 }
 
 const attachTo = (e, n, c) => {
-  e.c[n] = c;
+  e[n] = c;
   c.mount && c.mount(e);
   sigs.forEach(s => s.onAdd(e));
 }
@@ -163,7 +184,10 @@ const szTags = () => {
 
 const szEnts = () => entities.map(e => e.serialize());
 export const getTag = (n) => tags.get(n) || newTag(n);
-export const component = (n, d) => components.set(n, d);
+export const component = (n, d) => {
+  if (reserve.includes(n)) throw 'Cannot use a reserved keyword as a component';
+  components.set(n, d);
+}
 export const findByComponent = (...n) => Signature.get(n).en;
 export const findByTag = (...n) => TagSignature.get(n).en;
 export const findById = (id) => entities.find(e => e.id === id);
@@ -181,7 +205,7 @@ export const deserialize = (data) => {
 }
 
 export const destroy = (e) => {
-  for (let n of Object.keys(e.c)) e.remove(n);
+  for (let n of Object.keys(e.components)) e.remove(n);
   for (let t of Object.keys(e.t)) e.untag(t);
   remove(entities, e);
 }
