@@ -17,6 +17,7 @@ import geotic from 'geotic'; // or
 import { entity, component } from 'geotic';
 ```
 [example](https://github.com/ddmills/geotic/blob/master/example/index.js)
+
 [example using three.js](https://github.com/ddmills/geotic-threejs)
 
 
@@ -144,7 +145,9 @@ component('health', (entity, max) =>  new Health(max));
 
 > message between components or entities
 
-Entities are event emitters. The primary functions being:
+Entities are event emitters. This can be used to decouple components from each other.
+
+Events can be emitted or listened to via:
 * **on(name, callback)**: register listener for an event
 * **off(name, callback)**: deregister listener for the event
 * **once(name, callback)**: register listener for the event that will deregister after being called once
@@ -170,6 +173,15 @@ class Position {
 }
 
 component('position', (entity, x, y) => new Position(entity, x, y));
+const thing = entity().add('position', 4, 3);
+
+thing.on('position-changed', () => {
+  console.log('the position has changed!');
+  console.log(this.position.x, this.position.y);
+});
+
+thing.position.x += 14;
+thing.position.y += 12;
 ```
 
 
