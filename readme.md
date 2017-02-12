@@ -5,6 +5,7 @@
 - **entity** a unique id and a collection of components
 - **tag** a group of entities
 - **component** simple data container
+- **event** message between components or entities
 - **system** logic that acts on entities with specific components or tags
 
 
@@ -42,7 +43,11 @@ Entity functions:
 * **untag(name)**: remove a tag from the entity
 * **serialize()**: serialize the entity and it's components
 * **static deserialize(data)**: deserialize data into a new entity instance
-* **t**: tags on the entity
+* **on(name, callback)**: register listener for an event
+* **off(name, callback)**: deregister listener for the event
+* **once(name, callback)**: register listener for the event that will deregister after being called once
+* **emit(name, ...args)**: invoke all registered listeners for the event with args
+* **tags**: tags on the entity
 * **id**: the entities' unique id
 
 
@@ -134,6 +139,39 @@ class Health {
 
 component('health', (entity, max) =>  new Health(max));
 ```
+
+### events
+
+> message between components or entities
+
+Entities are event emitters. The primary functions being:
+* **on(name, callback)**: register listener for an event
+* **off(name, callback)**: deregister listener for the event
+* **once(name, callback)**: register listener for the event that will deregister after being called once
+* **emit(name, ...args)**: invoke all registered listeners for the event with args
+
+```js
+class Position {
+  constructor(entity, x = 0, y = 0) {
+    this.entity = entity;
+    this._x = x;
+    this._y = y;
+  }
+  get x() { return this._x; }
+  get y() { return this._y; }
+  set x(newX) {
+    this._x = newX;
+    this.entity.emit('position-changed');
+  }
+  set y(newY) {
+    this._y = newY;
+    this.entity.emit('position-changed');
+  }
+}
+
+component('position', (entity, x, y) => new Position(entity, x, y));
+```
+
 
 ### tags
 

@@ -44,7 +44,7 @@ class Signature {
 
 class TagSignature extends Signature {
   match(e) {
-    let k = Object.keys(e.t);
+    let k = Object.keys(e.tags);
     for (let n of this.na) {
       if (!k.includes(n)) return false;
     }
@@ -64,6 +64,7 @@ class TagSignature extends Signature {
 const reserve = [
   't',
   'id',
+  'listeners',
   'serialize',
   'deserialize',
   'add',
@@ -73,12 +74,17 @@ const reserve = [
   'tag',
   'untag',
   'components',
+  'on',
+  'off',
+  'once',
+  'emit',
 ];
 
 class Entity {
   constructor(id) {
-    this.t = {};
     this.id = id;
+    this.tags = {};
+    this.listeners = new Map;
   }
   serialize() {
     return {
@@ -146,15 +152,51 @@ class Entity {
   tag(n, a = {}) {
     const t = getTag(n);
     Object.assign(t, a);
-    if (n in this.t) return this;
-    this.t[n] = t;
+    if (n in this.tags) return this;
+    this.tags[n] = t;
     tsigs.forEach(t => t.onAdd(this));
     return this;
   }
   untag(n) {
-    if (!this.t[n]) return;
-    delete this.t[n];
+    if (!this.tags[n]) return;
+    delete this.tags[n];
     tsigs.forEach(t => t.onRem(this, n));
+    return this;
+  }
+  on(e, f) {
+    this.listeners.has(e) || this.listeners.set(e, []);
+    this.listeners.get(e).push(f);
+    return this;
+  }
+  once(e, f) {
+    const fn = (...a) => {
+      this.off(e, f);
+      f(...a);
+    };
+    fn._ = f;
+    return this.on(e, fn);
+  }
+  off(e, f) {
+    const ls = this.listeners.get(e);
+    if (ls && ls.length) {
+      ls.forEach((l, i) => {
+        if (l === f || l._ === f) {
+          ls.splice(i, 1);
+        }
+      });
+    }
+
+    ls.length ?
+      this.listeners.set(e, ls) :
+      this.listeners.delete(e);
+
+    return this;
+  }
+  emit(e, ...a) {
+    const ls = this.listeners.get(e);
+    if (ls && ls.length) {
+      ls.forEach(l => l(...a));
+    }
     return this;
   }
 }
@@ -210,7 +252,7 @@ export const deserialize = (data) => {
 
 export const destroy = (e) => {
   for (let n of Object.keys(e.components)) e.remove(n);
-  for (let t of Object.keys(e.t)) e.untag(t);
+  for (let t of Object.keys(e.tags)) e.untag(t);
   remove(entities, e);
 }
 
