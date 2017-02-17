@@ -1,14 +1,5 @@
 #### geotic
 
-```
-                   _   _      
-   __ _  ___  ___ | |_(_) ___ 
-  / _` |/ _ \/ _ \| __| |/ __|
- | (_| |  __/ (_) | |_| | (__ 
-  \__, |\___|\___/ \__|_|\___|
-  |___/                       
-```
-
 *adjective* physically concerning land or its inhabitants.
 
 - **entity** a unique id and a collection of components
