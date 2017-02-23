@@ -62,7 +62,7 @@ in tools from geotic.
 * **findByComponent(...components)** get an array of entities with given components names
 
 
-**example** destroy all entities with 'enemy' tag
+**example** destroy all entities with an 'enemy' tag.
 ```js
 const removeEnemies = () => {
   geotic
@@ -71,7 +71,7 @@ const removeEnemies = () => {
 }
 ```
 
-**example** apply velocity to an entity.
+**example** apply velocity to all entities with a `position` and `velocity` component.
 ```js
 const applyVelocity = (dt) => {
   // only entities with both position and velocity are accepted
@@ -105,12 +105,15 @@ const loadGame = () => {
 
 > simple data container
 
-Components can be simple or complex
+Components can be simple or complex.
+
 ```js
 component(name, callback);
 component('pos', () => ({ x:0, y:0, z:0 }));
 component('name', (entity, name) => name);
 ```
+
+The name must be unique. The callback is a function which should return an instance of the component. The results of the callback will be attached to the entity at `entity.componentName`.
 
 Components can provide optional functions:
 * **mount(entity)**: called when component is *added* to given entity
@@ -118,8 +121,10 @@ Components can provide optional functions:
 * **serialize()**: how to explicitly serialize this object
 * **static deserialize(data)**: how to explicitly deserialize some serialized data back into a component (should return a new instance of the component)
 
+Components can be primitive data types, basic objects, functions, or classes. As long as they have a unique name.
 
-Components can be classes
+**example** register a `health` component which returns an instance of the `Health` class.
+
 ```js
 class Health {
   constructor(max = 100) {
@@ -141,6 +146,36 @@ class Health {
 component('health', (entity, max) =>  new Health(max));
 ```
 
+The component can then be attached to an entity (via the `add` function), and accessed via it's name.
+
+```js
+// rabbits have 80hp max.
+const rabbit = entity().add('health', 80);
+rabbit.health.reduce(5);
+
+console.log(rabbit.health.alive);
+```
+
+**example** create a `kill` component, using the health class above.
+
+```js
+component('kill', entity => {
+  // in order to be killable, the entity must have a 'health' component.
+  // `mandate` will retrieve the health component if it exists, or
+  // create one if it doesn't.
+  const health = entity.mandate('health');
+  
+  // we return a function, which when called will set the current health to zero
+  return () => health.current = 0;
+});
+
+const rabbit = entity()
+  .add('health', 80)
+  .add('kill');
+
+rabbit.kill();
+```
+
 ### events
 
 > message between components or entities
@@ -153,6 +188,7 @@ Events can be emitted or listened to via:
 * **once(name, callback)**: register listener for the event that will deregister after being called once
 * **emit(name, ...args)**: invoke all registered listeners for the event with args
 
+**example** use events to notify of a change in position.
 ```js
 class Position {
   constructor(entity, x = 0, y = 0) {
@@ -173,6 +209,8 @@ class Position {
 }
 
 component('position', (entity, x, y) => new Position(entity, x, y));
+
+
 const thing = entity().add('position', 4, 3);
 
 thing.on('position-changed', () => {
