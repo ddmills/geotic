@@ -62,7 +62,6 @@ class TagSignature extends Signature {
 }
 
 const reserve = [
-  't',
   'id',
   'listeners',
   'serialize',
@@ -72,6 +71,7 @@ const reserve = [
   'has',
   'destroy',
   'tag',
+  'tags',
   'untag',
   'components',
   'on',

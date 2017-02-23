@@ -116,7 +116,7 @@ Components can provide optional functions:
 * **mount(entity)**: called when component is *added* to given entity
 * **unmount(entity)**: called when component is *removed* from given entity
 * **serialize()**: how to explicitly serialize this object
-* **static deserialize(data)**: how explicitly deserialize the data (should return a new instance of the component)
+* **static deserialize(data)**: how to explicitly deserialize some serialized data back into a component (should return a new instance of the component)
 
 
 Components can be classes
