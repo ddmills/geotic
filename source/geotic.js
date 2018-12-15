@@ -257,7 +257,7 @@ export const destroy = (e) => {
 }
 
 export const clear = () => {
-  entities.forEach(e => e.destroy());
+  entities.slice().forEach(e => e.destroy());
   sigs = new Map();
   tsigs = new Map();
   tags = new Map();
