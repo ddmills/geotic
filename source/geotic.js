@@ -89,7 +89,7 @@ class Entity {
   serialize() {
     return {
       id: this.id,
-      tags: Object.keys(this.t),
+      tags: Object.keys(this.tags),
       components: (() => {
         const s = [];
         for (let n of Object.keys(this.components)) {
