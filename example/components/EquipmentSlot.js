@@ -6,7 +6,7 @@ export default class EquipmentSlot extends Component {
     static properties = {
         name: 'head',
         allowedTypes: ['hand'],
-        entity: '<Entity>'
+        content: '<Entity>'
     };
 
     onDetached() {

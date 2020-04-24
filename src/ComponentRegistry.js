@@ -21,7 +21,7 @@ export default class ComponentRegistry {
     #ecs = null;
 
     constructor(ecs) {
-        this.ecs = ecs;
+        this.#ecs = ecs;
     }
 
     register(component) {
@@ -43,7 +43,7 @@ export default class ComponentRegistry {
         const definition = this.get(typeOrClass);
 
         if (definition) {
-            return new definition(properties = {});
+            return new definition(this.#ecs, properties);
         }
 
         console.warn(`Could not create component definition for ${typeOrClass} since it is not registered`);
