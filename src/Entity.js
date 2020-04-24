@@ -1,34 +1,57 @@
 import Component from './Component';
 
+const getType = (typeOrClassOrComponent) => {
+    if (typeof typeOrClassOrComponent === 'string') {
+        return typeOrClassOrComponent;
+    }
+
+    if (typeOrClassOrComponent instanceof Component) {
+        return typeOrClassOrComponent.type;
+    }
+
+    if (typeOrClassOrComponent.prototype instanceof Component) {
+        return typeOrClassOrComponent.name;
+    }
+
+    return null;
+}
+
 export default class Entity {
-    _components = {};
+    #components = {};
+    #ecs = null;
+
+    get ecs() {
+        return this.#ecs;
+    }
 
     get components() {
-        return this._components;
+        return this.#components;
     }
 
-    has(typeOrClass) {
-        if (typeof typeOrClass === 'string') {
-            return this.components.hasOwnProperty(typeOrClass);
-        }
-
-        if (typeOrClass.prototype instanceof Component) {
-            return this.components.hasOwnProperty(typeOrClass.name);
-        }
-
-        return false;
+    constructor(ecs) {
+        this.#ecs = ecs;
     }
 
-    get(type) {
-        const all = this.components[type];
+    has(typeOrClass, accessor = null) {
+        const type = getType(typeOrClass);
+        const hasType = this.components.hasOwnProperty(type);
 
-        if (all) {
-            const first = all[0];
-
-            return first.allowMultiple ? all : first;
+        if (hasType && accessor) {
+            return this.components[type].hasOwnProperty(accessor);
         }
 
-        return null;
+        return hasType;
+    }
+
+    get(typeOrClass, accessor = null) {
+        const type = getType(typeOrClass);
+        const components = this.components[type];
+
+        if (components && accessor) {
+            return components[accessor];
+        }
+
+        return components;
     }
 
     add(component) {
@@ -36,16 +59,32 @@ export default class Entity {
             console.warn(`Cannot add "${component.type}" component since it is already attached to an entity.`);
         }
 
-        if (!component.allowMultiple && this.has(component.type)) {
-            console.warn(`"${component.type}" component has allowMultiple set to ${component.allowMultiple}. Trying to add a "${component.type}" component to an entity which already has one.`);
+        if (!component.allowMultiple) {
+            if (this.has(component.type)) {
+                console.warn(`"${component.type}" component has allowMultiple set to ${component.allowMultiple}. Trying to add a "${component.type}" component to an entity which already has one.`);
+                return false;
+            }
+
+            this.components[component.type] = component;
+            component._onAttached(this);
+            return true;
+        }
+
+        if (!component.accessorProperty) {
+            console.warn(`"${component.type}" component has allowMultiple set to ${component.allowMultiple}, but the "accessorProperty" is not defined.`);
+            return false;
+        }
+
+        if (!component.accessor) {
+            console.warn(`"${component.type}" component has a falsy accessor of "${component.accessor}". The accessorProperty is set to "${component.accessorProperty}".`);
             return false;
         }
 
         if (!this.components[component.type]) {
-            this.components[component.type] = [];
+            this.components[component.type] = {};
         }
 
-        this.components[component.type].push(component);
+        this.components[component.type][component.accessor] = component;
 
         component._onAttached(this);
 
@@ -56,21 +95,38 @@ export default class Entity {
         return component.entity === this;
     }
 
-    remove(component) {
-        const type = typeof component === 'string' ? component : component.type;
+    remove(typeOrClassOrComponent, accessor = null) {
+        accessor = typeOrClassOrComponent instanceof Component ? typeOrClassOrComponent.accessor : accessor;
+        const definition = this.ecs.registry.get(typeOrClassOrComponent);
 
-        const all = this.components[type];
-        const idx = all.indexOf(component);
+        if (definition.allowMultiple) {
+            if (!accessor) {
+                console.warn(`Trying to remove a "${definition.type}" component which allows multiple without specifying an accessor.`);
+                return;
+            }
 
-        if (idx < 0) {
-            console.warn(`Trying to remove a "${type}" component from an entity to whom it doesn't belong`);
-            return false;
+            const all = this.components[definition.type];
+            const component = all[accessor];
+
+            if (component) {
+                delete all[accessor];
+                component._onDetached();
+                return component;
+            } else {
+                console.warn(`Trying to remove a "${definition.type}" component from an entity at "${accessor}", but it wasn't found.`);
+                return;
+            }
         }
 
-        all.splice(idx, 1);
+        if (definition.type in this.components) {
+            const component = this.components[definition.type];
 
-        component._onDetached();
+            delete this.components[definition.type];
+            component._onDetached();
 
-        return true;
+            return component;
+        }
+
+        console.warn(`Trying to remove a "${definition.type}" component from an entity, but it wasn't found.`);
     }
 }

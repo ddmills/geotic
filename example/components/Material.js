@@ -1,10 +1,9 @@
 import { Component } from '../../build';
 
 export default class Material extends Component {
-    constructor(name) {
-        super();
-        this.name = name;
-    }
+    static properties = {
+        name: 'air',
+    };
 
     onAttached() {
         console.log(`${this.name} onAttached`, this.entity);
