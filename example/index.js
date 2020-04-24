@@ -13,9 +13,9 @@ const sword = ecs.createEntity();
 
 const bronze = new Material({ name: 'bronze' })
 sword.add(bronze);
+
 console.log('sword.has', sword.has('Material'));
 sword.remove(bronze);
-console.log('sword.has', sword.has('Material'));
 
 const leftHand = new EquipmentSlot({
     name: 'leftHand',
@@ -31,6 +31,8 @@ player.add(rightHand);
 
 console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
 
+console.log(player.EquipmentSlot.leftHand);
+
 // e.add('position', { x: 1, y: 4 });
 // e.add(new Position({ x: 1, y: 4 }));
 // e.add(Position, { x: 1, y: 4 });
@@ -40,5 +42,3 @@ console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
 //     slotType: ['head'],
 //     entity: '12356'
 // });
-
-// e.get(

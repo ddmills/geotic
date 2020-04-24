@@ -44,5 +44,8 @@
   "bugs": {
     "url": "https://github.com/ddmills/geotic/issues"
   },
-  "homepage": "https://github.com/ddmills/geotic#readme"
+  "homepage": "https://github.com/ddmills/geotic#readme",
+  "dependencies": {
+    "nanoid": "3.1.3"
+  }
 }

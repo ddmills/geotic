@@ -17,8 +17,13 @@ const getType = (typeOrClassOrComponent) => {
 }
 
 export default class Entity {
+    #id = null;
     #components = {};
     #ecs = null;
+
+    get id() {
+        return this.#id;
+    }
 
     get ecs() {
         return this.#ecs;
@@ -30,14 +35,15 @@ export default class Entity {
 
     constructor(ecs) {
         this.#ecs = ecs;
+        this.#id = ecs.generateId();
     }
 
     has(typeOrClass, accessor = null) {
         const type = getType(typeOrClass);
-        const hasType = this.components.hasOwnProperty(type);
+        const hasType = this.hasOwnProperty(type);
 
         if (hasType && accessor) {
-            return this.components[type].hasOwnProperty(accessor);
+            return this[type].hasOwnProperty(accessor);
         }
 
         return hasType;
@@ -45,7 +51,7 @@ export default class Entity {
 
     get(typeOrClass, accessor = null) {
         const type = getType(typeOrClass);
-        const components = this.components[type];
+        const components = this[type];
 
         if (components && accessor) {
             return components[accessor];
@@ -65,7 +71,7 @@ export default class Entity {
                 return false;
             }
 
-            this.components[component.type] = component;
+            this[component.type] = component;
             component._onAttached(this);
             return true;
         }
@@ -80,11 +86,11 @@ export default class Entity {
             return false;
         }
 
-        if (!this.components[component.type]) {
-            this.components[component.type] = {};
+        if (!this[component.type]) {
+            this[component.type] = {};
         }
 
-        this.components[component.type][component.accessor] = component;
+        this[component.type][component.accessor] = component;
 
         component._onAttached(this);
 
@@ -105,7 +111,7 @@ export default class Entity {
                 return;
             }
 
-            const all = this.components[definition.type];
+            const all = this[definition.type];
             const component = all[accessor];
 
             if (component) {
@@ -118,10 +124,10 @@ export default class Entity {
             }
         }
 
-        if (definition.type in this.components) {
-            const component = this.components[definition.type];
+        if (definition.type in this) {
+            const component = this[definition.type];
 
-            delete this.components[definition.type];
+            delete this[definition.type];
             component._onDetached();
 
             return component;
