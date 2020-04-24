@@ -1,6 +1,11 @@
+import EntityRef from './EntityRefProperty';
+import SimpleProperty from './SimpleProperty';
+
 export default class Component {
     #entity = null;
+    #ecs = null;
     #props = {};
+
     static allowMultiple = false;
     static accessorProperty = null;
     static properties = {};
@@ -14,7 +19,7 @@ export default class Component {
     }
 
     get ecs() {
-        return this.entity.ecs;
+        return this.ecs;
     }
 
     get type() {
@@ -41,11 +46,19 @@ export default class Component {
         return this[this.accessorProperty];
     }
 
-    constructor(properties) {
+    constructor(ecs, properties) {
+        this.#ecs = ecs;
         this._defineProxies();
         Object.entries(properties).forEach(([key, value]) =>{
             this[key] = value;
         });
+    }
+
+    serialize() {
+        return Object.entries(this.#props).reduce((o, [key, value]) => ({
+            ...o,
+            [key]: value.serialize()
+        }), {});
     }
 
     _onAttached(entity) {
@@ -74,13 +87,19 @@ export default class Component {
 
     _defineProxies() {
         Object.entries(this.constructor.properties).forEach(([key, value]) => {
+            if (value === '<Entity>') {
+                this.#props[key] = new EntityRef(this.#ecs);
+            } else {
+                this.#props[key] = new SimpleProperty();
+            }
+
             Object.defineProperty(this, key, {
                 enumerable: true,
                 set(v) {
-                    this.#props[key] = v;
+                    this.#props[key].value = v;
                 },
                 get() {
-                    return this.#props[key];
+                    return this.#props[key].value;
                 }
             });
         });

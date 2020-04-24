@@ -6,10 +6,10 @@ export default class Material extends Component {
     };
 
     onAttached() {
-        console.log(`${this.name} onAttached`, this.entity);
+        console.log(`${this.name} onAttached`, this.entity.id);
     }
 
     onDetached() {
-        console.log(`${this.name} onDetached`, this.entity);
+        console.log(`${this.name} onDetached`, this.entity.id);
     }
 }
