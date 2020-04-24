@@ -1,36 +1,23 @@
-import { entity, component } from '../source/geotic';
-import geotic from '../source/geotic';
+import Material from './components/Material';
+import Position from './components/Position';
+import { Entity, ComponentRegistry } from '../build';
 
-// define components
-component('pos', () => ({ x:0, y:0, z:0 }));
-component('name', (entity, name) => name);
+// const axe = new Entity();
+// const bronze = new BronzeMaterial();
+// axe.add(bronze);
+// axe.remove(bronze);
 
-class Health {
-  constructor(max = 100) {
-    this.max = max;
-    this.current = max;
-  }
-  reduce(amount) {
-    this.current -= this.current ? amount : 0;
-  }
-  heal(amount) {
-    this.current += amount;
-    if (this.current > this.max) this.current = this.max;
-  }
-  get alive() {
-    return this.current > 0;
-  }
-}
+// const player = new Entity();
+// player.add(new FleshMaterial());
+// player.add(new Position({ x: 1, y: 3}));
 
-component('health', (entity, max) =>  new Health(max));
+const registry = new ComponentRegistry();
 
-//define entities
-const dog = entity()
-  .add('name', 'Sam')
-  .add('health');
+registry.register(Material);
+registry.register(Position);
 
-let data = geotic.serialize();
-let clone = geotic.deserialize(data);
+const mat = registry.get('Material');
 
-
-geotic.findByComponent('health')[1].health.reduce(5);
+const e = new Entity();
+e.add(new mat('test'));
+// e.remove('Material');
