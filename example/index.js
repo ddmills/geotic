@@ -1,23 +1,44 @@
 import Material from './components/Material';
 import Position from './components/Position';
-import { Entity, ComponentRegistry } from '../build';
+import EquipmentSlot from './components/EquipmentSlot';
+import { ECSManager } from '../build';
 
-// const axe = new Entity();
-// const bronze = new BronzeMaterial();
-// axe.add(bronze);
-// axe.remove(bronze);
+const ecs = new ECSManager();
 
-// const player = new Entity();
-// player.add(new FleshMaterial());
-// player.add(new Position({ x: 1, y: 3}));
+ecs.registry.register(EquipmentSlot);
+ecs.registry.register(Material);
 
-const registry = new ComponentRegistry();
+const player = ecs.createEntity();
+const sword = ecs.createEntity();
 
-registry.register(Material);
-registry.register(Position);
+const bronze = new Material({ name: 'bronze' })
+sword.add(bronze);
+console.log('sword.has', sword.has('Material'));
+sword.remove(bronze);
+console.log('sword.has', sword.has('Material'));
 
-const mat = registry.get('Material');
+const leftHand = new EquipmentSlot({
+    name: 'leftHand',
+    allowedTypes: ['hand'],
+});
+const rightHand = new EquipmentSlot({
+    name: 'rightHand',
+    allowedTypes: ['hand'],
+});
 
-const e = new Entity();
-e.add(new mat('test'));
-// e.remove('Material');
+player.add(leftHand);
+player.add(rightHand);
+
+console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
+
+// e.add('position', { x: 1, y: 4 });
+// e.add(new Position({ x: 1, y: 4 }));
+// e.add(Position, { x: 1, y: 4 });
+
+// e.add('target', { entity: '44' });
+// e.add('EquipmentSlot', {
+//     slotType: ['head'],
+//     entity: '12356'
+// });
+
+// e.get(
