@@ -1,21 +1,5 @@
 import Component from './Component';
 
-const getType = (typeOrClass) => {
-    if (typeof typeOrClass === 'string') {
-        return typeOrClass;
-    }
-
-    if (typeOrClass instanceof Component) {
-        return typeOrClass.type;
-    }
-
-    if (typeOrClass.prototype instanceof Component) {
-        return typeOrClass.type;
-    }
-
-    return null;
-}
-
 export default class ComponentRegistry {
     #definitions = {};
     #ecs = null;
@@ -29,7 +13,7 @@ export default class ComponentRegistry {
     }
 
     get(typeOrClassOrComponent) {
-        const type = getType(typeOrClassOrComponent);
+        const type = ComponentRegistry._getType(typeOrClassOrComponent);
 
         if (!type) {
             console.warn(`Cannot get component definition for type or class ${typeOrClassOrComponent} since it is neither a Component class or type (string)`);
@@ -47,5 +31,21 @@ export default class ComponentRegistry {
         }
 
         console.warn(`Could not create component definition for ${typeOrClass} since it is not registered`);
+    }
+
+    static _getType(typeOrClassOrComponent) {
+        if (typeof typeOrClassOrComponent === 'string') {
+            return typeOrClassOrComponent;
+        }
+
+        if (typeOrClassOrComponent instanceof Component) {
+            return typeOrClassOrComponent.type;
+        }
+
+        if (typeOrClassOrComponent.prototype instanceof Component) {
+            return typeOrClassOrComponent.name;
+        }
+
+        return null;
     }
 }
