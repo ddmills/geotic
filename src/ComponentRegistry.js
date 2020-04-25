@@ -13,7 +13,7 @@ export default class ComponentRegistry {
     }
 
     get(typeOrClassOrComponent) {
-        const type = ComponentRegistry._getType(typeOrClassOrComponent);
+        const type = this._getType(typeOrClassOrComponent);
 
         if (!type) {
             console.warn(
@@ -37,7 +37,7 @@ export default class ComponentRegistry {
         );
     }
 
-    static _getType(typeOrClassOrComponent) {
+    _getType(typeOrClassOrComponent) {
         if (typeof typeOrClassOrComponent === 'string') {
             return typeOrClassOrComponent;
         }

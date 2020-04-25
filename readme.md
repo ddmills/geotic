@@ -258,8 +258,21 @@ TODO
     - ✓ basic serialize/deserialize from object
     - onAttached safely access entity
 2. prefab
-    - poly inherit
+    - ✓ prefab base class
+    - ✓ prefab registry
+    - ✓ poly inherit
+    - PrefabComponent types
+        - component definition
+        - initial props
+        - should overwrite or replace
+        - applyToEntity(e)
 3. query
     - inclue/exclude
-4. events
+4. properties
+    - <EntityArray> or <EntitySet>
+    - <Prefab>
+    - <PrefabArray> or <PrefabSet>
+5. events
     - an event to an entity will send it to all child components
+6. sourcemaps
+7. component default property values
