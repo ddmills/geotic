@@ -23,7 +23,7 @@ export default class Entity {
     }
 
     has(typeOrClass, accessor = null) {
-        const type = this.ecs.registry._getType(typeOrClass);
+        const type = this.ecs.components._getType(typeOrClass);
         const hasType = this.hasOwnProperty(type);
 
         if (hasType && accessor) {
@@ -34,7 +34,7 @@ export default class Entity {
     }
 
     get(typeOrClass, accessor = null) {
-        const type = this.ecs.registry._getType(typeOrClass);
+        const type = this.ecs.components._getType(typeOrClass);
         const components = this[type];
 
         if (components && accessor) {
@@ -114,7 +114,7 @@ export default class Entity {
             typeOrClassOrComponent instanceof Component
                 ? typeOrClassOrComponent.accessor
                 : accessor;
-        const definition = this.ecs.registry.get(typeOrClassOrComponent);
+        const definition = this.ecs.components.get(typeOrClassOrComponent);
 
         if (definition.allowMultiple) {
             if (!accessor) {

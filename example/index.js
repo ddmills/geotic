@@ -10,17 +10,17 @@ import { ECSManager } from '../build';
 const ecs = new ECSManager();
 const ecs2 = new ECSManager();
 
-ecs.registry.register(EquipmentSlot);
-ecs.registry.register(Material);
-ecs.registry.register(Position);
-ecs.registry.register(Listener);
-ecs.registry.register(Health);
+ecs.registerComponent(EquipmentSlot);
+ecs.registerComponent(Material);
+ecs.registerComponent(Position);
+ecs.registerComponent(Listener);
+ecs.registerComponent(Health);
 
-ecs2.registry.register(EquipmentSlot);
-ecs2.registry.register(Material);
-ecs2.registry.register(Position);
-ecs2.registry.register(Listener);
-ecs2.registry.register(Health);
+ecs2.registerComponent(EquipmentSlot);
+ecs2.registerComponent(Material);
+ecs2.registerComponent(Position);
+ecs2.registerComponent(Listener);
+ecs2.registerComponent(Health);
 
 ecs.registerPrefab(BeingPrefab);
 ecs.registerPrefab(HumanPrefab);
@@ -53,10 +53,10 @@ const data = ecs.serialize();
 
 const human = ecs.createPrefab('HumanPrefab');
 
-console.log(human.serialize());
+// console.log(human.serialize());
 
-// console.log(JSON.stringify(ecs.serialize(), null, 2));
+console.log(JSON.stringify(ecs.serialize(), null, 2));
 
-// ecs2.deserialize(data);
+ecs2.deserialize(data);
 
 // console.log(JSON.stringify(ecs2.serialize(), null, 2));

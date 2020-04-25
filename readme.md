@@ -254,25 +254,45 @@ geotic.findById(id).name; // 'danny'
 
 TODO
 
-1. deserialize
-    - ✓ basic serialize/deserialize from object
-    - onAttached safely access entity
-2. prefab
-    - ✓ prefab base class
-    - ✓ prefab registry
-    - ✓ poly inherit
-    - PrefabComponent types
-        - component definition
-        - initial props
-        - should overwrite or replace
-        - applyToEntity(e)
-3. query
-    - inclue/exclude
-4. properties
-    - <EntityArray> or <EntitySet>
-    - <Prefab>
-    - <PrefabArray> or <PrefabSet>
-5. events
-    - an event to an entity will send it to all child components
-6. sourcemaps
-7. component default property values
+-   deserialize
+    -   ✓ basic serialize/deserialize from object
+    -   onAttached safely access entity
+-   serialize
+    -   only serialize if value is different from default (?)
+-   prefab
+    -   ✓ prefab base class
+    -   ✓ prefab registry
+    -   ✓ poly inherit
+    -   PrefabComponent types
+        -   component definition
+        -   initial props
+        -   should overwrite or replace
+        -   applyToEntity(entity)
+    -   reference prefab chain on entity
+    -   https://www.youtube.com/watch?v=fGLJC5UY2o4
+-   query
+    -   include
+    -   exclude
+    -   cache
+-   properties
+    -   <EntitySet>
+    -   <Prefab>
+    -   <PrefabSet>
+-   events
+    -   https://www.youtube.com/watch?v=4uxN5GqXcaA
+    -   entity.sendEvent(event)
+    -   component.handleEvent(event)
+    -   an event to an entity will send it to all child components
+-   dev
+    -   sourcemaps
+    -   ✓ prettier
+    -   ✓ rollup
+-   component
+    -   default property values
+    -   destroy()
+    -   onDestroyed()
+-   prefab caching
+    -   only instantiate components when different from defaults
+    -   smaller save files
+    -   less instances
+-   ✓ Entity registry
