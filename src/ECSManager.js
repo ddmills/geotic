@@ -1,5 +1,5 @@
 import ComponentRegistry from './ComponentRegistry';
-import { nanoid } from 'nanoid'
+import { nanoid } from 'nanoid';
 import Entity from './Entity';
 
 export default class ECSManager {

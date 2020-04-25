@@ -16,7 +16,9 @@ export default class ComponentRegistry {
         const type = ComponentRegistry._getType(typeOrClassOrComponent);
 
         if (!type) {
-            console.warn(`Cannot get component definition for type or class ${typeOrClassOrComponent} since it is neither a Component class or type (string)`);
+            console.warn(
+                `Cannot get component definition for type or class ${typeOrClassOrComponent} since it is neither a Component class or type (string)`
+            );
             return null;
         }
 
@@ -30,7 +32,9 @@ export default class ComponentRegistry {
             return new definition(this.#ecs, properties);
         }
 
-        console.warn(`Could not create component definition for ${typeOrClass} since it is not registered`);
+        console.warn(
+            `Could not create component definition for ${typeOrClass} since it is not registered`
+        );
     }
 
     static _getType(typeOrClassOrComponent) {

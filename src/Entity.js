@@ -47,12 +47,16 @@ export default class Entity {
 
     add(component) {
         if (component.isAttached) {
-            console.warn(`Cannot add "${component.type}" component since it is already attached to an entity.`);
+            console.warn(
+                `Cannot add "${component.type}" component since it is already attached to an entity.`
+            );
         }
 
         if (!component.allowMultiple) {
             if (this.has(component.type)) {
-                console.warn(`"${component.type}" component has allowMultiple set to ${component.allowMultiple}. Trying to add a "${component.type}" component to an entity which already has one.`);
+                console.warn(
+                    `"${component.type}" component has allowMultiple set to ${component.allowMultiple}. Trying to add a "${component.type}" component to an entity which already has one.`
+                );
                 return false;
             }
 
@@ -63,7 +67,7 @@ export default class Entity {
                 configurable: true,
                 get() {
                     return this.components[component.type];
-                }
+                },
             });
 
             component._onAttached(this);
@@ -71,12 +75,16 @@ export default class Entity {
         }
 
         if (!component.accessorProperty) {
-            console.warn(`"${component.type}" component has allowMultiple set to ${component.allowMultiple}, but the "accessorProperty" is not defined.`);
+            console.warn(
+                `"${component.type}" component has allowMultiple set to ${component.allowMultiple}, but the "accessorProperty" is not defined.`
+            );
             return false;
         }
 
         if (!component.accessor) {
-            console.warn(`"${component.type}" component has a falsy accessor of "${component.accessor}". The accessorProperty is set to "${component.accessorProperty}".`);
+            console.warn(
+                `"${component.type}" component has a falsy accessor of "${component.accessor}". The accessorProperty is set to "${component.accessorProperty}".`
+            );
             return false;
         }
 
@@ -87,7 +95,7 @@ export default class Entity {
                 enumerable: true,
                 get() {
                     return this.components[component.type];
-                }
+                },
             });
         }
 
@@ -103,12 +111,17 @@ export default class Entity {
     }
 
     remove(typeOrClassOrComponent, accessor = null) {
-        accessor = typeOrClassOrComponent instanceof Component ? typeOrClassOrComponent.accessor : accessor;
+        accessor =
+            typeOrClassOrComponent instanceof Component
+                ? typeOrClassOrComponent.accessor
+                : accessor;
         const definition = this.ecs.registry.get(typeOrClassOrComponent);
 
         if (definition.allowMultiple) {
             if (!accessor) {
-                console.warn(`Trying to remove a "${definition.type}" component which allows multiple without specifying an accessor.`);
+                console.warn(
+                    `Trying to remove a "${definition.type}" component which allows multiple without specifying an accessor.`
+                );
                 return;
             }
 
@@ -120,7 +133,9 @@ export default class Entity {
                 component._onDetached();
                 return component;
             } else {
-                console.warn(`Trying to remove a "${definition.type}" component from an entity at "${accessor}", but it wasn't found.`);
+                console.warn(
+                    `Trying to remove a "${definition.type}" component from an entity at "${accessor}", but it wasn't found.`
+                );
                 return;
             }
         }
@@ -135,27 +150,35 @@ export default class Entity {
             return component;
         }
 
-        console.warn(`Trying to remove a "${definition.type}" component from an entity, but it wasn't found.`);
+        console.warn(
+            `Trying to remove a "${definition.type}" component from an entity, but it wasn't found.`
+        );
     }
 
     serialize() {
-        return Object.entries(this.components).reduce((o, [key, value]) => {
-            if (value instanceof Component) {
+        return Object.entries(this.components).reduce(
+            (o, [key, value]) => {
+                if (value instanceof Component) {
+                    return {
+                        ...o,
+                        [key]: value.serialize(),
+                    };
+                }
+
                 return {
                     ...o,
-                    [key]: value.serialize()
+                    [key]: Object.entries(value).reduce(
+                        (o2, [k2, v2]) => ({
+                            ...o2,
+                            [k2]: v2.serialize(),
+                        }),
+                        {}
+                    ),
                 };
+            },
+            {
+                id: this.id,
             }
-
-            return {
-                ...o,
-                [key]: Object.entries(value).reduce((o2, [k2, v2]) => ({
-                    ...o2,
-                    [k2]: v2.serialize()
-                }), {})
-            };
-        }, {
-            id: this.id
-        });
+        );
     }
 }

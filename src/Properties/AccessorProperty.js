@@ -11,7 +11,9 @@ export default class AccessorProperty {
             return;
         }
 
-        console.warn('Property cannot be changed, since it is marked as an accessor property.');
+        console.warn(
+            'Property is read-only and cannot be changed, since it is marked as an accessor property.'
+        );
     }
 
     constructor(value) {

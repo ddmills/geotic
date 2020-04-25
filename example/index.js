@@ -12,7 +12,7 @@ ecs.registry.register(Position);
 const player = ecs.createEntity();
 const sword = ecs.createEntity();
 
-const bronze = ecs.createComponent(Material, { name: 'bronze' })
+const bronze = ecs.createComponent(Material, { name: 'bronze' });
 sword.add(bronze);
 
 const leftHand = ecs.createComponent('EquipmentSlot', {
@@ -42,12 +42,26 @@ console.log(JSON.stringify(player.serialize(), null, 2));
 // console.log(player.EquipmentSlot.rightHand.content.has(Material));
 player.EquipmentSlot.rightHand.name = 'test';
 
-// e.add('position', { x: 1, y: 4 });
-// e.add(new Position({ x: 1, y: 4 }));
-// e.add(Position, { x: 1, y: 4 });
-
-// e.add('target', { entity: '44' });
-// e.add('EquipmentSlot', {
-//     slotType: ['head'],
-//     entity: '12356'
-// });
+// const data = {
+//     "id": "WtACi7RZ0SXT9DwbNo1AZ",
+//     "Position": {
+//       "x": 4,
+//       "y": 12
+//     },
+//     "EquipmentSlot": {
+//       "leftHand": {
+//         "name": "leftHand",
+//         "allowedTypes": [
+//           "hand"
+//         ],
+//         "content": null
+//       },
+//       "rightHand": {
+//         "name": "rightHand",
+//         "allowedTypes": [
+//           "hand"
+//         ],
+//         "content": "fRJkYHfRJey3cr2r3BRpG"
+//       }
+//     }
+// };

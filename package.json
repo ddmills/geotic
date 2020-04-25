@@ -1,51 +1,53 @@
 {
-  "name": "geotic",
-  "version": "2.4.3",
-  "description": "entity-component-system",
-  "main": "build/index.js",
-  "type": "module",
-  "scripts": {
-    "start": "npm run build && node --experimental-modules --es-module-specifier-resolution=node example/index.js",
-    "build": "rollup -c",
-    "prepublish": "npm run build"
-  },
-  "devDependencies": {
-    "@babel/cli": "7.8.4",
-    "@babel/core": "7.9.0",
-    "@babel/plugin-proposal-class-properties": "7.8.3",
-    "@rollup/plugin-commonjs": "11.1.0",
-    "@rollup/plugin-node-resolve": "7.1.3",
-    "rollup": "2.7.2",
-    "rollup-plugin-babel": "4.4.0"
-  },
-  "directories": {
-    "lib": "build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ddmills/geotic.git"
-  },
-  "keywords": [
-    "Entity",
-    "Component",
-    "System",
-    "ES6",
-    "Class",
-    "Javascript",
-    "Framework",
-    "Game",
-    "Engine",
-    "ecs",
-    "ec",
-    "js"
-  ],
-  "author": "Dalton Mill <mills.dalton@gmail.com> (http://www.ddmills.com)",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ddmills/geotic/issues"
-  },
-  "homepage": "https://github.com/ddmills/geotic#readme",
-  "dependencies": {
-    "nanoid": "3.1.3"
-  }
+    "name": "geotic",
+    "version": "2.4.3",
+    "description": "entity-component-system",
+    "main": "build/index.js",
+    "type": "module",
+    "scripts": {
+        "start": "npm run build && node --experimental-modules --es-module-specifier-resolution=node example/index.js",
+        "build": "rollup -c",
+        "pretty": "prettier --write .",
+        "prepublish": "npm run build"
+    },
+    "devDependencies": {
+        "@babel/cli": "7.8.4",
+        "@babel/core": "7.9.0",
+        "@babel/plugin-proposal-class-properties": "7.8.3",
+        "@rollup/plugin-commonjs": "11.1.0",
+        "@rollup/plugin-node-resolve": "7.1.3",
+        "prettier": "2.0.5",
+        "rollup": "2.7.2",
+        "rollup-plugin-babel": "4.4.0"
+    },
+    "directories": {
+        "lib": "build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ddmills/geotic.git"
+    },
+    "keywords": [
+        "Entity",
+        "Component",
+        "System",
+        "ES6",
+        "Class",
+        "Javascript",
+        "Framework",
+        "Game",
+        "Engine",
+        "ecs",
+        "ec",
+        "js"
+    ],
+    "author": "Dalton Mill <mills.dalton@gmail.com> (http://www.ddmills.com)",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ddmills/geotic/issues"
+    },
+    "homepage": "https://github.com/ddmills/geotic#readme",
+    "dependencies": {
+        "nanoid": "3.1.3"
+    }
 }

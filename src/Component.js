@@ -53,10 +53,13 @@ export default class Component {
     }
 
     serialize() {
-        return Object.entries(this.#props).reduce((o, [key, value]) => ({
-            ...o,
-            [key]: value.serialize()
-        }), {});
+        return Object.entries(this.#props).reduce(
+            (o, [key, value]) => ({
+                ...o,
+                [key]: value.serialize(),
+            }),
+            {}
+        );
     }
 
     _onAttached(entity) {
@@ -71,11 +74,9 @@ export default class Component {
         }
     }
 
-    onAttached() {
-    }
+    onAttached() {}
 
-    onDetached() {
-    }
+    onDetached() {}
 
     remove() {
         if (this.isAttached) {
@@ -91,13 +92,9 @@ export default class Component {
                     initialProperties[key]
                 );
             } else if (key === this.accessorProperty) {
-                this.#props[key] = new AccessorProperty(
-                    initialProperties[key]
-                );
+                this.#props[key] = new AccessorProperty(initialProperties[key]);
             } else {
-                this.#props[key] = new SimpleProperty(
-                    initialProperties[key]
-                );
+                this.#props[key] = new SimpleProperty(initialProperties[key]);
             }
 
             Object.defineProperty(this, key, {
@@ -107,7 +104,7 @@ export default class Component {
                 },
                 get() {
                     return this.#props[key].value;
-                }
+                },
             });
         });
     }
