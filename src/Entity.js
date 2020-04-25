@@ -1,20 +1,5 @@
 import Component from './Component';
-
-const getType = (typeOrClassOrComponent) => {
-    if (typeof typeOrClassOrComponent === 'string') {
-        return typeOrClassOrComponent;
-    }
-
-    if (typeOrClassOrComponent instanceof Component) {
-        return typeOrClassOrComponent.type;
-    }
-
-    if (typeOrClassOrComponent.prototype instanceof Component) {
-        return typeOrClassOrComponent.name;
-    }
-
-    return null;
-}
+import ComponentRegistry from './ComponentRegistry';
 
 export default class Entity {
     #id = null;
@@ -39,7 +24,7 @@ export default class Entity {
     }
 
     has(typeOrClass, accessor = null) {
-        const type = getType(typeOrClass);
+        const type = ComponentRegistry._getType(typeOrClass);
         const hasType = this.hasOwnProperty(type);
 
         if (hasType && accessor) {
@@ -50,7 +35,7 @@ export default class Entity {
     }
 
     get(typeOrClass, accessor = null) {
-        const type = getType(typeOrClass);
+        const type = ComponentRegistry._getType(typeOrClass);
         const components = this[type];
 
         if (components && accessor) {
@@ -71,7 +56,16 @@ export default class Entity {
                 return false;
             }
 
-            this[component.type] = component;
+            this.components[component.type] = component;
+
+            Object.defineProperty(this, component.type, {
+                enumerable: true,
+                configurable: true,
+                get() {
+                    return this.components[component.type];
+                }
+            });
+
             component._onAttached(this);
             return true;
         }
@@ -86,11 +80,18 @@ export default class Entity {
             return false;
         }
 
-        if (!this[component.type]) {
-            this[component.type] = {};
+        if (!this.components[component.type]) {
+            this.components[component.type] = {};
+            Object.defineProperty(this, component.type, {
+                configurable: true,
+                enumerable: true,
+                get() {
+                    return this.components[component.type];
+                }
+            });
         }
 
-        this[component.type][component.accessor] = component;
+        this.components[component.type][component.accessor] = component;
 
         component._onAttached(this);
 
@@ -111,7 +112,7 @@ export default class Entity {
                 return;
             }
 
-            const all = this[definition.type];
+            const all = this.components[definition.type];
             const component = all[accessor];
 
             if (component) {
@@ -125,14 +126,34 @@ export default class Entity {
         }
 
         if (definition.type in this) {
-            const component = this[definition.type];
+            const component = this.components[definition.type];
 
             delete this[definition.type];
+            delete this.components[definition.type];
             component._onDetached();
 
             return component;
         }
 
         console.warn(`Trying to remove a "${definition.type}" component from an entity, but it wasn't found.`);
+    }
+
+    serialize() {
+        return Object.entries(this.components).reduce((o, [key, value]) => {
+            if (value instanceof Component) {
+                return {
+                    ...o,
+                    [key]: value.serialize()
+                };
+            }
+
+            return {
+                ...o,
+                [key]: Object.entries(value).reduce((o2, [k2, v2]) => ({
+                    ...o2,
+                    [k2]: v2.serialize()
+                }), {})
+            };
+        }, {});
     }
 }

@@ -1,5 +1,5 @@
-import EntityRef from './EntityRefProperty';
-import SimpleProperty from './SimpleProperty';
+import EntityRef from './Properties/EntityRefProperty';
+import SimpleProperty from './Properties/SimpleProperty';
 
 export default class Component {
     #entity = null;

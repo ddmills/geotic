@@ -37,7 +37,7 @@ console.log(player.EquipmentSlot.rightHand.content.Material);
 console.log(player.EquipmentSlot.rightHand.content.has(Material));
 player.EquipmentSlot.rightHand.content.Material.remove();
 console.log(player.EquipmentSlot.rightHand.content.has(Material));
-console.log(player.EquipmentSlot.rightHand.serialize());
+console.log(JSON.stringify(player.serialize(), null, 2));
 
 // e.add('position', { x: 1, y: 4 });
 // e.add(new Position({ x: 1, y: 4 }));
