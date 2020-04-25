@@ -57,7 +57,11 @@ export default class PrefabRegistry {
                 const type = componentData.type;
                 const def = this.#ecs.components.get(type);
                 if (def) {
-                    prefab.addComponent(def, componentData.properties);
+                    prefab.addComponent(
+                        def,
+                        componentData.properties,
+                        componentData.overwrite
+                    );
                     return;
                 }
             }

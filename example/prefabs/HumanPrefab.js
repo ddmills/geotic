@@ -18,5 +18,12 @@ export default {
                 allowedTypes: ['pants'],
             },
         },
+        {
+            type: 'Material',
+            overwrite: true,
+            properties: {
+                name: 'stuff',
+            },
+        },
     ],
 };
