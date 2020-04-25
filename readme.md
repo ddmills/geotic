@@ -263,11 +263,11 @@ TODO
     -   ✓ prefab base class
     -   ✓ prefab registry
     -   ✓ poly inherit
-    -   PrefabComponent types
-        -   component definition
-        -   initial props
-        -   should overwrite or replace
-        -   applyToEntity(entity)
+    -   ✗ PrefabComponent types
+        -   ✗ component definition
+        -   ✗ initial props
+        -   ✓ should overwrite or replace
+        -   ✗ applyToEntity(entity)
     -   reference prefab chain on entity
     -   https://www.youtube.com/watch?v=fGLJC5UY2o4
 -   ✓ query
