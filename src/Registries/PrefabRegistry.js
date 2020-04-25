@@ -1,5 +1,5 @@
-import Component from './Component';
-import Prefab from './Prefab';
+import Component from '../Component';
+import Prefab from '../Prefab';
 
 export default class PrefabRegistry {
     #prefabs = {};
