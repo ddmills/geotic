@@ -46,7 +46,7 @@ export default class PrefabRegistry {
                 typeof componentData === 'string' ||
                 componentData.prototype instanceof Component
             ) {
-                const def = this.#ecs.registry.get(componentData);
+                const def = this.#ecs.components.get(componentData);
                 if (def) {
                     prefab.addComponent(def);
                     return;
@@ -55,7 +55,7 @@ export default class PrefabRegistry {
 
             if (typeof componentData === 'object') {
                 const type = componentData.type;
-                const def = this.#ecs.registry.get(type);
+                const def = this.#ecs.components.get(type);
                 if (def) {
                     prefab.addComponent(def, componentData.properties);
                     return;
