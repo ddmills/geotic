@@ -8,6 +8,10 @@ export default class EntityRegistry {
         this.#ecs = ecs;
     }
 
+    get all() {
+        return Object.values(this.#entities);
+    }
+
     register(entity) {
         this.#entities[entity.id] = entity;
 

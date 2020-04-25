@@ -45,18 +45,17 @@ player.add(ecs.createComponent(Position, { x: 4, y: 12 }));
 player.add(leftHand);
 player.add(rightHand);
 
-console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
-console.log(player.EquipmentSlot.rightHand.allowedTypes);
 player.EquipmentSlot.rightHand.content = sword;
-console.log(EquipmentSlot.properties);
+
 const data = ecs.serialize();
-
 const human = ecs.createPrefab('HumanPrefab');
-
-// console.log(human.serialize());
-
-console.log(JSON.stringify(ecs.serialize(), null, 2));
 
 ecs2.deserialize(data);
 
-// console.log(JSON.stringify(ecs2.serialize(), null, 2));
+const query = ecs.createQuery((entity) => entity.has('Position'));
+
+console.log(Object.keys(query.get()).length);
+human.remove('Position');
+console.log(Object.keys(query.get()).length);
+human.add(ecs.createComponent(Position, { x: 4, y: 12 }));
+console.log(Object.keys(query.get()).length);

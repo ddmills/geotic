@@ -270,10 +270,9 @@ TODO
         -   applyToEntity(entity)
     -   reference prefab chain on entity
     -   https://www.youtube.com/watch?v=fGLJC5UY2o4
--   query
-    -   include
-    -   exclude
-    -   cache
+-   ✓ query
+    -   ✓ cache
+    -   ✓ filter
 -   properties
     -   <EntitySet>
     -   <Prefab>
