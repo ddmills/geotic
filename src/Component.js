@@ -1,7 +1,7 @@
-import EntityRefProperty from './Properties/EntityRefProperty';
-import SimpleProperty from './Properties/SimpleProperty';
-import AccessorProperty from './Properties/AccessorProperty';
-import EntityRefArrayProperty from './Properties/EntityRefArrayProperty';
+import EntityRefProperty from './properties/EntityRefProperty';
+import SimpleProperty from './properties/SimpleProperty';
+import AccessorProperty from './properties/AccessorProperty';
+import EntityRefArrayProperty from './properties/EntityRefArrayProperty';
 
 export default class Component {
     #entity = null;

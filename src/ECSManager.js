@@ -1,8 +1,8 @@
-import ComponentRegistry from './Registries/ComponentRegistry';
-import PrefabRegistry from './Registries/PrefabRegistry';
+import ComponentRegistry from './registries/ComponentRegistry';
+import PrefabRegistry from './registries/PrefabRegistry';
 import { nanoid } from 'nanoid/non-secure';
-import EntityRegistry from './Registries/EntityRegistry';
-import QueryRegistry from './Registries/QueryRegistry';
+import EntityRegistry from './registries/EntityRegistry';
+import QueryRegistry from './registries/QueryRegistry';
 
 export default class ECSManager {
     constructor() {

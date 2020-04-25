@@ -45,6 +45,8 @@ player.add(ecs.createComponent(Position, { x: 4, y: 12 }));
 player.add(leftHand);
 player.add(rightHand);
 
+console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
+console.log(player.EquipmentSlot.rightHand.allowedTypes);
 player.EquipmentSlot.rightHand.content = sword;
 
 const data = ecs.serialize();
