@@ -263,16 +263,20 @@ TODO
     -   ✓ prefab base class
     -   ✓ prefab registry
     -   ✓ poly inherit
-    -   ✗ PrefabComponent types
-        -   ✗ component definition
-        -   ✗ initial props
+    -   ✓ PrefabComponent types
+        -   ✓ component definition
+        -   ✓ initial props
         -   ✓ should overwrite or replace
-        -   ✗ applyToEntity(entity)
+        -   ✓ applyToEntity(entity)
     -   reference prefab chain on entity
     -   https://www.youtube.com/watch?v=fGLJC5UY2o4
 -   ✓ query
     -   ✓ cache
     -   ✓ filter
+    -   re-filter on property change
+-   logging configuration
+    -   route all console logs to logger
+    -   check all console log statements
 -   properties
     -   <EntitySet>
     -   <Prefab>
@@ -283,7 +287,7 @@ TODO
     -   component.handleEvent(event)
     -   an event to an entity will send it to all child components
 -   dev
-    -   sourcemaps
+    -   ✓ sourcemaps
     -   ✓ prettier
     -   ✓ rollup
 -   component
