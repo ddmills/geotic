@@ -18,9 +18,9 @@ export default class Entity {
         return this.#components;
     }
 
-    constructor(ecs) {
+    constructor(ecs, id = null) {
         this.#ecs = ecs;
-        this.#id = ecs.generateId();
+        this.#id = id || ecs.generateId();
     }
 
     has(typeOrClass, accessor = null) {

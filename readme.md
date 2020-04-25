@@ -249,3 +249,17 @@ addZombie('danny');
 const id = geotic.getTag('lastCreated').id;
 geotic.findById(id).name; // 'danny'
 ```
+
+## v2
+
+TODO
+
+1. deserialize
+    - ✓ basic serialize/deserialize from object
+    - onAttached safely access entity
+2. prefab
+    - poly inherit
+3. query
+    - inclue/exclude
+4. events
+    - an event to an entity will send it to all child components
