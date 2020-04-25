@@ -1,6 +1,7 @@
 import EntityRefProperty from './Properties/EntityRefProperty';
 import SimpleProperty from './Properties/SimpleProperty';
 import AccessorProperty from './Properties/AccessorProperty';
+import EntityRefArrayProperty from './Properties/EntityRefArrayProperty';
 
 export default class Component {
     #entity = null;
@@ -88,6 +89,11 @@ export default class Component {
         Object.entries(this.constructor.properties).forEach(([key, value]) => {
             if (value === '<Entity>') {
                 this.#props[key] = new EntityRefProperty(
+                    this.#ecs,
+                    initialProperties[key]
+                );
+            } else if (value === '<EntitySet>') {
+                this.#props[key] = new EntityRefArrayProperty(
                     this.#ecs,
                     initialProperties[key]
                 );

@@ -7,5 +7,5 @@ export default {
     output: {
         dir: 'build',
     },
-    plugins: [babel(), commonjs(), resolve()],
+    plugins: [babel(), commonjs(), resolve({ browser: true })],
 };

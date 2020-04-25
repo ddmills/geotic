@@ -1,5 +1,4 @@
 import Component from './Component';
-import ComponentRegistry from './ComponentRegistry';
 
 export default class Entity {
     #id = null;
@@ -24,7 +23,7 @@ export default class Entity {
     }
 
     has(typeOrClass, accessor = null) {
-        const type = ComponentRegistry._getType(typeOrClass);
+        const type = this.ecs.registry._getType(typeOrClass);
         const hasType = this.hasOwnProperty(type);
 
         if (hasType && accessor) {
@@ -35,7 +34,7 @@ export default class Entity {
     }
 
     get(typeOrClass, accessor = null) {
-        const type = ComponentRegistry._getType(typeOrClass);
+        const type = this.ecs.registry._getType(typeOrClass);
         const components = this[type];
 
         if (components && accessor) {

@@ -1,5 +1,6 @@
 import ComponentRegistry from './ComponentRegistry';
-import { nanoid } from 'nanoid';
+import PrefabRegistry from './PrefabRegistry';
+import { nanoid } from 'nanoid/non-secure';
 import Entity from './Entity';
 
 export default class ECSManager {
@@ -9,6 +10,7 @@ export default class ECSManager {
         this.idGenerator = () => nanoid();
 
         this.registry = new ComponentRegistry(this);
+        this.prefabs = new PrefabRegistry(this);
     }
 
     generateId() {
@@ -21,10 +23,22 @@ export default class ECSManager {
         return this.registerEntity(entity);
     }
 
+    createPrefab(nameOrClass) {
+        return this.prefabs.create(nameOrClass);
+    }
+
     registerEntity(entity) {
         this.#entities[entity.id] = entity;
 
         return entity;
+    }
+
+    registerPrefab(data) {
+        this.prefabs.deserialize(data);
+    }
+
+    registerComponent(component) {
+        this.registry.register(component);
     }
 
     getEntity(id) {
