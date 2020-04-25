@@ -1,4 +1,5 @@
 import Component from '../Component';
+import PrefabComponent from '../PrefabComponent';
 import Prefab from '../Prefab';
 
 export default class PrefabRegistry {
@@ -48,7 +49,7 @@ export default class PrefabRegistry {
             ) {
                 const def = this.#ecs.components.get(componentData);
                 if (def) {
-                    prefab.addComponent(def);
+                    prefab.addComponent(new PrefabComponent(def));
                     return;
                 }
             }
@@ -58,16 +59,15 @@ export default class PrefabRegistry {
                 const def = this.#ecs.components.get(type);
                 if (def) {
                     prefab.addComponent(
-                        def,
-                        componentData.properties,
-                        componentData.overwrite
+                        new PrefabComponent(
+                            def,
+                            componentData.properties,
+                            componentData.overwrite
+                        )
                     );
                     return;
                 }
             }
-
-            console.log(componentData);
-
             console.warn(
                 `Unrecognized component reference "${componentData}" in prefab ${data.name}. Ensure the component is registered before the prefab.`
             );

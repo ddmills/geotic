@@ -20,7 +20,7 @@ export default {
         },
         {
             type: 'Material',
-            overwrite: true,
+            overwrite: false,
             properties: {
                 name: 'stuff',
             },
