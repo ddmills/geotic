@@ -6,10 +6,12 @@ export default class EquipmentSlot extends Component {
     static properties = {
         name: 'head',
         allowedTypes: ['hand'],
-        content: '<Entity>'
+        content: '<Entity>',
     };
 
     onDetached() {
-        console.log(`${this.properties.name} slot removed from ${this.properties.entity}`);
+        console.log(
+            `${this.properties.name} slot removed from ${this.properties.entity}`
+        );
     }
 }

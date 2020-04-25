@@ -1,2 +1,1 @@
-export default class EntityRepository {
-}
+export default class EntityRepository {}
