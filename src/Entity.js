@@ -154,6 +154,8 @@ export default class Entity {
                     [k2]: v2.serialize()
                 }), {})
             };
-        }, {});
+        }, {
+            id: this.id
+        });
     }
 }

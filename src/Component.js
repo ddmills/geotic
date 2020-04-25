@@ -1,5 +1,6 @@
-import EntityRef from './Properties/EntityRefProperty';
+import EntityRefProperty from './Properties/EntityRefProperty';
 import SimpleProperty from './Properties/SimpleProperty';
+import AccessorProperty from './Properties/AccessorProperty';
 
 export default class Component {
     #entity = null;
@@ -46,12 +47,9 @@ export default class Component {
         return this[this.accessorProperty];
     }
 
-    constructor(ecs, properties) {
+    constructor(ecs, properties = {}) {
         this.#ecs = ecs;
-        this._defineProxies();
-        Object.entries(properties).forEach(([key, value]) =>{
-            this[key] = value;
-        });
+        this._defineProxies(properties);
     }
 
     serialize() {
@@ -85,12 +83,21 @@ export default class Component {
         }
     }
 
-    _defineProxies() {
+    _defineProxies(initialProperties) {
         Object.entries(this.constructor.properties).forEach(([key, value]) => {
             if (value === '<Entity>') {
-                this.#props[key] = new EntityRef(this.#ecs);
+                this.#props[key] = new EntityRefProperty(
+                    this.#ecs,
+                    initialProperties[key]
+                );
+            } else if (key === this.accessorProperty) {
+                this.#props[key] = new AccessorProperty(
+                    initialProperties[key]
+                );
             } else {
-                this.#props[key] = new SimpleProperty();
+                this.#props[key] = new SimpleProperty(
+                    initialProperties[key]
+                );
             }
 
             Object.defineProperty(this, key, {
