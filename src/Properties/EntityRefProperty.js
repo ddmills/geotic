@@ -1,6 +1,6 @@
 import Entity from '../Entity';
 
-export default class EntityRef {
+export default class EntityRefProperty {
     #ecs;
     #id;
 
@@ -22,8 +22,9 @@ export default class EntityRef {
         return this.#ecs.getEntity(this.#id);
     }
 
-    constructor(ecs) {
+    constructor(ecs, value) {
         this.#ecs = ecs;
+        this.value = value;
     }
 
     serialize() {

@@ -32,12 +32,15 @@ player.add(rightHand);
 console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
 console.log(player.EquipmentSlot.rightHand.allowedTypes);
 player.EquipmentSlot.rightHand.content = sword;
-console.log(player.EquipmentSlot.rightHand.content.Material);
-
-console.log(player.EquipmentSlot.rightHand.content.has(Material));
-player.EquipmentSlot.rightHand.content.Material.remove();
-console.log(player.EquipmentSlot.rightHand.content.has(Material));
+console.log(EquipmentSlot.properties);
 console.log(JSON.stringify(player.serialize(), null, 2));
+
+// console.log(player.EquipmentSlot.rightHand.content.Material);
+
+// console.log(player.EquipmentSlot.rightHand.content.has(Material));
+// player.EquipmentSlot.rightHand.content.Material.remove();
+// console.log(player.EquipmentSlot.rightHand.content.has(Material));
+player.EquipmentSlot.rightHand.name = 'test';
 
 // e.add('position', { x: 1, y: 4 });
 // e.add(new Position({ x: 1, y: 4 }));
