@@ -2,6 +2,7 @@ import ComponentRegistry from './Registries/ComponentRegistry';
 import PrefabRegistry from './Registries/PrefabRegistry';
 import { nanoid } from 'nanoid/non-secure';
 import EntityRegistry from './Registries/EntityRegistry';
+import QueryRegistry from './Registries/QueryRegistry';
 
 export default class ECSManager {
     constructor() {
@@ -9,6 +10,7 @@ export default class ECSManager {
         this.components = new ComponentRegistry(this);
         this.prefabs = new PrefabRegistry(this);
         this.entities = new EntityRegistry(this);
+        this.queries = new QueryRegistry(this);
     }
 
     generateId() {
@@ -41,6 +43,10 @@ export default class ECSManager {
 
     createComponent(type, properties) {
         return this.components.create(type, properties);
+    }
+
+    createQuery(settings) {
+        return this.queries.create(settings);
     }
 
     serialize() {

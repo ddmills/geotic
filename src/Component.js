@@ -21,7 +21,7 @@ export default class Component {
     }
 
     get ecs() {
-        return this.ecs;
+        return this.#ecs;
     }
 
     get type() {
@@ -65,13 +65,17 @@ export default class Component {
 
     _onAttached(entity) {
         this.#entity = entity;
+        this.ecs.queries.onComponentAdded(entity, this);
         this.onAttached();
     }
 
     _onDetached() {
         if (this.isAttached) {
             this.onDetached();
+            const entity = this.#entity;
+
             this.#entity = null;
+            this.ecs.queries.onComponentRemoved(entity, this);
         }
     }
 
