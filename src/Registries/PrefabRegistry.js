@@ -42,7 +42,9 @@ export default class PrefabRegistry {
             return ref;
         });
 
-        data.components.forEach((componentData) => {
+        const comps = data.components || [];
+
+        comps.components.forEach((componentData) => {
             if (
                 typeof componentData === 'string' ||
                 componentData.prototype instanceof Component
@@ -69,7 +71,7 @@ export default class PrefabRegistry {
                 }
             }
             console.warn(
-                `Unrecognized component reference "${componentData}" in prefab ${data.name}. Ensure the component is registered before the prefab.`
+                `Unrecognized component reference "${componentData}" in prefab "${data.name}". Ensure the component is registered before the prefab.`
             );
         });
 

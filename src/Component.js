@@ -120,7 +120,6 @@ export default class Component {
     }
 
     onEvent(evt) {
-        console.log(`${this.type} received ${evt.name}`);
     }
 
     _defineProxies(initialProperties) {

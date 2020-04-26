@@ -269,12 +269,15 @@ TODO
         -   ✓ should overwrite or replace
         -   ✓ applyToEntity(entity)
     -   reference prefab chain on entity
+        -   entity.is(prefab)
+    -   allow overrides on prefab instantiation
     -   https://www.youtube.com/watch?v=fGLJC5UY2o4
 -   ✓ query
     -   ✓ cache
     -   ✓ filter
     -   ? re-filter on property change
         -   simple query vs advanced (?)
+    -   return Array instead of Object
 -   logging configuration
     -   route all console logs to logger
     -   check all console log statements
@@ -293,12 +296,15 @@ TODO
     -   ✓ sourcemaps
     -   ✓ prettier
     -   ✓ rollup
-    =   github npm deploy action
+    -   github npm deploy action
 -   component
     -   ✓ default property values
     -   destroy()
     -   onDestroyed()
     -   clone
+    -   allowMultiple without specifying accessorProperty
+-   registry
+    -   warn if component malformed (?)
 -   prefab caching
     -   only instantiate components when different from defaults
     -   less instances
@@ -308,3 +314,7 @@ TODO
     -   ? destroy()
     -   shift component add/remove code to manager
     -   add(type, properties);
+    -   control how components are named
+-   Performance
+    -   Use raw for loops
+    -   store entities as array instead of object (?)
