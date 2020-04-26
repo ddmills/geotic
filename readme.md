@@ -8,7 +8,7 @@ _adjective_ physically concerning land or its inhabitants.
 -   **event** message between components or entities
 -   **system** logic that acts on entities with specific components or tags
 
-### usage
+### usage (V2 ONLY)
 
 `npm install geotic`
 
@@ -274,6 +274,7 @@ TODO
     -   ✓ cache
     -   ✓ filter
     -   ? re-filter on property change
+        -   simple query vs advanced (?)
 -   logging configuration
     -   route all console logs to logger
     -   check all console log statements
@@ -292,6 +293,7 @@ TODO
     -   ✓ sourcemaps
     -   ✓ prettier
     -   ✓ rollup
+    =   github npm deploy action
 -   component
     -   ✓ default property values
     -   destroy()
