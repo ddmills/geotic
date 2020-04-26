@@ -201,7 +201,7 @@ export default class Entity {
                     }
                 }
             }
-        };
+        }
 
         return evt;
     }

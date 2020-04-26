@@ -281,13 +281,13 @@ TODO
     -   <EntitySet>
     -   <Prefab>
     -   <PrefabSet>
--   events
+-   ✓ events
     -   ✓ https://www.youtube.com/watch?v=4uxN5GqXcaA
     -   ✓ entity.sendEvent(event)
     -   ✓ component.handleEvent(event)
     -   ✓ an event to an entity will send it to all child components
     -   ✓ child component can "cancel" the event to prevent it bubbling (?)
-    -   component eventMap
+    -   ✓ component eventMap
 -   dev
     -   ✓ sourcemaps
     -   ✓ prettier
@@ -296,6 +296,7 @@ TODO
     -   ✓ default property values
     -   destroy()
     -   onDestroyed()
+    -   clone
 -   prefab caching
     -   only instantiate components when different from defaults
     -   less instances
