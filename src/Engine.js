@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid/non-secure';
 import EntityRegistry from './registries/EntityRegistry';
 import QueryRegistry from './registries/QueryRegistry';
 
-export default class ECSManager {
+export default class Engine {
     constructor() {
         this.idGenerator = () => nanoid();
         this.components = new ComponentRegistry(this);
