@@ -282,10 +282,12 @@ TODO
     -   <Prefab>
     -   <PrefabSet>
 -   events
-    -   https://www.youtube.com/watch?v=4uxN5GqXcaA
-    -   entity.sendEvent(event)
-    -   component.handleEvent(event)
-    -   an event to an entity will send it to all child components
+    -   ✓ https://www.youtube.com/watch?v=4uxN5GqXcaA
+    -   ✓ entity.sendEvent(event)
+    -   ✓ component.handleEvent(event)
+    -   ✓ an event to an entity will send it to all child components
+    -   ✓ child component can "cancel" the event to prevent it bubbling (?)
+    -   component eventMap
 -   dev
     -   ✓ sourcemaps
     -   ✓ prettier

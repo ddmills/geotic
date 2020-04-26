@@ -99,6 +99,14 @@ export default class Component {
         }
     }
 
+    _onEvent(evt) {
+        this.onEvent(evt);
+    }
+
+    onEvent(evt) {
+        console.log(`${this.type} received ${evt.name}`);
+    }
+
     _defineProxies(initialProperties) {
         Object.entries(this.constructor.properties).forEach(([key, value]) => {
             if (value === '<Entity>') {
