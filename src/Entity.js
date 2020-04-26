@@ -1,4 +1,5 @@
 import Component from './Component';
+import EntityEvent from './EntityEvent';
 
 export default class Entity {
     #id = null;
@@ -179,5 +180,29 @@ export default class Entity {
                 id: this.id,
             }
         );
+    }
+
+    fireEvent(name, data) {
+        const evt = new EntityEvent(name, data);
+
+        for (const component of Object.values(this.components)) {
+            if (component instanceof Component) {
+                component._onEvent(evt);
+
+                if (evt.prevented) {
+                    return evt;
+                }
+            } else {
+                for (const nestedComponent of Object.values(component)) {
+                    nestedComponent._onEvent(evt);
+
+                    if (evt.prevented) {
+                        return evt;
+                    }
+                }
+            }
+        };
+
+        return evt;
     }
 }

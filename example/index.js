@@ -66,3 +66,8 @@ const thing = ecs.createEntity();
 thing.add(ecs.createComponent('Position'));
 
 console.log(thing.serialize());
+
+const evt = human.fireEvent('test', { some: 'data' });
+
+console.log(evt.data);
+console.log(evt.handled);
