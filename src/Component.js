@@ -53,6 +53,16 @@ export default class Component {
         this._defineProxies(properties);
     }
 
+    getDefaultPropertyValue(propertyName) {
+        const value = this.constructor.properties[propertyName];
+
+        if (['<Entity>', '<EntitySet>'].includes(value)) {
+            return undefined;
+        }
+
+        return value;
+    }
+
     serialize() {
         return Object.entries(this.#props).reduce(
             (o, [key, value]) => ({
@@ -102,9 +112,17 @@ export default class Component {
                     initialProperties[key]
                 );
             } else if (key === this.accessorProperty) {
-                this.#props[key] = new AccessorProperty(initialProperties[key]);
+                const value = initialProperties.hasOwnProperty(key)
+                    ? initialProperties[key]
+                    : this.getDefaultPropertyValue(key);
+
+                this.#props[key] = new AccessorProperty(value);
             } else {
-                this.#props[key] = new SimpleProperty(initialProperties[key]);
+                const value = initialProperties.hasOwnProperty(key)
+                    ? initialProperties[key]
+                    : this.getDefaultPropertyValue(key);
+
+                this.#props[key] = new SimpleProperty(value);
             }
 
             Object.defineProperty(this, key, {

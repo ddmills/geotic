@@ -61,3 +61,8 @@ human.remove('Position');
 console.log(Object.keys(query.get()).length);
 human.add(ecs.createComponent(Position, { x: 4, y: 12 }));
 console.log(Object.keys(query.get()).length);
+
+const thing = ecs.createEntity();
+thing.add(ecs.createComponent('Position'));
+
+console.log(thing.serialize());

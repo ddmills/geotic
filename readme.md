@@ -273,7 +273,7 @@ TODO
 -   ✓ query
     -   ✓ cache
     -   ✓ filter
-    -   re-filter on property change
+    -   ? re-filter on property change
 -   logging configuration
     -   route all console logs to logger
     -   check all console log statements
@@ -291,11 +291,10 @@ TODO
     -   ✓ prettier
     -   ✓ rollup
 -   component
-    -   default property values
+    -   ✓ default property values
     -   destroy()
     -   onDestroyed()
 -   prefab caching
     -   only instantiate components when different from defaults
-    -   smaller save files
     -   less instances
 -   ✓ Entity registry
