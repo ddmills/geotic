@@ -5,10 +5,10 @@ import Health from './components/Health';
 import BeingPrefab from './prefabs/BeingPrefab';
 import HumanPrefab from './prefabs/HumanPrefab';
 import EquipmentSlot from './components/EquipmentSlot';
-import { ECSManager } from '../build';
+import { Engine } from '../build';
 
-const ecs = new ECSManager();
-const ecs2 = new ECSManager();
+const ecs = new Engine();
+const ecs2 = new Engine();
 
 ecs.registerComponent(EquipmentSlot);
 ecs.registerComponent(Material);

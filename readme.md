@@ -301,3 +301,8 @@ TODO
     -   only instantiate components when different from defaults
     -   less instances
 -   ✓ Entity registry
+-   Entity
+    -   ? keep track of refs
+    -   ? destroy()
+    -   shift component add/remove code to manager
+    -   add(type, properties);
