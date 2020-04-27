@@ -304,7 +304,7 @@ TODO
     -   ? keep track of refs
     -   ? destroy()
     -   shift component add/remove code to manager
-    -   add(type, properties);
+    -   ✓ add(type, properties);
     -   control how components are named
 -   Performance
     -   Use raw for loops

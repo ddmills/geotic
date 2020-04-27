@@ -45,12 +45,8 @@ export default class Entity {
         return components;
     }
 
-    add(component) {
-        if (component.isAttached) {
-            console.warn(
-                `Cannot add "${component.type}" component since it is already attached to an entity.`
-            );
-        }
+    add(typeOrClass, properties={}) {
+        const component = this.ecs.components.create(typeOrClass, properties);
 
         if (!component.allowMultiple) {
             if (this.has(component.type)) {

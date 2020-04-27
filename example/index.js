@@ -28,22 +28,16 @@ ecs.registerPrefab(HumanPrefab);
 const player = ecs.createEntity();
 const sword = ecs.createEntity();
 
-const bronze = ecs.createComponent(Material, { name: 'bronze' });
-sword.add(bronze);
-
-const leftHand = ecs.createComponent('EquipmentSlot', {
+sword.add(Material, { name: 'bronze' });
+player.add(Position, { x: 4, y: 12 });
+player.add('EquipmentSlot', {
     name: 'leftHand',
     allowedTypes: ['hand'],
 });
-
-const rightHand = ecs.createComponent(EquipmentSlot, {
+player.add(EquipmentSlot, {
     name: 'rightHand',
     allowedTypes: ['hand'],
 });
-
-player.add(ecs.createComponent(Position, { x: 4, y: 12 }));
-player.add(leftHand);
-player.add(rightHand);
 
 console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
 console.log(player.EquipmentSlot.rightHand.allowedTypes);
@@ -59,11 +53,11 @@ const query = ecs.createQuery((entity) => entity.has('Position'));
 console.log(Object.keys(query.get()).length);
 human.remove('Position');
 console.log(Object.keys(query.get()).length);
-human.add(ecs.createComponent(Position, { x: 4, y: 12 }));
+human.add(Position, { x: 4, y: 12 });
 console.log(Object.keys(query.get()).length);
 
 const thing = ecs.createEntity();
-thing.add(ecs.createComponent('Position'));
+thing.add('Position');
 
 console.log(thing.serialize());
 
