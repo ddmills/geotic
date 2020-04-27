@@ -44,7 +44,7 @@ export default class PrefabRegistry {
 
         const comps = data.components || [];
 
-        comps.components.forEach((componentData) => {
+        for (const componentData of comps) {
             if (
                 typeof componentData === 'string' ||
                 componentData.prototype instanceof Component
@@ -52,11 +52,8 @@ export default class PrefabRegistry {
                 const def = this.#ecs.components.get(componentData);
                 if (def) {
                     prefab.addComponent(new PrefabComponent(def));
-                    return;
                 }
-            }
-
-            if (typeof componentData === 'object') {
+            } else if (typeof componentData === 'object') {
                 const type = componentData.type;
                 const def = this.#ecs.components.get(type);
                 if (def) {
@@ -67,13 +64,13 @@ export default class PrefabRegistry {
                             componentData.overwrite
                         )
                     );
-                    return;
                 }
+            } else {
+                console.warn(
+                    `Unrecognized component reference "${componentData}" in prefab "${data.name}". Ensure the component is registered before the prefab.`
+                );
             }
-            console.warn(
-                `Unrecognized component reference "${componentData}" in prefab "${data.name}". Ensure the component is registered before the prefab.`
-            );
-        });
+        };
 
         this.register(prefab);
 

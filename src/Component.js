@@ -2,6 +2,7 @@ import EntityRefProperty from './properties/EntityRefProperty';
 import SimpleProperty from './properties/SimpleProperty';
 import AccessorProperty from './properties/AccessorProperty';
 import EntityRefArrayProperty from './properties/EntityRefArrayProperty';
+import camelcase from 'camelcase';
 
 export default class Component {
     #entity = null;
@@ -11,7 +12,6 @@ export default class Component {
     static allowMultiple = false;
     static accessorProperty = null;
     static properties = {};
-    static eventMap = {};
 
     static get type() {
         return this.name;
@@ -19,10 +19,6 @@ export default class Component {
 
     get entity() {
         return this.#entity;
-    }
-
-    get eventMap() {
-        return this.constructor.eventMap;
     }
 
     get ecs() {
@@ -106,16 +102,11 @@ export default class Component {
 
     _onEvent(evt) {
         this.onEvent(evt);
-        const handlerName = this.eventMap[evt.name];
 
-        if (handlerName) {
-            if (typeof this[handlerName] === 'function') {
-                this[handlerName](evt);
-            } else {
-                console.warn(
-                    `Component "${this.type}" has a handler specified for the "${evt.name}" event, but a function named "${handlerName}" could not be found on the "${this.type}" component.`
-                );
-            }
+        const handlerName = camelcase(`on ${evt.name}`);
+
+        if (typeof this[handlerName] === 'function') {
+            this[handlerName](evt);
         }
     }
 
