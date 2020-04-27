@@ -1,4 +1,4 @@
-export default class AccessorProperty {
+export default class keyProperty {
     #value = null;
 
     get value() {
@@ -12,7 +12,7 @@ export default class AccessorProperty {
         }
 
         console.warn(
-            'Property is read-only and cannot be changed, since it is marked as an accessor property.'
+            'Property is read-only and cannot be changed, since it is marked as a key property.'
         );
     }
 

@@ -2,7 +2,7 @@ import { Component } from '../../build';
 
 export default class EquipmentSlot extends Component {
     static allowMultiple = true;
-    static accessorProperty = 'name';
+    static keyProperty = 'name';
     static properties = {
         name: 'head',
         allowedTypes: ['hand'],

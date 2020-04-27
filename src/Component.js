@@ -1,6 +1,6 @@
 import EntityRefProperty from './properties/EntityRefProperty';
 import SimpleProperty from './properties/SimpleProperty';
-import AccessorProperty from './properties/AccessorProperty';
+import KeyProperty from './properties/KeyProperty';
 import EntityRefArrayProperty from './properties/EntityRefArrayProperty';
 import camelcase from 'camelcase';
 
@@ -10,7 +10,7 @@ export default class Component {
     #props = {};
 
     static allowMultiple = false;
-    static accessorProperty = null;
+    static keyProperty = null;
     static properties = {};
 
     static get type() {
@@ -37,16 +37,16 @@ export default class Component {
         return this.constructor.allowMultiple;
     }
 
-    get accessorProperty() {
-        return this.constructor.accessorProperty;
+    get keyProperty() {
+        return this.constructor.keyProperty;
     }
 
     get properties() {
         return this.#props;
     }
 
-    get accessor() {
-        return this[this.accessorProperty];
+    get key() {
+        return this[this.keyProperty];
     }
 
     constructor(ecs, properties = {}) {
@@ -125,12 +125,12 @@ export default class Component {
                     this.#ecs,
                     initialProperties[key]
                 );
-            } else if (key === this.accessorProperty) {
+            } else if (key === this.keyProperty) {
                 const value = initialProperties.hasOwnProperty(key)
                     ? initialProperties[key]
                     : this.getDefaultPropertyValue(key);
 
-                this.#props[key] = new AccessorProperty(value);
+                this.#props[key] = new KeyProperty(value);
             } else {
                 const value = initialProperties.hasOwnProperty(key)
                     ? initialProperties[key]

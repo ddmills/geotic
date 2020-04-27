@@ -23,23 +23,23 @@ export default class Entity {
         this.#id = id || ecs.generateId();
     }
 
-    has(typeOrClass, accessor = null) {
+    has(typeOrClass, key = null) {
         const type = this.ecs.components._getType(typeOrClass);
         const hasType = this.hasOwnProperty(type);
 
-        if (hasType && accessor) {
-            return this[type].hasOwnProperty(accessor);
+        if (hasType && key) {
+            return this[type].hasOwnProperty(key);
         }
 
         return hasType;
     }
 
-    get(typeOrClass, accessor = null) {
+    get(typeOrClass, key = null) {
         const type = this.ecs.components._getType(typeOrClass);
         const components = this[type];
 
-        if (components && accessor) {
-            return components[accessor];
+        if (components && key) {
+            return components[key];
         }
 
         return components;
@@ -74,16 +74,16 @@ export default class Entity {
             return true;
         }
 
-        if (!component.accessorProperty) {
+        if (!component.keyProperty) {
             console.warn(
-                `"${component.type}" component has allowMultiple set to ${component.allowMultiple}, but the "accessorProperty" is not defined.`
+                `"${component.type}" component has allowMultiple set to ${component.allowMultiple}, but the "keyProperty" is not defined.`
             );
             return false;
         }
 
-        if (!component.accessor) {
+        if (!component.key) {
             console.warn(
-                `"${component.type}" component has a falsy accessor of "${component.accessor}". The accessorProperty is set to "${component.accessorProperty}".`
+                `"${component.type}" component has a falsy key of "${component.key}". The keyProperty is set to "${component.keyProperty}".`
             );
             return false;
         }
@@ -99,7 +99,7 @@ export default class Entity {
             });
         }
 
-        this.components[component.type][component.accessor] = component;
+        this.components[component.type][component.key] = component;
 
         component._onAttached(this);
 
@@ -110,31 +110,31 @@ export default class Entity {
         return component.entity === this;
     }
 
-    remove(typeOrClassOrComponent, accessor = null) {
-        accessor =
+    remove(typeOrClassOrComponent, key = null) {
+        key =
             typeOrClassOrComponent instanceof Component
-                ? typeOrClassOrComponent.accessor
-                : accessor;
+                ? typeOrClassOrComponent.key
+                : key;
         const definition = this.ecs.components.get(typeOrClassOrComponent);
 
         if (definition.allowMultiple) {
-            if (!accessor) {
+            if (!key) {
                 console.warn(
-                    `Trying to remove a "${definition.type}" component which allows multiple without specifying an accessor.`
+                    `Trying to remove a "${definition.type}" component which allows multiple without specifying an key.`
                 );
                 return;
             }
 
             const all = this.components[definition.type];
-            const component = all[accessor];
+            const component = all[key];
 
             if (component) {
-                delete all[accessor];
+                delete all[key];
                 component._onDetached();
                 return component;
             } else {
                 console.warn(
-                    `Trying to remove a "${definition.type}" component from an entity at "${accessor}", but it wasn't found.`
+                    `Trying to remove a "${definition.type}" component from an entity at "${key}", but it wasn't found.`
                 );
                 return;
             }

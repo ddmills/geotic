@@ -292,8 +292,8 @@ TODO
     -   destroy()
     -   onDestroyed()
     -   clone
-    -   allowMultiple without specifying accessorProperty
-    -   rename accessor to `key`
+    -   allowMultiple without specifying keyProperty
+    -   ✓ rename accessor to `key`
 -   registry
     -   warn if component malformed (?)
 -   prefab caching
