@@ -7,7 +7,6 @@ export default class Health extends Component {
     };
 
     onTest(evt) {
-        console.log('CUSTOM HANDLER');
         evt.handle();
     }
 }

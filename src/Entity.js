@@ -1,5 +1,6 @@
 import Component from './Component';
 import EntityEvent from './EntityEvent';
+import camelcase from 'camelcase';
 
 export default class Entity {
     #id = null;
@@ -25,10 +26,10 @@ export default class Entity {
 
     has(typeOrClass, key = null) {
         const type = this.ecs.components._getType(typeOrClass);
-        const hasType = this.hasOwnProperty(type);
+        const hasType = this.hasOwnProperty(camelcase(type));
 
         if (hasType && key) {
-            return this[type].hasOwnProperty(key);
+            return this[camelcase(type)].hasOwnProperty(key);
         }
 
         return hasType;
@@ -36,7 +37,7 @@ export default class Entity {
 
     get(typeOrClass, key = null) {
         const type = this.ecs.components._getType(typeOrClass);
-        const components = this[type];
+        const components = this[camelcase(type)];
 
         if (components && key) {
             return components[key];
@@ -47,6 +48,7 @@ export default class Entity {
 
     add(typeOrClass, properties={}) {
         const component = this.ecs.components.create(typeOrClass, properties);
+        const accessor = camelcase(component.type);
 
         if (!component) {
             console.warn(
@@ -63,13 +65,13 @@ export default class Entity {
                 return false;
             }
 
-            this.components[component.type] = component;
+            this.components[accessor] = component;
 
-            Object.defineProperty(this, component.type, {
+            Object.defineProperty(this, accessor, {
                 enumerable: true,
                 configurable: true,
                 get() {
-                    return this.components[component.type];
+                    return this.components[accessor];
                 },
             });
 
@@ -78,18 +80,18 @@ export default class Entity {
         }
 
         if (!component.keyProperty) {
-            if (!this.components[component.type]) {
-                this.components[component.type] = [];
-                Object.defineProperty(this, component.type, {
+            if (!this.components[accessor]) {
+                this.components[accessor] = [];
+                Object.defineProperty(this, accessor, {
                     configurable: true,
                     enumerable: true,
                     get() {
-                        return this.components[component.type];
+                        return this.components[accessor];
                     },
                 });
             }
 
-            this.components[component.type].push(component);
+            this.components[accessor].push(component);
 
             component._onAttached(this);
 
@@ -103,18 +105,18 @@ export default class Entity {
             return false;
         }
 
-        if (!this.components[component.type]) {
-            this.components[component.type] = {};
-            Object.defineProperty(this, component.type, {
+        if (!this.components[accessor]) {
+            this.components[accessor] = {};
+            Object.defineProperty(this, accessor, {
                 configurable: true,
                 enumerable: true,
                 get() {
-                    return this.components[component.type];
+                    return this.components[accessor];
                 },
             });
         }
 
-        this.components[component.type][component.key] = component;
+        this.components[accessor][component.key] = component;
 
         component._onAttached(this);
 
@@ -131,10 +133,12 @@ export default class Entity {
 
         const definition = this.ecs.components.get(typeOrClassOrComponent);
 
+        const accessor = camelcase(definition.type);
+
         if (definition.allowMultiple) {
             if (!definition.keyProperty) {
                 if (isComponent) {
-                    const all = this.components[definition.type];
+                    const all = this.components[accessor];
 
                     if (!all) {
                         console.warn(
@@ -150,19 +154,19 @@ export default class Entity {
                         typeOrClassOrComponent._onDetached();
 
                         if (all.length === 0) {
-                            delete this[definition.type];
-                            delete this.components[definition.type];
+                            delete this[accessor];
+                            delete this.components[accessor];
                         }
 
                         return true;
                     }
                 } else {
-                    for (const instance of this.components[definition.type]) {
+                    for (const instance of this.components[accessor]) {
                         instance._onDetached();
                     }
 
-                    delete this[definition.type];
-                    delete this.components[definition.type];
+                    delete this[accessor];
+                    delete this.components[accessor];
 
                     return true;
                 }
@@ -175,7 +179,7 @@ export default class Entity {
                 return;
             }
 
-            const all = this.components[definition.type];
+            const all = this.components[accessor];
             const component = all[key];
 
             if (component) {
@@ -190,11 +194,11 @@ export default class Entity {
             }
         }
 
-        if (definition.type in this) {
-            const component = this.components[definition.type];
+        if (accessor in this) {
+            const component = this.components[accessor];
 
-            delete this[definition.type];
-            delete this.components[definition.type];
+            delete this[accessor];
+            delete this.components[accessor];
             component._onDetached();
 
             return component;

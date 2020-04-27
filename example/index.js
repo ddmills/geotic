@@ -42,8 +42,8 @@ player.add(EquipmentSlot, {
 });
 
 console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
-console.log(player.EquipmentSlot.rightHand.allowedTypes);
-player.EquipmentSlot.rightHand.content = sword;
+console.log(player.equipmentSlot.rightHand.allowedTypes);
+player.equipmentSlot.rightHand.content = sword;
 
 const data = ecs.serialize();
 const human = ecs.createPrefab('HumanPrefab');
@@ -72,7 +72,7 @@ human.add('Action', { name: 'a' });
 human.add('Action', { name: 'b' });
 human.add('Action', { name: 'c' });
 
-human.Action[0].remove();
+human.action[0].remove();
 
 console.log(human.Action);
 console.log(human.has('Action'));

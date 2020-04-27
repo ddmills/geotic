@@ -306,6 +306,7 @@ TODO
     -   shift component add/remove code to manager
     -   ✓ add(type, properties);
     -   control how components are named
+    -   ✓ camelCase component access
 -   Performance
     -   Use raw for loops
     -   store entities as array instead of object (?)

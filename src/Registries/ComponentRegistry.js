@@ -1,4 +1,5 @@
 import Component from '../Component';
+import camelcase from 'camelcase';
 
 export default class ComponentRegistry {
     #definitions = {};
@@ -39,7 +40,7 @@ export default class ComponentRegistry {
 
     _getType(typeOrClassOrComponent) {
         if (typeof typeOrClassOrComponent === 'string') {
-            return typeOrClassOrComponent;
+            return camelcase(typeOrClassOrComponent, { pascalCase: true });
         }
 
         if (typeOrClassOrComponent instanceof Component) {
