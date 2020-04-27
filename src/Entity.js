@@ -48,6 +48,13 @@ export default class Entity {
     add(typeOrClass, properties={}) {
         const component = this.ecs.components.create(typeOrClass, properties);
 
+        if (!component) {
+            console.warn(
+                `"${typeOrClass}" component cannot be added, since it is not registered.`
+            );
+            return false;
+        }
+
         if (!component.allowMultiple) {
             if (this.has(component.type)) {
                 console.warn(
@@ -71,10 +78,22 @@ export default class Entity {
         }
 
         if (!component.keyProperty) {
-            console.warn(
-                `"${component.type}" component has allowMultiple set to ${component.allowMultiple}, but the "keyProperty" is not defined.`
-            );
-            return false;
+            if (!this.components[component.type]) {
+                this.components[component.type] = [];
+                Object.defineProperty(this, component.type, {
+                    configurable: true,
+                    enumerable: true,
+                    get() {
+                        return this.components[component.type];
+                    },
+                });
+            }
+
+            this.components[component.type].push(component);
+
+            component._onAttached(this);
+
+            return true;
         }
 
         if (!component.key) {
@@ -107,13 +126,48 @@ export default class Entity {
     }
 
     remove(typeOrClassOrComponent, key = null) {
-        key =
-            typeOrClassOrComponent instanceof Component
-                ? typeOrClassOrComponent.key
-                : key;
+        const isComponent = typeOrClassOrComponent instanceof Component;
+        key = isComponent ? typeOrClassOrComponent.key : key;
+
         const definition = this.ecs.components.get(typeOrClassOrComponent);
 
         if (definition.allowMultiple) {
+            if (!definition.keyProperty) {
+                if (isComponent) {
+                    const all = this.components[definition.type];
+
+                    if (!all) {
+                        console.warn(
+                            `Trying to remove a "${definition.type}" component from an entity, but it wasn't found.`
+                        );
+                        return;
+                    }
+
+                    const index = all.indexOf(typeOrClassOrComponent);
+
+                    if (index > -1) {
+                        all.splice(index, 1);
+                        typeOrClassOrComponent._onDetached();
+
+                        if (all.length === 0) {
+                            delete this[definition.type];
+                            delete this.components[definition.type];
+                        }
+
+                        return true;
+                    }
+                } else {
+                    for (const instance of this.components[definition.type]) {
+                        instance._onDetached();
+                    }
+
+                    delete this[definition.type];
+                    delete this.components[definition.type];
+
+                    return true;
+                }
+            }
+
             if (!key) {
                 console.warn(
                     `Trying to remove a "${definition.type}" component which allows multiple without specifying an key.`

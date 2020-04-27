@@ -292,7 +292,7 @@ TODO
     -   destroy()
     -   onDestroyed()
     -   clone
-    -   allowMultiple without specifying keyProperty
+    -   ✓ allowMultiple without specifying keyProperty
     -   ✓ rename accessor to `key`
 -   registry
     -   warn if component malformed (?)

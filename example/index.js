@@ -2,6 +2,7 @@ import Material from './components/Material';
 import Position from './components/Position';
 import Listener from './components/Listener';
 import Health from './components/Health';
+import Action from './components/Action';
 import BeingPrefab from './prefabs/BeingPrefab';
 import HumanPrefab from './prefabs/HumanPrefab';
 import EquipmentSlot from './components/EquipmentSlot';
@@ -15,6 +16,7 @@ ecs.registerComponent(Material);
 ecs.registerComponent(Position);
 ecs.registerComponent(Listener);
 ecs.registerComponent(Health);
+ecs.registerComponent(Action);
 
 ecs2.registerComponent(EquipmentSlot);
 ecs2.registerComponent(Material);
@@ -65,3 +67,16 @@ const evt = human.fireEvent('test', { some: 'data' });
 
 console.log(evt.data);
 console.log(evt.handled);
+
+human.add('Action', { name: 'a' });
+human.add('Action', { name: 'b' });
+human.add('Action', { name: 'c' });
+
+human.Action[0].remove();
+
+console.log(human.Action);
+console.log(human.has('Action'));
+
+human.remove('Action');
+
+console.log(human.has('Action'));
