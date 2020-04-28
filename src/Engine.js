@@ -38,7 +38,7 @@ export default class Engine {
     }
 
     getEntity(id) {
-        this.entities.get(id);
+        return this.entities.get(id);
     }
 
     createComponent(type, properties) {
