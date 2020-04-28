@@ -46,7 +46,7 @@ export default class Entity {
         return components;
     }
 
-    add(typeOrClass, properties={}) {
+    add(typeOrClass, properties = {}) {
         const component = this.ecs.components.create(typeOrClass, properties);
         const accessor = camelcase(component.type);
 

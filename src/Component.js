@@ -110,8 +110,7 @@ export default class Component {
         }
     }
 
-    onEvent(evt) {
-    }
+    onEvent(evt) {}
 
     _defineProxies(initialProperties) {
         Object.entries(this.constructor.properties).forEach(([key, value]) => {

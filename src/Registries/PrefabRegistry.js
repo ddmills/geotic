@@ -70,7 +70,7 @@ export default class PrefabRegistry {
                     `Unrecognized component reference "${componentData}" in prefab "${data.name}". Ensure the component is registered before the prefab.`
                 );
             }
-        };
+        }
 
         this.register(prefab);
 

@@ -11,9 +11,9 @@ _adjective_ physically concerning land or its inhabitants.
 
 This library is _heavily_ inspired by ECS in Caves of Qud:
 
-- [Thomas Biskup - There be dragons: Entity Component Systems for Roguelikes](https://www.youtube.com/watch?v=fGLJC5UY2o4&t=1534s)
-- [Brian Bucklew - AI in Qud and Sproggiwood](https://www.youtube.com/watch?v=4uxN5GqXcaA)
-- [Brian Bucklew - Data-Driven Engines of Qud and Sproggiwood](https://www.youtube.com/watch?v=U03XXzcThGU)
+-   [Thomas Biskup - There be dragons: Entity Component Systems for Roguelikes](https://www.youtube.com/watch?v=fGLJC5UY2o4&t=1534s)
+-   [Brian Bucklew - AI in Qud and Sproggiwood](https://www.youtube.com/watch?v=4uxN5GqXcaA)
+-   [Brian Bucklew - Data-Driven Engines of Qud and Sproggiwood](https://www.youtube.com/watch?v=U03XXzcThGU)
 
 ### usage
 
@@ -55,8 +55,8 @@ query.get().forEach(...);
 const zombie = ecs.createEntity();
 
 zombie.add('Name', { value: 'Donnie' });
-zombie.add('Position': { x: 2, y: 0, z: 3 });
-zombie.add('Velocity': { x: 0, y: 0, z: 1 });
+zombie.add('Position', { x: 2, y: 0, z: 3 });
+zombie.add('Velocity', { x: 0, y: 0, z: 1 });
 zombie.add('Health', { value: 200 });
 zombie.add('Enemy');
 ```
@@ -102,7 +102,6 @@ class Health extends Component {
     }
 }
 ```
-
 
 Component properties and methods:
 
