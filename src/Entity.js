@@ -7,10 +7,6 @@ export default class Entity {
     #components = {};
     #ecs = null;
 
-    get id() {
-        return this.#id;
-    }
-
     get ecs() {
         return this.#ecs;
     }
@@ -22,6 +18,11 @@ export default class Entity {
     constructor(ecs, id = null) {
         this.#ecs = ecs;
         this.#id = id || ecs.generateId();
+        Object.defineProperty(this, 'id', {
+            value: this.#id,
+            enumerable: true,
+            writable: false
+        });
     }
 
     has(typeOrClass, key = null) {

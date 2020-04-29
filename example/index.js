@@ -41,42 +41,44 @@ player.add(EquipmentSlot, {
     allowedTypes: ['hand'],
 });
 
-console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
-console.log(player.equipmentSlot.rightHand.allowedTypes);
-player.equipmentSlot.rightHand.content = sword;
+console.log(player.serialize());
 
-const data = ecs.serialize();
-const human = ecs.createPrefab('HumanPrefab');
+// console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
+// console.log(player.equipmentSlot.rightHand.allowedTypes);
+// player.equipmentSlot.rightHand.content = sword;
 
-ecs2.deserialize(data);
+// const data = ecs.serialize();
+// const human = ecs.createPrefab('HumanPrefab');
 
-const query = ecs.createQuery((entity) => entity.has('Position'));
+// ecs2.deserialize(data);
 
-console.log(Object.keys(query.get()).length);
-human.remove('Position');
-console.log(Object.keys(query.get()).length);
-human.add(Position, { x: 4, y: 12 });
-console.log(Object.keys(query.get()).length);
+// const query = ecs.createQuery((entity) => entity.has('Position'));
 
-const thing = ecs.createEntity();
-thing.add('Position');
+// console.log(Object.keys(query.get()).length);
+// human.remove('Position');
+// console.log(Object.keys(query.get()).length);
+// human.add(Position, { x: 4, y: 12 });
+// console.log(Object.keys(query.get()).length);
 
-console.log(thing.serialize());
+// const thing = ecs.createEntity();
+// thing.add('Position');
 
-const evt = human.fireEvent('test', { some: 'data' });
+// console.log(thing.serialize());
 
-console.log(evt.data);
-console.log(evt.handled);
+// const evt = human.fireEvent('test', { some: 'data' });
 
-human.add('Action', { name: 'a' });
-human.add('Action', { name: 'b' });
-human.add('Action', { name: 'c' });
+// console.log(evt.data);
+// console.log(evt.handled);
 
-human.action[0].remove();
+// human.add('Action', { name: 'a' });
+// human.add('Action', { name: 'b' });
+// human.add('Action', { name: 'c' });
 
-console.log(human.Action);
-console.log(human.has('Action'));
+// human.action[0].remove();
 
-human.remove('Action');
+// console.log(human.Action);
+// console.log(human.has('Action'));
 
-console.log(human.has('Action'));
+// human.remove('Action');
+
+// console.log(human.has('Action'));

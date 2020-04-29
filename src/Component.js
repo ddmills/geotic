@@ -1,8 +1,5 @@
-import EntityRefProperty from './properties/EntityRefProperty';
-import SimpleProperty from './properties/SimpleProperty';
-import KeyProperty from './properties/KeyProperty';
-import EntityRefArrayProperty from './properties/EntityRefArrayProperty';
 import camelcase from 'camelcase';
+import PropertyStrategy from './Properties/PropertyStrategy';
 
 export default class Component {
     #entity = null;
@@ -42,7 +39,13 @@ export default class Component {
     }
 
     get properties() {
-        return this.#props;
+        const ob = {};
+
+        for (const [key, value] of Object.entries(this.#props)) {
+            ob[key] = value.get();
+        }
+
+        return ob;
     }
 
     get key() {
@@ -57,7 +60,7 @@ export default class Component {
     getDefaultPropertyValue(propertyName) {
         const value = this.constructor.properties[propertyName];
 
-        if (['<Entity>', '<EntitySet>'].includes(value)) {
+        if (['<Entity>', '<EntityArray>'].includes(value)) {
             return undefined;
         }
 
@@ -113,40 +116,14 @@ export default class Component {
     onEvent(evt) {}
 
     _defineProxies(initialProperties) {
-        Object.entries(this.constructor.properties).forEach(([key, value]) => {
-            if (value === '<Entity>') {
-                this.#props[key] = new EntityRefProperty(
-                    this.#ecs,
-                    initialProperties[key]
-                );
-            } else if (value === '<EntitySet>') {
-                this.#props[key] = new EntityRefArrayProperty(
-                    this.#ecs,
-                    initialProperties[key]
-                );
-            } else if (key === this.keyProperty) {
-                const value = initialProperties.hasOwnProperty(key)
-                    ? initialProperties[key]
-                    : this.getDefaultPropertyValue(key);
+        for (const key in this.constructor.properties) {
+            const defaultValue = this.constructor.properties[key];
+            const initialValue = initialProperties.hasOwnProperty(key) ? initialProperties[key] : defaultValue;
+            const Property = PropertyStrategy.get(defaultValue);
+            const property = new Property(this, initialValue);
 
-                this.#props[key] = new KeyProperty(value);
-            } else {
-                const value = initialProperties.hasOwnProperty(key)
-                    ? initialProperties[key]
-                    : this.getDefaultPropertyValue(key);
-
-                this.#props[key] = new SimpleProperty(value);
-            }
-
-            Object.defineProperty(this, key, {
-                enumerable: true,
-                set(v) {
-                    this.#props[key].value = v;
-                },
-                get() {
-                    return this.#props[key].value;
-                },
-            });
-        });
+            this.#props[key] = property;
+            Object.defineProperty(this, key, property.descriptor);
+        }
     }
 }

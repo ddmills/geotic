@@ -1,7 +1,7 @@
 import Engine from '../../src/Engine';
 import Component from '../../src/Component';
 
-describe('EntityRefProperty', () => {
+describe('EntityProperty', () => {
     let engine;
 
     class TestComponent extends Component {
