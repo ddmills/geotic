@@ -21,7 +21,7 @@ export default class Entity {
         Object.defineProperty(this, 'id', {
             value: this.#id,
             enumerable: true,
-            writable: false
+            writable: false,
         });
     }
 

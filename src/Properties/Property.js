@@ -6,6 +6,10 @@ export default class Property {
         this.set(value);
     }
 
+    get ecs() {
+        return this.component.ecs;
+    }
+
     get descriptor() {
         return {
             enumerable: true,
@@ -23,4 +27,6 @@ export default class Property {
     serialize() {
         return undefined;
     }
+
+    cleanupReference(entity) {}
 }

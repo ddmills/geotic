@@ -25,8 +25,8 @@ export default class Engine {
         return this.prefabs.create(nameOrClass);
     }
 
-    registerEntity(entity) {
-        return this.entities.register(entity);
+    destroyEntity(entity) {
+        return this.entities.destroy(entity);
     }
 
     registerPrefab(data) {

@@ -118,7 +118,9 @@ export default class Component {
     _defineProxies(initialProperties) {
         for (const key in this.constructor.properties) {
             const defaultValue = this.constructor.properties[key];
-            const initialValue = initialProperties.hasOwnProperty(key) ? initialProperties[key] : defaultValue;
+            const initialValue = initialProperties.hasOwnProperty(key)
+                ? initialProperties[key]
+                : defaultValue;
             const Property = PropertyStrategy.get(defaultValue);
             const property = new Property(this, initialValue);
 

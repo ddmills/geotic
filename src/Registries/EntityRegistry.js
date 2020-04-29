@@ -3,6 +3,7 @@ import Entity from '../Entity';
 export default class EntityRegistry {
     #entities = {};
     #ecs = null;
+    #refs = {};
 
     constructor(ecs) {
         this.#ecs = ecs;
@@ -26,6 +27,39 @@ export default class EntityRegistry {
         const entity = new Entity(this.#ecs);
 
         return this.register(entity);
+    }
+
+    destroy(entity) {
+        this.cleanupRefs(entity);
+        delete this.#entities[entity.id];
+    }
+
+    cleanupRefs(entity) {
+        const refs = this.#refs[entity.id];
+
+        if (!refs) {
+            return;
+        }
+
+        for (const ref of refs) {
+            ref.cleanupReference(entity);
+        }
+
+        delete this.#refs[entity.id];
+    }
+
+    addRef(entityId, property) {
+        if (!(entityId in this.#refs)) {
+            this.#refs[entityId] = new Set();
+        }
+
+        this.#refs[entityId].add(property);
+    }
+
+    removeRef(entityId, property) {
+        if (entityId in this.#refs) {
+            this.#refs[entityId].delete(property);
+        }
     }
 
     serialize() {

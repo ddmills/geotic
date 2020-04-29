@@ -20,7 +20,10 @@ describe('EntityArrayProperty', () => {
 
         beforeEach(() => {
             entity = engine.createEntity();
-            referenceEntities = chance.n(() => engine.createEntity(), chance.d6());
+            referenceEntities = chance.n(
+                () => engine.createEntity(),
+                chance.d6()
+            );
             entity.add(TestComponent);
         });
 
@@ -48,8 +51,12 @@ describe('EntityArrayProperty', () => {
                 });
 
                 it('can append more entities', () => {
-                    expect(entity.testComponent.testProperty).toContain(newReferencedEntity);
-                    expect(entity.testComponent.properties.testProperty).toContain(newReferencedEntity);
+                    expect(entity.testComponent.testProperty).toContain(
+                        newReferencedEntity
+                    );
+                    expect(
+                        entity.testComponent.properties.testProperty
+                    ).toContain(newReferencedEntity);
                 });
             });
         });
