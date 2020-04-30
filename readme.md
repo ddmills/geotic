@@ -264,6 +264,7 @@ TODO
     -   ? re-filter on property change
         -   simple query vs advanced (?)
     -   return Array instead of Object
+    -   filter destroyed entities by default
 -   logging configuration
     -   route all console logs to logger
     -   check all console log statements
@@ -301,8 +302,10 @@ TODO
     -   less instances
 -   ✓ Entity registry
 -   Entity
-    -   ? keep track of refs
-    -   ? destroy()
+    -   ✓ keep track of refs
+    -   ✓ destroy()
+        -   component.onDestroy()
+        -   property.onDestroy() (do ref cleanup)
     -   shift component add/remove code to manager
     -   ✓ add(type, properties);
     -   control how components are named

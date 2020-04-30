@@ -6,6 +6,7 @@ export default class Entity {
     #id = null;
     #components = {};
     #ecs = null;
+    #isDestroyed = false;
 
     get ecs() {
         return this.#ecs;
@@ -13,6 +14,10 @@ export default class Entity {
 
     get components() {
         return this.#components;
+    }
+
+    get isDestroyed() {
+        return this.#isDestroyed;
     }
 
     constructor(ecs, id = null) {
@@ -45,6 +50,11 @@ export default class Entity {
         }
 
         return components;
+    }
+
+    destroy() {
+        this.#isDestroyed = true;
+        this.ecs.entities.onEntityDestroyed(this);
     }
 
     add(typeOrClass, properties = {}) {

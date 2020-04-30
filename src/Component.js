@@ -124,7 +124,10 @@ export default class Component {
             const initialValue = initialProperties.hasOwnProperty(key)
                 ? initialProperties[key]
                 : this._defaultPropertyValue(key);
-            const property = PropertyFactory.create(this, this.constructor.properties[key]);
+            const property = PropertyFactory.create(
+                this,
+                this.constructor.properties[key]
+            );
 
             this.#props[key] = property;
             Object.defineProperty(this, key, property.descriptor);

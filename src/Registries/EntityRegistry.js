@@ -30,6 +30,10 @@ export default class EntityRegistry {
     }
 
     destroy(entity) {
+        entity.destroy();
+    }
+
+    onEntityDestroyed(entity) {
         this.cleanupRefs(entity);
         delete this.#entities[entity.id];
     }
@@ -48,7 +52,7 @@ export default class EntityRegistry {
         delete this.#refs[entity.id];
     }
 
-    addRef(entityId, property) { // TODO include some metadata (index?)
+    addRef(entityId, property) {
         if (!(entityId in this.#refs)) {
             this.#refs[entityId] = new Set();
         }

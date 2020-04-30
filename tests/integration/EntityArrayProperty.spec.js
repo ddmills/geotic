@@ -84,13 +84,17 @@ describe('EntityArrayProperty', () => {
                 entity.testComponent.testProperty = referenceEntities;
 
                 destroyedEntity = chance.pickone(referenceEntities);
-                nonDestroyedEntities = referenceEntities.filter((e) => e !== destroyedEntity);
+                nonDestroyedEntities = referenceEntities.filter(
+                    (e) => e !== destroyedEntity
+                );
 
                 engine.destroyEntity(destroyedEntity);
             });
 
             it('should no longer include the entity in the property', () => {
-                expect(entity.testComponent.testProperty).toEqual(nonDestroyedEntities);
+                expect(entity.testComponent.testProperty).toEqual(
+                    nonDestroyedEntities
+                );
             });
 
             describe('when serialized', () => {

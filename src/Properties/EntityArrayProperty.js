@@ -37,7 +37,7 @@ export default class EntityArrayProperty extends Property {
                 this.ecs.entities.removeRef(value, this);
 
                 return Reflect.deleteProperty(target, prop);
-            }
+            },
         });
     }
 
