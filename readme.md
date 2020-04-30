@@ -297,6 +297,7 @@ TODO
     -   clone
     -   ✓ allowMultiple without specifying keyProperty
     -   ✓ rename accessor to `key`
+    -   rename `type` to `definitionType`
 -   registry
     -   warn if component malformed (?)
 -   prefab caching
