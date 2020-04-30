@@ -48,7 +48,7 @@ export default class EntityRegistry {
         delete this.#refs[entity.id];
     }
 
-    addRef(entityId, property) {
+    addRef(entityId, property) { // TODO include some metadata (index?)
         if (!(entityId in this.#refs)) {
             this.#refs[entityId] = new Set();
         }

@@ -76,5 +76,72 @@ describe('EntityArrayProperty', () => {
                 expect(result.testComponent.testProperty).toEqual(ids);
             });
         });
+
+        describe('when the referenced entity is destroyed', () => {
+            let destroyedEntity, nonDestroyedEntities;
+
+            beforeEach(() => {
+                entity.testComponent.testProperty = referenceEntities;
+
+                destroyedEntity = chance.pickone(referenceEntities);
+                nonDestroyedEntities = referenceEntities.filter((e) => e !== destroyedEntity);
+
+                engine.destroyEntity(destroyedEntity);
+            });
+
+            it('should no longer include the entity in the property', () => {
+                expect(entity.testComponent.testProperty).toEqual(nonDestroyedEntities);
+            });
+
+            describe('when serialized', () => {
+                let result;
+
+                beforeEach(() => {
+                    result = entity.serialize();
+                });
+
+                it('should not show up when serialized', () => {
+                    expect(result.testComponent.testProperty).toEqual(
+                        expect.not.arrayContaining([destroyedEntity.id])
+                    );
+                });
+            });
+        });
+
+        describe('when a reference in the array is changed', () => {
+            let newReference, dereferenced;
+
+            beforeEach(() => {
+                newReference = engine.createEntity();
+                dereferenced = referenceEntities[0];
+
+                entity.testComponent.testProperty = referenceEntities;
+                entity.testComponent.testProperty[0] = newReference;
+            });
+
+            it('should keep a reference to the new entity', () => {
+                expect(entity.testComponent.testProperty).toEqual(
+                    expect.arrayContaining([newReference])
+                );
+            });
+
+            it('should not reference the dereferenced entity', () => {
+                expect(entity.testComponent.testProperty).toEqual(
+                    expect.not.arrayContaining([dereferenced.id])
+                );
+            });
+
+            describe('when the new reference is destroyed', () => {
+                beforeEach(() => {
+                    engine.destroyEntity(newReference);
+                });
+
+                it('should no longer include the entity in the property', () => {
+                    expect(entity.testComponent.testProperty).toEqual(
+                        expect.not.arrayContaining([newReference.id])
+                    );
+                });
+            });
+        });
     });
 });

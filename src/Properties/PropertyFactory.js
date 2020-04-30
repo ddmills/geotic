@@ -4,14 +4,14 @@ import EntityProperty from './EntityProperty';
 import EntityArrayProperty from './EntityArrayProperty';
 
 export default class PropertyStrategy {
-    static get(value) {
+    static create(component, value) {
         switch (value) {
             case '<Entity>':
-                return EntityProperty;
+                return new EntityProperty(component);
             case '<EntityArray>':
-                return EntityArrayProperty;
+                return new EntityArrayProperty(component);
             default:
-                return SimpleProperty;
+                return new SimpleProperty(component);
         }
     }
 }

@@ -1,9 +1,8 @@
 export default class Property {
     component;
 
-    constructor(component, value) {
+    constructor(component) {
         this.component = component;
-        this.set(value);
     }
 
     get ecs() {

@@ -288,6 +288,7 @@ TODO
     -   github npm deploy action
 -   component
     -   ✓ default property values
+    -   property.deserialize(data)
     -   destroy()
     -   onDestroyed()
     -   clone

@@ -1,5 +1,5 @@
 import camelcase from 'camelcase';
-import PropertyStrategy from './Properties/PropertyStrategy';
+import PropertyFactory from './Properties/PropertyFactory';
 
 export default class Component {
     #entity = null;
@@ -57,16 +57,6 @@ export default class Component {
         this._defineProxies(properties);
     }
 
-    getDefaultPropertyValue(propertyName) {
-        const value = this.constructor.properties[propertyName];
-
-        if (['<Entity>', '<EntityArray>'].includes(value)) {
-            return undefined;
-        }
-
-        return value;
-    }
-
     serialize() {
         return Object.entries(this.#props).reduce(
             (o, [key, value]) => ({
@@ -115,17 +105,30 @@ export default class Component {
 
     onEvent(evt) {}
 
+    _defaultPropertyValue(propertyName) {
+        const value = this.constructor.properties[propertyName];
+
+        if (value === '<EntityArray>') {
+            return [];
+        }
+
+        if (value === '<Entity>') {
+            return undefined;
+        }
+
+        return value;
+    }
+
     _defineProxies(initialProperties) {
         for (const key in this.constructor.properties) {
-            const defaultValue = this.constructor.properties[key];
             const initialValue = initialProperties.hasOwnProperty(key)
                 ? initialProperties[key]
-                : defaultValue;
-            const Property = PropertyStrategy.get(defaultValue);
-            const property = new Property(this, initialValue);
+                : this._defaultPropertyValue(key);
+            const property = PropertyFactory.create(this, this.constructor.properties[key]);
 
             this.#props[key] = property;
             Object.defineProperty(this, key, property.descriptor);
+            property.set(initialValue);
         }
     }
 }
