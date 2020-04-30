@@ -108,6 +108,36 @@ describe('EntityArrayProperty', () => {
             });
         });
 
+        describe('when multiple references are destroyed', () => {
+            beforeEach(() => {
+                const firstRef = engine.createEntity();
+                const secondRef = engine.createEntity();
+
+                entity.testComponent.testProperty = [firstRef, secondRef];
+
+                engine.destroyEntity(firstRef);
+                engine.destroyEntity(secondRef);
+            });
+
+            it('should remove both refs', () => {
+                expect(entity.testComponent.testProperty).toEqual([]);
+            });
+        });
+
+        describe('when a reference exists twice in the same array', () => {
+            beforeEach(() => {
+                const ref = engine.createEntity();
+
+                entity.testComponent.testProperty = [ref, ref];
+
+                engine.destroyEntity(ref);
+            });
+
+            it('should remove it from all locations in the array', () => {
+                expect(entity.testComponent.testProperty).toEqual([]);
+            });
+        });
+
         describe('when a reference in the array is changed', () => {
             let newReference, dereferenced;
 
