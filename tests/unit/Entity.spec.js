@@ -5,9 +5,12 @@ import Component from '../../src/Component';
 describe('Engine', () => {
     let engine;
 
+    class TestComponent extends Component {}
+
     beforeEach(() => {
         engine = new Engine();
         engine.registerComponent(EmptyComponent);
+        engine.registerComponent(TestComponent);
     });
 
     describe('create', () => {
@@ -29,10 +32,26 @@ describe('Engine', () => {
     });
 
     describe('destroy', () => {
-        let entity;
+        let entity,
+            component,
+            emptyComponentDestroySpy,
+            testComponentDestroySpy;
 
         beforeEach(() => {
             entity = engine.createEntity();
+            entity.add(EmptyComponent);
+            entity.add(TestComponent);
+
+            testComponentDestroySpy = jest.spyOn(
+                entity.testComponent,
+                'destroy'
+            );
+            emptyComponentDestroySpy = jest.spyOn(
+                entity.emptyComponent,
+                'destroy'
+            );
+
+            component = entity.testComponent;
             entity.destroy();
         });
 
@@ -42,8 +61,15 @@ describe('Engine', () => {
             expect(result).toBeUndefined();
         });
 
-        it('should set the isDestroyed flag to TRUE', () => {
+        it('should set the entity "isDestroyed" flag to TRUE', () => {
             expect(entity.isDestroyed).toBe(true);
+        });
+
+        it('should call "onDestroyed" for all components', () => {
+            expect(testComponentDestroySpy).toHaveBeenCalledTimes(1);
+            expect(testComponentDestroySpy).toHaveBeenCalledWith();
+            expect(emptyComponentDestroySpy).toHaveBeenCalledTimes(1);
+            expect(emptyComponentDestroySpy).toHaveBeenCalledWith();
         });
     });
 });

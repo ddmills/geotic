@@ -54,6 +54,17 @@ export default class Entity {
 
     destroy() {
         this.#isDestroyed = true;
+
+        for (const component of Object.values(this.components)) {
+            if (component instanceof Component) {
+                component.destroy();
+            } else {
+                for (const nestedComponent of Object.values(component)) {
+                    nestedComponent.destroy();
+                }
+            }
+        }
+
         this.ecs.entities.onEntityDestroyed(this);
     }
 
@@ -67,6 +78,12 @@ export default class Entity {
             );
             return false;
         }
+
+        return this.attach(component);
+    }
+
+    attach(component) {
+        const accessor = camelcase(component.type);
 
         if (!component.allowMultiple) {
             if (this.has(component.type)) {

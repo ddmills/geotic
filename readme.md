@@ -290,8 +290,10 @@ TODO
 -   component
     -   ✓ default property values
     -   property.deserialize(data)
-    -   destroy()
-    -   onDestroyed()
+    -   ✓ remove()
+        -   ensure works with key components
+    -   ✓ destroy()
+    -   ✓ onDestroyed()
     -   clone
     -   ✓ allowMultiple without specifying keyProperty
     -   ✓ rename accessor to `key`
@@ -304,7 +306,7 @@ TODO
 -   Entity
     -   ✓ keep track of refs
     -   ✓ destroy()
-        -   component.onDestroy()
+        -   ✓ component.onDestroy()
         -   property.onDestroy() (do ref cleanup)
     -   shift component add/remove code to manager
     -   ✓ add(type, properties);

@@ -5,6 +5,7 @@ export default class Component {
     #entity = null;
     #ecs = null;
     #props = {};
+    #isDestroyed = false;
 
     static allowMultiple = false;
     static keyProperty = null;
@@ -28,6 +29,10 @@ export default class Component {
 
     get isAttached() {
         return Boolean(this.entity);
+    }
+
+    get isDestroyed() {
+        return this.#isDestroyed;
     }
 
     get allowMultiple() {
@@ -83,14 +88,28 @@ export default class Component {
         }
     }
 
+    _onDestroyed() {
+        this.#isDestroyed = true;
+        this.onDestroyed();
+    }
+
     onAttached() {}
 
     onDetached() {}
 
-    remove() {
+    onDestroyed() {}
+
+    remove(destroy = true) {
         if (this.isAttached) {
             this.entity.remove(this);
         }
+        if (destroy) {
+            this._onDestroyed();
+        }
+    }
+
+    destroy() {
+        this.remove(true);
     }
 
     _onEvent(evt) {
