@@ -150,33 +150,6 @@ describe('Component', () => {
             it('should set "isAttached" to false', () => {
                 expect(component.isAttached).toBe(false);
             });
-
-            // describe('re-attaching', () => {
-            //     let newEntity;
-
-            //     beforeEach(() => {
-            //         onAttachedStub.mockReset();
-            //         newEntity = engine.createEntity();
-            //         newEntity.attach(component);
-            //     });
-
-            //     it('should call the onAttached handler', () => {
-            //         expect(onAttachedStub).toHaveBeenCalledTimes(1);
-            //         expect(onAttachedStub).toHaveBeenCalledWith();
-            //     });
-
-            //     it('should set the entity', () => {
-            //         expect(component.entity).toBe(newEntity);
-            //     });
-
-            //     it('should set the isAttached flag to true', () => {
-            //         expect(component.isAttached).toBe(true);
-            //     });
-
-            //     it('should not change the isDestroyed flag', () => {
-            //         expect(component.isDestroyed).toBe(false);
-            //     });
-            // });
         });
     });
 

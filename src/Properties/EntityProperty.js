@@ -31,6 +31,12 @@ export default class EntityProperty extends Property {
         return this.id;
     }
 
+    onDestroyed() {
+        if (this.id) {
+            this.ecs.entities.removeRef(this.id, this);
+        }
+    }
+
     cleanupReference(entity) {
         if (this.id === entity.id) {
             this.id = undefined;

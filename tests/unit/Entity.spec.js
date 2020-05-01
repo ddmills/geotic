@@ -14,6 +14,9 @@ describe('Entity', () => {
         static keyProperty = 'name';
     }
     class ArrayComponent extends Component {
+        static properties = {
+            name: 'a'
+        };
         static allowMultiple = true;
     }
 
@@ -101,6 +104,198 @@ describe('Entity', () => {
             expect(nestedComponentDestroySpy).toHaveBeenCalledWith();
             expect(arrayComponentDestroySpy).toHaveBeenCalledTimes(1);
             expect(arrayComponentDestroySpy).toHaveBeenCalledWith();
+        });
+    });
+
+    describe('remove', () => {
+        let entity;
+
+        beforeEach(() => {
+            entity = engine.createEntity();
+        });
+
+        describe('simple components', () => {
+            beforeEach(() => {
+                entity.add(TestComponent);
+            });
+
+            describe('when removed by class', () => {
+                beforeEach(() => {
+                    entity.remove(TestComponent);
+                });
+
+                it('should set the component to undefined', () => {
+                    expect(entity.testComponent).toBeUndefined();
+                });
+            });
+
+            describe('when removed by type', () => {
+                beforeEach(() => {
+                    entity.remove('TestComponent');
+                });
+
+                it('should set the component to undefined', () => {
+                    expect(entity.testComponent).toBeUndefined();
+                });
+            });
+
+            describe('when removed by instance', () => {
+                beforeEach(() => {
+                    const instance = entity.testComponent;
+
+                    entity.remove(instance);
+                });
+
+                it('should set the component to undefined', () => {
+                    expect(entity.testComponent).toBeUndefined();
+                });
+            });
+        });
+
+        describe('keyed components', () => {
+            beforeEach(() => {
+                entity.add(NestedComponent, { name: 'a' });
+                entity.add(NestedComponent, { name: 'b' });
+            });
+
+            describe('when one of them is removed', () => {
+                describe('when removed by class', () => {
+                    beforeEach(() => {
+                        entity.remove(NestedComponent, 'b');
+                    });
+
+                    it('should set the component to undefined', () => {
+                        expect(entity.nestedComponent.b).toBeUndefined();
+                    });
+
+                    it('should not delete the other component', () => {
+                        expect(entity.nestedComponent.a).toBeDefined();
+                    });
+                });
+
+                describe('when removed by type', () => {
+                    beforeEach(() => {
+                        entity.remove('NestedComponent', 'b');
+                    });
+
+                    it('should set the component to undefined', () => {
+                        expect(entity.nestedComponent.b).toBeUndefined();
+                    });
+
+                    it('should not remove the other component', () => {
+                        expect(entity.nestedComponent.a).toBeDefined();
+                    });
+                });
+
+                describe('when removed by instance', () => {
+                    beforeEach(() => {
+                        const instance = entity.nestedComponent.b;
+
+                        entity.remove(instance);
+                    });
+
+                    it('should set the component to undefined', () => {
+                        expect(entity.testComponent).toBeUndefined();
+                    });
+                });
+            });
+
+            describe('when both are removed', () => {
+                describe('when removed by class', () => {
+                    beforeEach(() => {
+                        entity.remove(NestedComponent, 'a');
+                        entity.remove(NestedComponent, 'b');
+                    });
+
+                    it('should set it to undefined', () => {
+                        expect(entity.nestedComponent).toBeUndefined();
+                    });
+                });
+
+                describe('when removed by type', () => {
+                    beforeEach(() => {
+                        entity.remove('NestedComponent', 'a');
+                        entity.remove('NestedComponent', 'b');
+                    });
+
+                    it('should set it to undefined', () => {
+                        expect(entity.nestedComponent).toBeUndefined();
+                    });
+                });
+
+                describe('when removed by instance', () => {
+                    beforeEach(() => {
+                        const instanceA = entity.nestedComponent.a;
+                        const instanceB = entity.nestedComponent.b;
+
+                        entity.remove(instanceA);
+                        entity.remove(instanceB);
+                    });
+
+                    it('should set it to undefined', () => {
+                        expect(entity.nestedComponent).toBeUndefined();
+                    });
+                });
+            });
+        });
+
+        describe('array components', () => {
+            beforeEach(() => {
+                entity.add(ArrayComponent, { name: 'a' });
+                entity.add(ArrayComponent, { name: 'b' });
+            });
+
+            describe('when one of them is removed', () => {
+                beforeEach(() => {
+                    const instance = entity.arrayComponent[1];
+
+                    entity.remove(instance);
+                });
+
+                it('should set the component to undefined', () => {
+                    expect(entity.arrayComponent[1]).toBeUndefined();
+                });
+
+                it('should keep the other component', () => {
+                    expect(entity.arrayComponent[0]).toBeDefined();
+                });
+            });
+
+            describe('when both are removed', () => {
+                describe('when removed by class', () => {
+                    beforeEach(() => {
+                        entity.remove(ArrayComponent);
+                    });
+
+                    it('should set it to undefined', () => {
+                        expect(entity.arrayComponent).toBeUndefined();
+                    });
+                });
+
+                describe('when removed by type', () => {
+                    beforeEach(() => {
+                        entity.remove('ArrayComponent');
+                    });
+
+                    it('should set it to undefined', () => {
+                        expect(entity.arrayComponent).toBeUndefined();
+                    });
+                });
+
+                describe('when removed by instance', () => {
+                    beforeEach(() => {
+                        const instanceA = entity.arrayComponent[0];
+                        const instanceB = entity.arrayComponent[1];
+
+                        entity.remove(instanceA);
+                        entity.remove(instanceB);
+                    });
+
+                    it('should set it to undefined', () => {
+                        expect(entity.arrayComponent).toBeUndefined();
+                    });
+                });
+            });
         });
     });
 });

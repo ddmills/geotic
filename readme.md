@@ -308,8 +308,8 @@ TODO
     -   ✓ keep track of refs
     -   ✓ destroy()
         -   ✓ component.onDestroy()
-        -   property.onDestroy() (do ref cleanup)
-    -   shift component add/remove code to manager
+        -   ✓ property.onDestroy() (do ref cleanup)
+    -   removing keyed component without key should remove all
     -   ✓ add(type, properties);
     -   control how components are named
     -   ✓ camelCase component access

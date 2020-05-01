@@ -63,6 +63,10 @@ export default class EntityArrayProperty extends Property {
         return this.proxy.map((ref) => ref.id);
     }
 
+    onDestroyed() {
+        this.set([]);
+    }
+
     cleanupReference(entity) {
         this.set(this.proxy.filter((ref) => ref.id !== entity.id));
     }

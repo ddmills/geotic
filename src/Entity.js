@@ -213,6 +213,10 @@ export default class Entity {
             if (component) {
                 delete all[key];
                 component._onDetached();
+                if (Object.keys(all).length <= 0) {
+                    delete this[accessor];
+                    delete this.components[accessor];
+                }
                 return component;
             } else {
                 console.warn(

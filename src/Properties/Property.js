@@ -27,5 +27,7 @@ export default class Property {
         return undefined;
     }
 
+    onDestroyed() {}
+
     cleanupReference(entity) {}
 }

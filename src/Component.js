@@ -91,6 +91,10 @@ export default class Component {
     _onDestroyed() {
         this.#isDestroyed = true;
         this.onDestroyed();
+
+        for (const prop of Object.values(this.#props)) {
+            prop.onDestroyed();
+        }
     }
 
     onAttached() {}
