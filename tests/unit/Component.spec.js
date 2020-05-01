@@ -16,14 +16,31 @@ describe('Component', () => {
             onDestroyedStub();
         }
     }
+    class NestedComponent extends Component {
+        static properties = {
+            name: 'test'
+        };
+        static allowMultiple = true;
+        static keyProperty = 'name';
+    }
+    class ArrayComponent extends Component {
+        static properties = {
+            name: 'a'
+        };
+        static allowMultiple = true;
+    }
 
     beforeEach(() => {
         engine = new Engine();
         onAttachedStub = jest.fn();
         onDetachedStub = jest.fn();
         onDestroyedStub = jest.fn();
+
         engine.registerComponent(EmptyComponent);
         engine.registerComponent(TestComponent);
+        engine.registerComponent(NestedComponent);
+        engine.registerComponent(ArrayComponent);
+
         entity = engine.createEntity();
     });
 
@@ -158,35 +175,97 @@ describe('Component', () => {
 
         beforeEach(() => {
             entity.add(TestComponent);
-
-            component = entity.testComponent;
-            component.destroy();
+            entity.add(NestedComponent, { name: 'a' });
+            entity.add(NestedComponent, { name: 'b' });
+            entity.add(ArrayComponent);
+            entity.add(ArrayComponent);
         });
 
-        it('should remove the component from the entity', () => {
-            expect(entity.has(TestComponent)).toBe(false);
+        describe('when destroying a simple component', () => {
+            beforeEach(() => {
+                component = entity.testComponent;
+                component.destroy();
+            });
+
+            it('should remove the component from the entity', () => {
+                expect(entity.has(TestComponent)).toBe(false);
+            });
+
+            it('should set the isDestroyed flag to true', () => {
+                expect(component.isDestroyed).toBe(true);
+            });
+
+            it('should call the "onDetached" handler', () => {
+                expect(onDetachedStub).toHaveBeenCalledTimes(1);
+                expect(onDetachedStub).toHaveBeenCalledWith();
+            });
+
+            it('should call the "onDestroyed" handler', () => {
+                expect(onDestroyedStub).toHaveBeenCalledTimes(1);
+                expect(onDestroyedStub).toHaveBeenCalledWith();
+            });
+
+            it('should set the component "entity" to null', () => {
+                expect(component.entity).toBeNull();
+            });
+
+            it('should set "isAttached" to false', () => {
+                expect(component.isAttached).toBe(false);
+            });
         });
 
-        it('should set the isDestroyed flag to true', () => {
-            expect(component.isDestroyed).toBe(true);
+        describe('when destroying a keyed component', () => {
+            beforeEach(() => {
+                component = entity.nestedComponent.b;
+                component.destroy();
+            });
+
+            it('should remove the component from the entity', () => {
+                expect(entity.nestedComponent.b).toBeUndefined();
+            });
+
+            it('should not remove the other nested component from the entity', () => {
+                expect(entity.nestedComponent.a).toBeDefined();
+            });
+
+            it('should set the isDestroyed flag to true', () => {
+                expect(component.isDestroyed).toBe(true);
+            });
+
+            it('should set the component "entity" to null', () => {
+                expect(component.entity).toBeNull();
+            });
+
+            it('should set "isAttached" to false', () => {
+                expect(component.isAttached).toBe(false);
+            });
         });
 
-        it('should call the "onDetached" handler', () => {
-            expect(onDetachedStub).toHaveBeenCalledTimes(1);
-            expect(onDetachedStub).toHaveBeenCalledWith();
-        });
+        describe('when destroying an array component', () => {
+            beforeEach(() => {
+                component = entity.arrayComponent[1];
+                component.destroy();
+            });
 
-        it('should call the "onDestroyed" handler', () => {
-            expect(onDestroyedStub).toHaveBeenCalledTimes(1);
-            expect(onDestroyedStub).toHaveBeenCalledWith();
-        });
+            it('should remove the component from the entity', () => {
+                expect(entity.arrayComponent[1]).toBeUndefined()
+            });
 
-        it('should set the component "entity" to null', () => {
-            expect(component.entity).toBeNull();
-        });
+            it('should not remove the other array component from the entity', () => {
+                expect(entity.arrayComponent[0]).toBeDefined();
+            });
 
-        it('should set "isAttached" to false', () => {
-            expect(component.isAttached).toBe(false);
+            it('should set the isDestroyed flag to true', () => {
+                expect(component.isDestroyed).toBe(true);
+            });
+
+            it('should set the component "entity" to null', () => {
+                expect(component.entity).toBeNull();
+            });
+
+            it('should set "isAttached" to false', () => {
+                expect(component.isAttached).toBe(false);
+            });
         });
     });
 });

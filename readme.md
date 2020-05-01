@@ -270,9 +270,10 @@ TODO
     -   check all console log statements
 -   tags
 -   properties
-    -   <EntitySet>
-    -   <Prefab>
-    -   <PrefabSet>
+    -   ✓ EntityArray
+    -   EntitySet
+    -   Prefab
+    -   PrefabSet
 -   ✓ events
     -   ✓ https://www.youtube.com/watch?v=4uxN5GqXcaA
     -   ✓ entity.sendEvent(event)
@@ -291,7 +292,7 @@ TODO
     -   ✓ default property values
     -   property.deserialize(data)
     -   ✓ remove()
-        -   ensure works with key components
+        -   ✓ ensure works with key components
     -   ✓ destroy()
     -   ✓ onDestroyed()
     -   clone
