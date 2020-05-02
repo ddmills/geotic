@@ -87,7 +87,7 @@ export default class PrefabRegistry {
         return this.#prefabs[name];
     }
 
-    create(nameOrClass) {
+    create(nameOrClass, initialProps = {}) {
         const prefab = this.get(nameOrClass);
 
         if (!prefab) {
@@ -99,7 +99,7 @@ export default class PrefabRegistry {
         }
 
         const entity = this.#ecs.createEntity();
-        prefab.applyToEntity(entity);
+        prefab.applyToEntity(entity, initialProps);
 
         return entity;
     }

@@ -11,13 +11,53 @@ export default class Prefab {
         this.components.push(prefabComponent);
     }
 
-    applyToEntity(entity) {
+    applyToEntity(entity, initialProps = {}) {
         this.inherit.forEach((parent) => {
-            parent.applyToEntity(entity);
+            parent.applyToEntity(entity, initialProps);
         });
 
-        this.components.forEach((component) => {
-            component.applyToEntity(entity);
+        const arrComps = {};
+
+        this.components.forEach((component, i) => {
+            const definition = component.componentDef;
+
+            let initialCompProps = {};
+
+            if (definition.allowMultiple) {
+                if (definition.keyProperty) {
+                    const key = component.properties[definition.keyProperty];
+
+                    if (
+                        initialProps[definition.primaryKey] &&
+                        initialProps[definition.primaryKey][key]
+                    ) {
+                        initialCompProps =
+                            initialProps[definition.primaryKey][key];
+                    }
+                } else {
+                    if (!arrComps[definition.primaryKey]) {
+                        arrComps[definition.primaryKey] = 0;
+                    }
+
+                    if (
+                        initialProps[definition.primaryKey] &&
+                        initialProps[definition.primaryKey][
+                            arrComps[definition.primaryKey]
+                        ]
+                    ) {
+                        initialCompProps =
+                            initialProps[definition.primaryKey][
+                                arrComps[definition.primaryKey]
+                            ];
+                    }
+
+                    arrComps[definition.primaryKey]++;
+                }
+            } else {
+                initialCompProps = initialProps[definition.primaryKey];
+            }
+
+            component.applyToEntity(entity, initialCompProps);
         });
 
         return entity;

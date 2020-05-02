@@ -1,15 +1,17 @@
+import merge from 'deepmerge';
+
 export default class PrefabComponent {
     get type() {
         return this.componentDef.type;
     }
 
-    constructor(componentDef, initialProperties = {}, overwrite = true) {
+    constructor(componentDef, properties = {}, overwrite = true) {
         this.componentDef = componentDef;
-        this.initialProperties = initialProperties;
+        this.properties = properties;
         this.overwrite = overwrite;
     }
 
-    applyToEntity(entity) {
+    applyToEntity(entity, initialProps = {}) {
         if (!this.componentDef.allowMultiple && entity.has(this.componentDef)) {
             if (this.overwrite) {
                 entity.remove(this.componentDef);
@@ -21,11 +23,8 @@ export default class PrefabComponent {
             }
         }
 
-        entity.add(
-            entity.ecs.createComponent(
-                this.componentDef,
-                this.initialProperties
-            )
-        );
+        const props = merge(this.properties, initialProps);
+
+        entity.add(this.componentDef, props);
     }
 }

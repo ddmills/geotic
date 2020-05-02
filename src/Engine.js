@@ -21,8 +21,8 @@ export default class Engine {
         return this.entities.create();
     }
 
-    createPrefab(nameOrClass) {
-        return this.prefabs.create(nameOrClass);
+    createPrefab(nameOrClass, initialProps = {}) {
+        return this.prefabs.create(nameOrClass, initialProps);
     }
 
     destroyEntity(entity) {

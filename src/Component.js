@@ -57,6 +57,14 @@ export default class Component {
         return this[this.keyProperty];
     }
 
+    static get primaryKey() {
+        return camelcase(this.type);
+    }
+
+    get primaryKey() {
+        return this.constructor.primaryKey;
+    }
+
     constructor(ecs, properties = {}) {
         this.#ecs = ecs;
         this._defineProxies(properties);

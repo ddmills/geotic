@@ -256,7 +256,7 @@ TODO
         -   ✓ applyToEntity(entity)
     -   reference prefab chain on entity
         -   entity.is(prefab)
-    -   allow overrides on prefab instantiation
+    -   ✓ allow overrides on prefab instantiation
     -   https://www.youtube.com/watch?v=fGLJC5UY2o4
 -   ✓ query
     -   ✓ cache
