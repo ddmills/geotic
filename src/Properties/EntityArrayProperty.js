@@ -16,6 +16,10 @@ export default class EntityArrayProperty extends Property {
 
                 const old = Reflect.get(target, prop, receiver);
 
+                if (typeof value === 'string') {
+                    value = this.ecs.entities.get(value);
+                }
+
                 if (old && old != value) {
                     this.ecs.entities.removeRef(value, this);
                 }

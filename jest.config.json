@@ -1,0 +1,3 @@
+{
+    "setupFilesAfterEnv": ["./tests/jest.setup.js"]
+}

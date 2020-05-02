@@ -1,18 +1,12 @@
 import Engine from '../../src/Engine';
-import Component from '../../src/Component';
+import { EntityRefArrayComponent } from '../data/components';
 
 describe('EntityArrayProperty', () => {
     let engine;
 
-    class TestComponent extends Component {
-        static properties = {
-            testProperty: '<EntityArray>',
-        };
-    }
-
     beforeEach(() => {
         engine = new Engine();
-        engine.registerComponent(TestComponent);
+        engine.registerComponent(EntityRefArrayComponent);
     });
 
     describe('<EntityArray>', () => {
@@ -24,21 +18,40 @@ describe('EntityArrayProperty', () => {
                 () => engine.createEntity(),
                 chance.d6()
             );
-            entity.add(TestComponent);
+            entity.add(EntityRefArrayComponent);
         });
 
         describe('set', () => {
-            beforeEach(() => {
-                entity.testComponent.testProperty = referenceEntities;
+            describe('when set by a reference', () => {
+                beforeEach(() => {
+                    entity.entityRefArrayComponent.otherEntities = referenceEntities;
+                });
+
+                it('should return an array of referenced entities', () => {
+                    expect(
+                        entity.entityRefArrayComponent.otherEntities
+                    ).toStrictEqual(referenceEntities);
+                    expect(
+                        entity.entityRefArrayComponent.properties.otherEntities
+                    ).toStrictEqual(referenceEntities);
+                });
             });
 
-            it('can be set by a reference', () => {
-                expect(entity.testComponent.testProperty).toEqual(
-                    referenceEntities
-                );
-                expect(entity.testComponent.properties.testProperty).toEqual(
-                    referenceEntities
-                );
+            describe('when set by ids', () => {
+                beforeEach(() => {
+                    const ids = referenceEntities.map((e) => e.id);
+
+                    entity.entityRefArrayComponent.otherEntities = ids;
+                });
+
+                it('should return an array of referenced entities', () => {
+                    expect(
+                        entity.entityRefArrayComponent.otherEntities
+                    ).toStrictEqual(referenceEntities);
+                    expect(
+                        entity.entityRefArrayComponent.properties.otherEntities
+                    ).toStrictEqual(referenceEntities);
+                });
             });
 
             describe('push', () => {
@@ -47,15 +60,18 @@ describe('EntityArrayProperty', () => {
                 beforeEach(() => {
                     newReferencedEntity = engine.createEntity();
 
-                    entity.testComponent.testProperty.push(newReferencedEntity);
+                    entity.entityRefArrayComponent.otherEntities = referenceEntities;
+                    entity.entityRefArrayComponent.otherEntities.push(
+                        newReferencedEntity
+                    );
                 });
 
                 it('can append more entities', () => {
-                    expect(entity.testComponent.testProperty).toContain(
-                        newReferencedEntity
-                    );
                     expect(
-                        entity.testComponent.properties.testProperty
+                        entity.entityRefArrayComponent.otherEntities
+                    ).toContain(newReferencedEntity);
+                    expect(
+                        entity.entityRefArrayComponent.properties.otherEntities
                     ).toContain(newReferencedEntity);
                 });
             });
@@ -65,7 +81,7 @@ describe('EntityArrayProperty', () => {
             let result;
 
             beforeEach(() => {
-                entity.testComponent.testProperty = referenceEntities;
+                entity.entityRefArrayComponent.otherEntities = referenceEntities;
 
                 result = entity.serialize();
             });
@@ -73,7 +89,9 @@ describe('EntityArrayProperty', () => {
             it('should serialize all of the referenced ids', () => {
                 const ids = referenceEntities.map((e) => e.id);
 
-                expect(result.testComponent.testProperty).toEqual(ids);
+                expect(result.entityRefArrayComponent.otherEntities).toEqual(
+                    ids
+                );
             });
         });
 
@@ -81,7 +99,7 @@ describe('EntityArrayProperty', () => {
             let destroyedEntity, nonDestroyedEntities;
 
             beforeEach(() => {
-                entity.testComponent.testProperty = referenceEntities;
+                entity.entityRefArrayComponent.otherEntities = referenceEntities;
 
                 destroyedEntity = chance.pickone(referenceEntities);
                 nonDestroyedEntities = referenceEntities.filter(
@@ -92,7 +110,7 @@ describe('EntityArrayProperty', () => {
             });
 
             it('should no longer include the entity in the property', () => {
-                expect(entity.testComponent.testProperty).toEqual(
+                expect(entity.entityRefArrayComponent.otherEntities).toEqual(
                     nonDestroyedEntities
                 );
             });
@@ -105,9 +123,9 @@ describe('EntityArrayProperty', () => {
                 });
 
                 it('should not show up when serialized', () => {
-                    expect(result.testComponent.testProperty).toEqual(
-                        expect.not.arrayContaining([destroyedEntity.id])
-                    );
+                    expect(
+                        result.entityRefArrayComponent.otherEntities
+                    ).toEqual(expect.not.arrayContaining([destroyedEntity.id]));
                 });
             });
         });
@@ -117,14 +135,19 @@ describe('EntityArrayProperty', () => {
                 const firstRef = engine.createEntity();
                 const secondRef = engine.createEntity();
 
-                entity.testComponent.testProperty = [firstRef, secondRef];
+                entity.entityRefArrayComponent.otherEntities = [
+                    firstRef,
+                    secondRef,
+                ];
 
                 engine.destroyEntity(firstRef);
                 engine.destroyEntity(secondRef);
             });
 
             it('should remove both refs', () => {
-                expect(entity.testComponent.testProperty).toEqual([]);
+                expect(entity.entityRefArrayComponent.otherEntities).toEqual(
+                    []
+                );
             });
         });
 
@@ -132,13 +155,15 @@ describe('EntityArrayProperty', () => {
             beforeEach(() => {
                 const ref = engine.createEntity();
 
-                entity.testComponent.testProperty = [ref, ref];
+                entity.entityRefArrayComponent.otherEntities = [ref, ref];
 
                 engine.destroyEntity(ref);
             });
 
             it('should remove it from all locations in the array', () => {
-                expect(entity.testComponent.testProperty).toEqual([]);
+                expect(entity.entityRefArrayComponent.otherEntities).toEqual(
+                    []
+                );
             });
         });
 
@@ -149,18 +174,18 @@ describe('EntityArrayProperty', () => {
                 newReference = engine.createEntity();
                 dereferenced = referenceEntities[0];
 
-                entity.testComponent.testProperty = referenceEntities;
-                entity.testComponent.testProperty[0] = newReference;
+                entity.entityRefArrayComponent.otherEntities = referenceEntities;
+                entity.entityRefArrayComponent.otherEntities[0] = newReference;
             });
 
             it('should keep a reference to the new entity', () => {
-                expect(entity.testComponent.testProperty).toEqual(
+                expect(entity.entityRefArrayComponent.otherEntities).toEqual(
                     expect.arrayContaining([newReference])
                 );
             });
 
             it('should not reference the dereferenced entity', () => {
-                expect(entity.testComponent.testProperty).toEqual(
+                expect(entity.entityRefArrayComponent.otherEntities).toEqual(
                     expect.not.arrayContaining([dereferenced.id])
                 );
             });
@@ -171,9 +196,9 @@ describe('EntityArrayProperty', () => {
                 });
 
                 it('should no longer include the entity in the property', () => {
-                    expect(entity.testComponent.testProperty).toEqual(
-                        expect.not.arrayContaining([newReference.id])
-                    );
+                    expect(
+                        entity.entityRefArrayComponent.otherEntities
+                    ).toEqual(expect.not.arrayContaining([newReference.id]));
                 });
             });
         });

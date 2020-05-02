@@ -57,11 +57,9 @@ export default class Engine {
 
     deserialize(data) {
         if (data.id) {
-            return this.entities.deserialize(data);
+            return this.entities.deserializeEntity(data);
         }
 
-        return data.entities.map((entityData) =>
-            this.entities.deserialize(entityData)
-        );
+        return this.entities.deserialize(data);
     }
 }

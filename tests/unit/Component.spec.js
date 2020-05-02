@@ -18,14 +18,14 @@ describe('Component', () => {
     }
     class NestedComponent extends Component {
         static properties = {
-            name: 'test'
+            name: 'test',
         };
         static allowMultiple = true;
         static keyProperty = 'name';
     }
     class ArrayComponent extends Component {
         static properties = {
-            name: 'a'
+            name: 'a',
         };
         static allowMultiple = true;
     }
@@ -248,7 +248,7 @@ describe('Component', () => {
             });
 
             it('should remove the component from the entity', () => {
-                expect(entity.arrayComponent[1]).toBeUndefined()
+                expect(entity.arrayComponent[1]).toBeUndefined();
             });
 
             it('should not remove the other array component from the entity', () => {

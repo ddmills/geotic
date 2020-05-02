@@ -8,7 +8,7 @@
         "start": "npm run build && node --enable-source-maps --experimental-modules --es-module-specifier-resolution=node example/index.js",
         "build": "rollup -c",
         "pretty": "prettier --write .",
-        "test": "jest --setupTestFrameworkScriptFile=./tests/jest.setup.js",
+        "test": "jest --config jest.config.json",
         "prepublish": "npm run build"
     },
     "author": "Dalton Mills <mills.dalton@gmail.com> (http://www.ddmills.com)",

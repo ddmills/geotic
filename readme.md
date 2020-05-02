@@ -290,7 +290,7 @@ TODO
     -   github npm deploy action
 -   component
     -   ✓ default property values
-    -   property.deserialize(data)
+    -   ✓ property.deserialize(data)
     -   ✓ remove()
         -   ✓ ensure works with key components
     -   ✓ destroy()

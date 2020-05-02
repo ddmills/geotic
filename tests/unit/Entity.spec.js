@@ -8,14 +8,14 @@ describe('Entity', () => {
     class TestComponent extends Component {}
     class NestedComponent extends Component {
         static properties = {
-            name: 'test'
+            name: 'test',
         };
         static allowMultiple = true;
         static keyProperty = 'name';
     }
     class ArrayComponent extends Component {
         static properties = {
-            name: 'a'
+            name: 'a',
         };
         static allowMultiple = true;
     }
@@ -36,7 +36,7 @@ describe('Entity', () => {
         });
 
         it('should be able to recall by entity id', () => {
-             const result = engine.getEntity(entity.id);
+            const result = engine.getEntity(entity.id);
 
             expect(result).toBe(entity);
         });

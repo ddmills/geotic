@@ -23,8 +23,18 @@ export default class EntityRegistry {
         return this.#entities[id];
     }
 
-    create() {
-        const entity = new Entity(this.#ecs);
+    createOrGetById(id) {
+        const entity = this.get(id);
+
+        if (entity) {
+            return entity;
+        }
+
+        return this.create(id);
+    }
+
+    create(id = undefined) {
+        const entity = new Entity(this.#ecs, id);
 
         return this.register(entity);
     }
@@ -73,30 +83,28 @@ export default class EntityRegistry {
     }
 
     deserialize(data) {
-        const { id, ...componentData } = data;
-        const entity = new Entity(this.#ecs, id);
+        for (const entityData of data.entities) {
+            this.createOrGetById(entityData.id);
+        }
 
-        this.register(entity);
+        for (const entityData of data.entities) {
+            this.deserializeEntity(entityData);
+        }
+    }
+
+    deserializeEntity(data) {
+        const { id, ...componentData } = data;
+        const entity = this.createOrGetById(id);
 
         Object.entries(componentData).forEach(([type, value]) => {
             const definition = this.#ecs.components.get(type);
 
             if (definition.allowMultiple) {
                 Object.values(value).forEach((d) => {
-                    const component = this.#ecs.components.create(
-                        definition,
-                        d
-                    );
-
-                    entity.add(component);
+                    entity.add(definition, d);
                 });
             } else {
-                const component = this.#ecs.components.create(
-                    definition,
-                    value
-                );
-
-                entity.add(component);
+                entity.add(definition, value);
             }
         });
     }

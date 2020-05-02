@@ -251,6 +251,13 @@ export default class Entity {
                     };
                 }
 
+                if (Array.isArray(value)) {
+                    return {
+                        ...o,
+                        [key]: value.map((v) => v.serialize()),
+                    };
+                }
+
                 return {
                     ...o,
                     [key]: Object.entries(value).reduce(
