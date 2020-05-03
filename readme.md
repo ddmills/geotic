@@ -261,10 +261,15 @@ TODO
 -   ✓ query
     -   ✓ cache
     -   ✓ filter
-    -   ? re-filter on property change
-        -   simple query vs advanced (?)
     -   return Array instead of Object
-    -   filter destroyed entities by default
+    -   ✓ filter destroyed entities by default
+    -   ✓ query definition
+        -   ✓ any
+        -   ✓ all
+        -   ✓ none
+    -   query.get
+    -   query.onEntityIncluded(e)
+    -   query.onEntityRemoved(e)
 -   logging configuration
     -   route all console logs to logger
     -   check all console log statements

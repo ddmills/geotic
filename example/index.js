@@ -43,6 +43,12 @@ player.add(EquipmentSlot, {
 
 console.log(player.serialize());
 
+// query = ecs.createQuery({
+//     all: [Action], // entity must have all of these
+//     any: [Health, Material], // entity must include at least one of these
+//     none: [EquipmentSlot] // entity cannot include any of these
+// });
+
 // console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
 // console.log(player.equipmentSlot.rightHand.allowedTypes);
 // player.equipmentSlot.rightHand.content = sword;

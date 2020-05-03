@@ -45,8 +45,8 @@ export default class Engine {
         return this.components.create(type, properties);
     }
 
-    createQuery(settings) {
-        return this.queries.create(settings);
+    createQuery(filters) {
+        return this.queries.create(filters);
     }
 
     serialize() {

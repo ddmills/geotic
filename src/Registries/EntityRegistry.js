@@ -36,7 +36,11 @@ export default class EntityRegistry {
     create(id = undefined) {
         const entity = new Entity(this.#ecs, id);
 
-        return this.register(entity);
+        this.register(entity);
+
+        this.#ecs.queries.onEntityCreated(entity);
+
+        return entity;
     }
 
     destroy(entity) {
@@ -46,6 +50,7 @@ export default class EntityRegistry {
     onEntityDestroyed(entity) {
         this.cleanupRefs(entity);
         delete this.#entities[entity.id];
+        this.#ecs.queries.onEntityDestroyed(entity);
     }
 
     cleanupRefs(entity) {
