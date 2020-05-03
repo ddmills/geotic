@@ -43,6 +43,12 @@ player.add(EquipmentSlot, {
 
 console.log(player.serialize());
 
+const q = ecs.createQuery({
+    all: [Position]
+});
+
+q.get().forEach((e) => console.log(e.position));
+
 // query = ecs.createQuery({
 //     all: [Action], // entity must have all of these
 //     any: [Health, Material], // entity must include at least one of these
