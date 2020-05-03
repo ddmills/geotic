@@ -45,7 +45,7 @@ query.get().forEach(...);
 
 ```
 
-[example](https://github.com/ddmills/geotic/blob/master/example/index.js)
+[example](https://github.com/ddmills/geotic-example)
 
 ### entities
 
