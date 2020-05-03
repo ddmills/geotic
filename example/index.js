@@ -44,7 +44,7 @@ player.add(EquipmentSlot, {
 console.log(player.serialize());
 
 const q = ecs.createQuery({
-    all: [Position]
+    all: [Position],
 });
 
 q.get().forEach((e) => console.log(e.position));

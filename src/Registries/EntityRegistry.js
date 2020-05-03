@@ -69,7 +69,7 @@ export default class EntityRegistry {
 
     addRef(entityId, property) {
         if (!this.#refs.has(entityId)) {
-            this.#refs.set(entityId,  new Set([property]));
+            this.#refs.set(entityId, new Set([property]));
             return;
         }
 
@@ -86,7 +86,7 @@ export default class EntityRegistry {
         const json = [];
 
         this.#entities.forEach((entity) => {
-            json.push(entity.serialize())
+            json.push(entity.serialize());
         });
 
         return json;
