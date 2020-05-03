@@ -1,26 +1,26 @@
 import Entity from '../Entity';
 
 export default class EntityRegistry {
-    #entities = {};
+    #entities = new Map();
     #ecs = null;
-    #refs = {};
+    #refs = new Map();
 
     constructor(ecs) {
         this.#ecs = ecs;
     }
 
     get all() {
-        return Object.values(this.#entities);
+        return this.#entities.values();
     }
 
     register(entity) {
-        this.#entities[entity.id] = entity;
+        this.#entities.set(entity.id, entity);
 
         return entity;
     }
 
     get(id) {
-        return this.#entities[id];
+        return this.#entities.get(id);
     }
 
     createOrGetById(id) {
@@ -49,12 +49,12 @@ export default class EntityRegistry {
 
     onEntityDestroyed(entity) {
         this.cleanupRefs(entity);
-        delete this.#entities[entity.id];
+        this.#entities.delete(entity.id);
         this.#ecs.queries.onEntityDestroyed(entity);
     }
 
     cleanupRefs(entity) {
-        const refs = this.#refs[entity.id];
+        const refs = this.#refs.get(entity.id);
 
         if (!refs) {
             return;
@@ -68,23 +68,28 @@ export default class EntityRegistry {
     }
 
     addRef(entityId, property) {
-        if (!(entityId in this.#refs)) {
-            this.#refs[entityId] = new Set();
+        if (!this.#refs.has(entityId)) {
+            this.#refs.set(entityId,  new Set([property]));
+            return;
         }
 
-        this.#refs[entityId].add(property);
+        this.#refs.get(entityId).add(property);
     }
 
     removeRef(entityId, property) {
-        if (entityId in this.#refs) {
-            this.#refs[entityId].delete(property);
+        if (this.#refs.has(entityId)) {
+            this.#refs.get(entityId).delete(property);
         }
     }
 
     serialize() {
-        return Object.values(this.#entities).map((entity) =>
-            entity.serialize()
-        );
+        const json = [];
+
+        this.#entities.forEach((entity) => {
+            json.push(entity.serialize())
+        });
+
+        return json;
     }
 
     deserialize(data) {
