@@ -72,6 +72,12 @@ const loop = (dt) => {
     });
 };
 
+const data = ecs.serialize(); // serialize the game state into a javascript object
+
+...
+
+ecs.deserialize(data); // convert the serialized data back into entities and components
+
 ```
 
 ### entities
@@ -152,7 +158,8 @@ class Health extends Component {
 
 Component properties and methods:
 
--   **static properties = {}** object that defines the properties of the component
+-   **static properties = {}** object that defines the properties of the component. These can also reference an entity or
+an array of entites by setting the default value to `<Entity>` and `<EntityArray>` respectively!
 -   **static allowMultiple = false** are multiple of this component type allowed? If true, components will either be stored as an object or array on the entity, depending on `keyProperty`.
 -   **static keyProperty = null** what property should be used as the key for accessing this component. if `allowMultiple` is false, this has no effect. If this property is omitted, it will be stored as an array on the component.
 -   **isAttached** returns `true` if this component is attached to an entity
@@ -330,9 +337,82 @@ console.log(evt.is('take-damage')); // simple name check
 
 > a predefined collection of components
 
-## Dev notes
+The prefab system is modelled after this talk by [Thomas Biskup - There be dragons: Entity Component Systems for Roguelikes](https://www.youtube.com/watch?v=fGLJC5UY2o4&t=1534s).
 
-TODO
+```js
+// prefabs must be registered before they can be instantiated
+ecs.registerPrefab({
+    name: 'Being',
+    components: [
+        {
+            type: 'Position',
+            properties: {
+                x: 4,
+                y: 10,
+            },
+        },
+        {
+            type: 'Material',
+            properties: {
+                name: 'flesh',
+            },
+        },
+    ],
+});
+
+ecs.registerPrefab({
+    // name used when creating the prefab
+    name: 'HumanWarrior',
+    // an array of other prefabs of which this one derives.
+    inherit: ['Being', 'Warrior'],
+    // an array of components to attach
+    components: [
+        {
+            // this can be a constructor name, or a reference directly to the component class
+            type: 'EquipmentSlot',
+            // what properties should be assigned to the component
+            properties: {
+                name: 'head',
+            },
+        },
+        {
+            // components that allow multiple can easily be added in
+            type: 'EquipmentSlot',
+            properties: {
+                name: 'legs',
+            },
+        },
+        {
+            type: 'Material',
+            // if a parent prefab already defines a `Material` component, this flag
+            // will say how to treat it. Defaults to overwrite=true
+            overwrite: true,
+            properties: {
+                name: 'silver',
+            },
+        },
+    ],
+});
+
+...
+
+const warrior1 = ecs.createPrefab('HumanWarrior');
+
+// property overrides can be provided as the second argument
+const warrior2 = ecs.createPrefab('HumanWarrior', {
+    equipmentSlot: {
+        head: {
+            item: ecs.createPrefab('Helmet')
+        },
+    },
+    position: {
+        x: 12,
+        y: 24,
+    },
+});
+```
+
+## Dev notes
 
 -   ✓ deserialize
     -   ✓ basic serialize/deserialize from object
