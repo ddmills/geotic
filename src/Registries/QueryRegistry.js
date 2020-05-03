@@ -16,11 +16,11 @@ export default class QueryRegistry {
         return query;
     }
 
-    onComponentAdded(entity, component) {
+    onComponentAdded(entity) {
         this.#queries.forEach((query) => query._onComponentAdded(entity));
     }
 
-    onComponentRemoved(entity, component) {
+    onComponentRemoved(entity) {
         this.#queries.forEach((query) => query._onComponentRemoved(entity));
     }
 

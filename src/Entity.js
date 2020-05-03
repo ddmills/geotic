@@ -70,7 +70,6 @@ export default class Entity {
 
     add(typeOrClass, properties = {}) {
         const component = this.ecs.components.create(typeOrClass, properties);
-        const accessor = camelcase(component.type);
 
         if (!component) {
             console.warn(
@@ -104,6 +103,8 @@ export default class Entity {
             });
 
             component._onAttached(this);
+            this.ecs.queries.onComponentAdded(this);
+
             return true;
         }
 
@@ -122,6 +123,7 @@ export default class Entity {
             this.components[accessor].push(component);
 
             component._onAttached(this);
+            this.ecs.queries.onComponentAdded(this);
 
             return true;
         }
@@ -147,6 +149,7 @@ export default class Entity {
         this.components[accessor][component.key] = component;
 
         component._onAttached(this);
+        this.ecs.queries.onComponentAdded(this, component);
 
         return true;
     }
@@ -186,6 +189,8 @@ export default class Entity {
                             delete this.components[accessor];
                         }
 
+                        this.ecs.queries.onComponentRemoved(this);
+
                         return true;
                     }
                 } else {
@@ -195,6 +200,7 @@ export default class Entity {
 
                     delete this[accessor];
                     delete this.components[accessor];
+                    this.ecs.queries.onComponentRemoved(this);
 
                     return true;
                 }
@@ -217,6 +223,8 @@ export default class Entity {
                     delete this[accessor];
                     delete this.components[accessor];
                 }
+                this.ecs.queries.onComponentRemoved(this);
+
                 return component;
             } else {
                 console.warn(
@@ -232,6 +240,7 @@ export default class Entity {
             delete this[accessor];
             delete this.components[accessor];
             component._onDetached();
+            this.ecs.queries.onComponentRemoved(this);
 
             return component;
         }
