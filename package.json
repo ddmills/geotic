@@ -1,6 +1,6 @@
 {
     "name": "geotic",
-    "version": "3.0.2",
+    "version": "3.0.3",
     "description": "entity-component-system",
     "main": "build/index.js",
     "type": "module",
