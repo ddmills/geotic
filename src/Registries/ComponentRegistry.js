@@ -3,7 +3,7 @@ import camelcase from 'camelcase';
 
 export default class ComponentRegistry {
     #nameCache = new Map();
-    #definitions = {};
+    #definitions = new Map();
     #ecs = null;
 
     constructor(ecs) {
@@ -11,7 +11,7 @@ export default class ComponentRegistry {
     }
 
     register(component) {
-        this.#definitions[component.name] = component;
+        this.#definitions.set(component.name, component);
         this.#nameCache.set(component.name, camelcase(component.name));
     }
 
@@ -33,7 +33,7 @@ export default class ComponentRegistry {
             return null;
         }
 
-        return this.#definitions[type];
+        return this.#definitions.get(type);
     }
 
     create(typeOrClass, properties = {}) {
@@ -50,7 +50,6 @@ export default class ComponentRegistry {
 
     _getType(typeOrClassOrComponent) {
         if (typeof typeOrClassOrComponent === 'string') {
-            // return camelcase(typeOrClassOrComponent, { pascalCase: true });
             return typeOrClassOrComponent;
         }
 
