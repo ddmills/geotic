@@ -1,6 +1,5 @@
 import Component from './Component';
 import EntityEvent from './EntityEvent';
-import camelcase from 'camelcase';
 
 export default class Entity {
     #id = null;
@@ -32,10 +31,11 @@ export default class Entity {
 
     has(typeOrClass, key = null) {
         const type = this.ecs.components._getType(typeOrClass);
-        const hasType = this.hasOwnProperty(camelcase(type));
+        const accessor = this.ecs.components.getAccessor(type);
+        const hasType = this.hasOwnProperty(accessor);
 
         if (hasType && key) {
-            return this[camelcase(type)].hasOwnProperty(key);
+            return this[accessor].hasOwnProperty(key);
         }
 
         return hasType;
@@ -43,7 +43,8 @@ export default class Entity {
 
     get(typeOrClass, key = null) {
         const type = this.ecs.components._getType(typeOrClass);
-        const components = this[camelcase(type)];
+        const accessor = this.ecs.components.getAccessor(type);
+        const components = this[accessor];
 
         if (components && key) {
             return components[key];
@@ -82,7 +83,7 @@ export default class Entity {
     }
 
     attach(component) {
-        const accessor = camelcase(component.type);
+        const accessor = this.ecs.components.getAccessor(component.type);
 
         if (!component.allowMultiple) {
             if (this.has(component.type)) {
@@ -164,7 +165,7 @@ export default class Entity {
 
         const definition = this.ecs.components.get(typeOrClassOrComponent);
 
-        const accessor = camelcase(definition.type);
+        const accessor = this.ecs.components.getAccessor(definition.type);
 
         if (definition.allowMultiple) {
             if (!definition.keyProperty) {

@@ -3,7 +3,8 @@ export default class Prefab {
     inherit = [];
     components = [];
 
-    constructor(name) {
+    constructor(ecs, name) {
+        this.ecs = ecs;
         this.name = name;
     }
 
@@ -20,6 +21,7 @@ export default class Prefab {
 
         this.components.forEach((component, i) => {
             const definition = component.componentDef;
+            const accessor = this.ecs.components.getAccessor(definition.type);
 
             let initialCompProps = {};
 
@@ -28,33 +30,33 @@ export default class Prefab {
                     const key = component.properties[definition.keyProperty];
 
                     if (
-                        initialProps[definition.primaryKey] &&
-                        initialProps[definition.primaryKey][key]
+                        initialProps[accessor] &&
+                        initialProps[accessor][key]
                     ) {
                         initialCompProps =
-                            initialProps[definition.primaryKey][key];
+                            initialProps[accessor][key];
                     }
                 } else {
-                    if (!arrComps[definition.primaryKey]) {
-                        arrComps[definition.primaryKey] = 0;
+                    if (!arrComps[accessor]) {
+                        arrComps[accessor] = 0;
                     }
 
                     if (
-                        initialProps[definition.primaryKey] &&
-                        initialProps[definition.primaryKey][
-                            arrComps[definition.primaryKey]
+                        initialProps[accessor] &&
+                        initialProps[accessor][
+                            arrComps[accessor]
                         ]
                     ) {
                         initialCompProps =
-                            initialProps[definition.primaryKey][
-                                arrComps[definition.primaryKey]
+                            initialProps[accessor][
+                                arrComps[accessor]
                             ];
                     }
 
-                    arrComps[definition.primaryKey]++;
+                    arrComps[accessor]++;
                 }
             } else {
-                initialCompProps = initialProps[definition.primaryKey];
+                initialCompProps = initialProps[accessor];
             }
 
             component.applyToEntity(entity, initialCompProps);

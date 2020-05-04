@@ -1,4 +1,5 @@
 import Entity from '../Entity';
+import camelcase from 'camelcase';
 
 export default class EntityRegistry {
     #entities = new Map();
@@ -106,7 +107,8 @@ export default class EntityRegistry {
         const { id, ...componentData } = data;
         const entity = this.createOrGetById(id);
 
-        Object.entries(componentData).forEach(([type, value]) => {
+        Object.entries(componentData).forEach(([key, value]) => {
+            const type = camelcase(key, { pascalCase: true });
             const definition = this.#ecs.components.get(type);
 
             if (definition.allowMultiple) {

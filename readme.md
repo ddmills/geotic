@@ -496,3 +496,7 @@ const warrior2 = ecs.createPrefab('HumanWarrior', {
 -   Performance
     -   Use raw for loops
     -   ✓ store entities as array instead of object (?)
+    -   use Map for component registry
+    -   rapid entity add/remove
+        -   ✓ cache camel case results
+    -   cache event name map

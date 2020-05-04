@@ -17,7 +17,7 @@ export default class PrefabRegistry {
             return registered;
         }
 
-        const prefab = new Prefab(data.name);
+        const prefab = new Prefab(this.#ecs, data.name);
 
         let inherit;
 

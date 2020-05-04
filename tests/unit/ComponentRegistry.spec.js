@@ -23,10 +23,6 @@ describe('ComponentRegistry', () => {
             expect(registry.get('EmptyComponent')).toBe(EmptyComponent);
         });
 
-        it('should return the component by camel-cased type', () => {
-            expect(registry.get('emptyComponent')).toBe(EmptyComponent);
-        });
-
         it('should return the component by instance', () => {
             const instance = new EmptyComponent(engine);
 
