@@ -23,7 +23,7 @@ export default class PrefabComponent {
             }
         }
 
-        const props = merge(this.properties, initialProps);
+        const props = merge(this.properties, initialProps, { clone: false });
 
         entity.add(this.componentDef, props);
     }
