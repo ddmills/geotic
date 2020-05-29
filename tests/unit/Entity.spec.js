@@ -116,15 +116,9 @@ describe('Entity', () => {
 
         describe('simple components', () => {
             describe.each([
-                ['class', () => (
-                    entity.add(TestComponent)
-                )],
-                ['type', () => (
-                    entity.add('TestComponent')
-                )],
-                ['instance', () => (
-                    entity.add(new TestComponent(engine))
-                )],
+                ['class', () => entity.add(TestComponent)],
+                ['type', () => entity.add('TestComponent')],
+                ['instance', () => entity.add(new TestComponent(engine))],
             ])('when added by %s', (def, fn) => {
                 let result;
 
@@ -196,18 +190,31 @@ describe('Entity', () => {
             });
 
             describe.each([
-                ['class', () => [
-                    entity.add(NestedComponent, { name: nameA }),
-                    entity.add(NestedComponent, { name: nameB }),
-                ]],
-                ['type', () => [
-                    entity.add('NestedComponent', { name: nameA }),
-                    entity.add('NestedComponent', { name: nameB }),
-                ]],
-                ['instance', () => [
-                    entity.add(new NestedComponent(engine, { name: nameA })),
-                    entity.add(new NestedComponent(engine, { name: nameB })),
-                ]],
+                [
+                    'class',
+                    () => [
+                        entity.add(NestedComponent, { name: nameA }),
+                        entity.add(NestedComponent, { name: nameB }),
+                    ],
+                ],
+                [
+                    'type',
+                    () => [
+                        entity.add('NestedComponent', { name: nameA }),
+                        entity.add('NestedComponent', { name: nameB }),
+                    ],
+                ],
+                [
+                    'instance',
+                    () => [
+                        entity.add(
+                            new NestedComponent(engine, { name: nameA })
+                        ),
+                        entity.add(
+                            new NestedComponent(engine, { name: nameB })
+                        ),
+                    ],
+                ],
             ])('when added by %s', (def, fn) => {
                 let result;
 
@@ -221,8 +228,12 @@ describe('Entity', () => {
                 });
 
                 it('should have the correct type of components', () => {
-                    expect(entity.nestedComponent[nameA]).toBeInstanceOf(NestedComponent);
-                    expect(entity.nestedComponent[nameB]).toBeInstanceOf(NestedComponent);
+                    expect(entity.nestedComponent[nameA]).toBeInstanceOf(
+                        NestedComponent
+                    );
+                    expect(entity.nestedComponent[nameB]).toBeInstanceOf(
+                        NestedComponent
+                    );
                 });
 
                 it('should set component properties', () => {
@@ -263,15 +274,14 @@ describe('Entity', () => {
                         engine.createEntity().add(instanceA);
                         engine.createEntity().add(instanceB);
 
-                        result = [
-                            entity.add(instanceA),
-                            entity.add(instanceB),
-                        ];
+                        result = [entity.add(instanceA), entity.add(instanceB)];
                     });
 
                     it('should not attach the instances', () => {
                         expect(entity.has(NestedComponent)).toBe(false);
-                        expect(entity.components.nestedComponent).toBeUndefined();
+                        expect(
+                            entity.components.nestedComponent
+                        ).toBeUndefined();
                     });
 
                     it('should return false', () => {
@@ -290,18 +300,27 @@ describe('Entity', () => {
             });
 
             describe.each([
-                ['class', () => [
-                    entity.add(ArrayComponent, { name: nameA }),
-                    entity.add(ArrayComponent, { name: nameB }),
-                ]],
-                ['type', () => [
-                    entity.add('ArrayComponent', { name: nameA }),
-                    entity.add('ArrayComponent', { name: nameB }),
-                ]],
-                ['instance', () => [
-                    entity.add(new ArrayComponent(engine, { name: nameA })),
-                    entity.add(new ArrayComponent(engine, { name: nameB })),
-                ]],
+                [
+                    'class',
+                    () => [
+                        entity.add(ArrayComponent, { name: nameA }),
+                        entity.add(ArrayComponent, { name: nameB }),
+                    ],
+                ],
+                [
+                    'type',
+                    () => [
+                        entity.add('ArrayComponent', { name: nameA }),
+                        entity.add('ArrayComponent', { name: nameB }),
+                    ],
+                ],
+                [
+                    'instance',
+                    () => [
+                        entity.add(new ArrayComponent(engine, { name: nameA })),
+                        entity.add(new ArrayComponent(engine, { name: nameB })),
+                    ],
+                ],
             ])('when added by %s', (def, fn) => {
                 let result;
 
@@ -326,8 +345,12 @@ describe('Entity', () => {
                 });
 
                 it('should have the correct type of components', () => {
-                    expect(entity.arrayComponent[0]).toBeInstanceOf(ArrayComponent);
-                    expect(entity.arrayComponent[1]).toBeInstanceOf(ArrayComponent);
+                    expect(entity.arrayComponent[0]).toBeInstanceOf(
+                        ArrayComponent
+                    );
+                    expect(entity.arrayComponent[1]).toBeInstanceOf(
+                        ArrayComponent
+                    );
                 });
 
                 it('should set component properties', () => {
@@ -368,15 +391,14 @@ describe('Entity', () => {
                         engine.createEntity().add(instanceA);
                         engine.createEntity().add(instanceB);
 
-                        result = [
-                            entity.add(instanceA),
-                            entity.add(instanceB),
-                        ];
+                        result = [entity.add(instanceA), entity.add(instanceB)];
                     });
 
                     it('should not attach the instances', () => {
                         expect(entity.has(ArrayComponent)).toBe(false);
-                        expect(entity.components.arrayComponent).toBeUndefined();
+                        expect(
+                            entity.components.arrayComponent
+                        ).toBeUndefined();
                     });
 
                     it('should return false', () => {
