@@ -107,6 +107,150 @@ describe('Entity', () => {
         });
     });
 
+    describe('add', () => {
+        let entity;
+
+        beforeEach(() => {
+            entity = engine.createEntity();
+        });
+
+        describe('simple components', () => {
+            describe.each([
+                ['class', () => (
+                    entity.add(TestComponent)
+                )],
+                ['type', () => (
+                    entity.add('TestComponent')
+                )],
+            ])('when added by %s', (def, fn) => {
+                let result;
+
+                beforeEach(() => {
+                    result = fn();
+                });
+
+                it('should add the component to the entity as a camel cased property', () => {
+                    expect(entity.testComponent).toBeDefined();
+                });
+
+                it('should include the component in the entity list', () => {
+                    expect(entity.components.testComponent).toBeTruthy();
+                });
+
+                it('should have the correct type of components', () => {
+                    expect(entity.testComponent).toBeInstanceOf(TestComponent);
+                });
+
+                it('should return TRUE', () => {
+                    expect(result).toBe(true);
+                });
+            });
+        });
+
+        describe('keyed components', () => {
+            let nameA, nameB;
+
+            beforeEach(() => {
+                nameA = chance.word();
+                nameB = chance.word();
+            });
+
+            describe.each([
+                ['class', () => [
+                    entity.add(NestedComponent, { name: nameA }),
+                    entity.add(NestedComponent, { name: nameB }),
+                ]],
+                ['type', () => [
+                    entity.add('NestedComponent', { name: nameA }),
+                    entity.add('NestedComponent', { name: nameB }),
+                ]],
+            ])('when added by %s', (def, fn) => {
+                let result;
+
+                beforeEach(() => {
+                    result = fn();
+                });
+
+                it('should add the components to the entity as a camel cased property', () => {
+                    expect(entity.nestedComponent[nameA]).toBeDefined();
+                    expect(entity.nestedComponent[nameB]).toBeDefined();
+                });
+
+                it('should have the correct type of components', () => {
+                    expect(entity.nestedComponent[nameA]).toBeInstanceOf(NestedComponent);
+                    expect(entity.nestedComponent[nameB]).toBeInstanceOf(NestedComponent);
+                });
+
+                it('should set component properties', () => {
+                    expect(entity.nestedComponent[nameA].name).toBe(nameA);
+                    expect(entity.nestedComponent[nameB].name).toBe(nameB);
+                });
+
+                it('should return TRUE', () => {
+                    expect(result[0]).toBe(true);
+                    expect(result[1]).toBe(true);
+                });
+            });
+        });
+
+        describe('array components', () => {
+            let nameA, nameB;
+
+            beforeEach(() => {
+                nameA = chance.word();
+                nameB = chance.word();
+            });
+
+            describe.each([
+                ['class', () => [
+                    entity.add(ArrayComponent, { name: nameA }),
+                    entity.add(ArrayComponent, { name: nameB }),
+                ]],
+                ['type', () => [
+                    entity.add('ArrayComponent', { name: nameA }),
+                    entity.add('ArrayComponent', { name: nameB }),
+                ]],
+            ])('when added by %s', (def, fn) => {
+                let result;
+
+                beforeEach(() => {
+                    result = fn();
+                });
+
+                it('should add the components to the entity as a camel cased array property', () => {
+                    expect(entity.arrayComponent).toBeDefined();
+                    expect(entity.arrayComponent).toHaveLength(2);
+                    expect(entity.arrayComponent[0].name).toBe(nameA);
+                    expect(entity.arrayComponent[1].name).toBe(nameB);
+                });
+
+                it('should mark the components as "attached"', () => {
+                    expect(entity.arrayComponent[0].isAttached).toBe(true);
+                    expect(entity.arrayComponent[1].isAttached).toBe(true);
+                });
+
+                it('should include the components in the entity list', () => {
+                    expect(entity.components.arrayComponent).toHaveLength(2);
+                });
+
+                it('should have the correct type of components', () => {
+                    expect(entity.arrayComponent[0]).toBeInstanceOf(ArrayComponent);
+                    expect(entity.arrayComponent[1]).toBeInstanceOf(ArrayComponent);
+                });
+
+                it('should set component properties', () => {
+                    expect(entity.arrayComponent[0].name).toBe(nameA);
+                    expect(entity.arrayComponent[1].name).toBe(nameB);
+                });
+
+                it('should return TRUE', () => {
+                    expect(result[0]).toBe(true);
+                    expect(result[1]).toBe(true);
+                });
+            });
+        });
+    });
+
     describe('remove', () => {
         let entity;
 
