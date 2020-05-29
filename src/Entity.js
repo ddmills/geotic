@@ -70,6 +70,17 @@ export default class Entity {
     }
 
     add(typeOrClass, properties = {}) {
+        if (typeOrClass instanceof Component) {
+            if (typeOrClass.isAttached) {
+                console.warn(
+                    `"${typeOrClass.type}" component cannot be added, since it is already attached to an entity.`
+                );
+                return false;
+            }
+
+            return this.attach(typeOrClass);
+        }
+
         const component = this.ecs.components.create(typeOrClass, properties);
 
         if (!component) {
