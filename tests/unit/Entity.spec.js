@@ -122,6 +122,9 @@ describe('Entity', () => {
                 ['type', () => (
                     entity.add('TestComponent')
                 )],
+                ['instance', () => (
+                    entity.add(new TestComponent(engine))
+                )],
             ])('when added by %s', (def, fn) => {
                 let result;
 
@@ -145,6 +148,43 @@ describe('Entity', () => {
                     expect(result).toBe(true);
                 });
             });
+
+            describe('when instance is added', () => {
+                let instance;
+
+                beforeEach(() => {
+                    instance = new TestComponent(engine);
+                });
+
+                describe('when instance is not attached to an entity', () => {
+                    beforeEach(() => {
+                        entity.add(instance);
+                    });
+
+                    it('should attach the same exact instance', () => {
+                        expect(entity.testComponent).toBe(instance);
+                    });
+                });
+
+                describe('when instance is already attached to an entity', () => {
+                    let result;
+
+                    beforeEach(() => {
+                        engine.createEntity().add(instance);
+
+                        result = entity.add(instance);
+                    });
+
+                    it('should not attach the instance', () => {
+                        expect(entity.has(TestComponent)).toBe(false);
+                        expect(entity.components.testComponent).toBeUndefined();
+                    });
+
+                    it('should return false', () => {
+                        expect(result).toBe(false);
+                    });
+                });
+            });
         });
 
         describe('keyed components', () => {
@@ -163,6 +203,10 @@ describe('Entity', () => {
                 ['type', () => [
                     entity.add('NestedComponent', { name: nameA }),
                     entity.add('NestedComponent', { name: nameB }),
+                ]],
+                ['instance', () => [
+                    entity.add(new NestedComponent(engine, { name: nameA })),
+                    entity.add(new NestedComponent(engine, { name: nameB })),
                 ]],
             ])('when added by %s', (def, fn) => {
                 let result;
@@ -191,6 +235,50 @@ describe('Entity', () => {
                     expect(result[1]).toBe(true);
                 });
             });
+
+            describe('when instances are added', () => {
+                let instanceA, instanceB;
+
+                beforeEach(() => {
+                    instanceA = new NestedComponent(engine, { name: nameA });
+                    instanceB = new NestedComponent(engine, { name: nameB });
+                });
+
+                describe('when instances are not attached to an entity', () => {
+                    beforeEach(() => {
+                        entity.add(instanceA);
+                        entity.add(instanceB);
+                    });
+
+                    it('should attach the same exact instances', () => {
+                        expect(entity.nestedComponent[nameA]).toBe(instanceA);
+                        expect(entity.nestedComponent[nameB]).toBe(instanceB);
+                    });
+                });
+
+                describe('when instances are already attached to an entity', () => {
+                    let result;
+
+                    beforeEach(() => {
+                        engine.createEntity().add(instanceA);
+                        engine.createEntity().add(instanceB);
+
+                        result = [
+                            entity.add(instanceA),
+                            entity.add(instanceB),
+                        ];
+                    });
+
+                    it('should not attach the instances', () => {
+                        expect(entity.has(NestedComponent)).toBe(false);
+                        expect(entity.components.nestedComponent).toBeUndefined();
+                    });
+
+                    it('should return false', () => {
+                        expect(result).toStrictEqual([false, false]);
+                    });
+                });
+            });
         });
 
         describe('array components', () => {
@@ -209,6 +297,10 @@ describe('Entity', () => {
                 ['type', () => [
                     entity.add('ArrayComponent', { name: nameA }),
                     entity.add('ArrayComponent', { name: nameB }),
+                ]],
+                ['instance', () => [
+                    entity.add(new ArrayComponent(engine, { name: nameA })),
+                    entity.add(new ArrayComponent(engine, { name: nameB })),
                 ]],
             ])('when added by %s', (def, fn) => {
                 let result;
@@ -246,6 +338,50 @@ describe('Entity', () => {
                 it('should return TRUE', () => {
                     expect(result[0]).toBe(true);
                     expect(result[1]).toBe(true);
+                });
+            });
+
+            describe('when instances are added', () => {
+                let instanceA, instanceB;
+
+                beforeEach(() => {
+                    instanceA = new ArrayComponent(engine, { name: nameA });
+                    instanceB = new ArrayComponent(engine, { name: nameB });
+                });
+
+                describe('when instances are not attached to an entity', () => {
+                    beforeEach(() => {
+                        entity.add(instanceA);
+                        entity.add(instanceB);
+                    });
+
+                    it('should attach the same exact instances', () => {
+                        expect(entity.arrayComponent[0]).toBe(instanceA);
+                        expect(entity.arrayComponent[1]).toBe(instanceB);
+                    });
+                });
+
+                describe('when instances are already attached to an entity', () => {
+                    let result;
+
+                    beforeEach(() => {
+                        engine.createEntity().add(instanceA);
+                        engine.createEntity().add(instanceB);
+
+                        result = [
+                            entity.add(instanceA),
+                            entity.add(instanceB),
+                        ];
+                    });
+
+                    it('should not attach the instances', () => {
+                        expect(entity.has(ArrayComponent)).toBe(false);
+                        expect(entity.components.arrayComponent).toBeUndefined();
+                    });
+
+                    it('should return false', () => {
+                        expect(result).toStrictEqual([false, false]);
+                    });
                 });
             });
         });
