@@ -100,13 +100,13 @@ Entity properties and methods:
 -   **ecs**: the geotic Engine instance
 -   **isDestroyed**: returns `true` if this entity is destroyed
 -   **components**: all component instances attached to this entity
--   **add(componentName, props={})**: create and add registered component to the entity
+-   **add(componentName, props={})**: create and add registered component to the entity. A component instance can also be supplied.
 -   **has(componentName, key='')**: returns true if entity has component
 -   **get(componentName, key='')**: get a component attached to this entity
 -   **owns(component)**: returns `true` if the specified component belongs to this entity
 -   **destroy()**: destroy the entity and all of it's components
 -   **remove(componentName, key='')**: remove (detach) component from the entity
--   **attach(component)**: attach a component that has been removed
+-   *DEPRECIATED* **attach(component)**: attach a component that has been removed. *DEPRECIATED*: Use `.add(instance)` instead!
 -   **serialize()**: serialize this entity and it's components
 -   **fireEvent(name, data={})**: send an event to all components on the entity
 
@@ -265,7 +265,7 @@ playerA.add(someComponent);
 
 const clonedComponent = playerA.someComponent.clone();
 
-playerB.attach(clonedComponent); // note the use of `attach` here
+playerB.add(clonedComponent);
 ```
 
 ### queries
