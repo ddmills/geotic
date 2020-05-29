@@ -263,7 +263,7 @@ const playerB = ecs.createEntity();
 
 playerA.add(someComponent);
 
-const clonedComponent = player.someComponent.clone();
+const clonedComponent = playerA.someComponent.clone();
 
 playerB.attach(clonedComponent); // note the use of `attach` here
 ```
