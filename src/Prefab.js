@@ -29,12 +29,8 @@ export default class Prefab {
                 if (definition.keyProperty) {
                     const key = component.properties[definition.keyProperty];
 
-                    if (
-                        initialProps[accessor] &&
-                        initialProps[accessor][key]
-                    ) {
-                        initialCompProps =
-                            initialProps[accessor][key];
+                    if (initialProps[accessor] && initialProps[accessor][key]) {
+                        initialCompProps = initialProps[accessor][key];
                     }
                 } else {
                     if (!arrComps[accessor]) {
@@ -43,14 +39,10 @@ export default class Prefab {
 
                     if (
                         initialProps[accessor] &&
-                        initialProps[accessor][
-                            arrComps[accessor]
-                        ]
+                        initialProps[accessor][arrComps[accessor]]
                     ) {
                         initialCompProps =
-                            initialProps[accessor][
-                                arrComps[accessor]
-                            ];
+                            initialProps[accessor][arrComps[accessor]];
                     }
 
                     arrComps[accessor]++;

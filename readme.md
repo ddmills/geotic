@@ -106,7 +106,7 @@ Entity properties and methods:
 -   **owns(component)**: returns `true` if the specified component belongs to this entity
 -   **destroy()**: destroy the entity and all of it's components
 -   **remove(componentName, key='')**: remove (detach) component from the entity
--   *DEPRECIATED* **attach(component)**: attach a component that has been removed. *DEPRECIATED*: Use `.add(instance)` instead!
+-   _DEPRECIATED_ **attach(component)**: attach a component that has been removed. _DEPRECIATED_: Use `.add(instance)` instead!
 -   **serialize()**: serialize this entity and it's components
 -   **fireEvent(name, data={})**: send an event to all components on the entity
 

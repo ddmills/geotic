@@ -117,10 +117,7 @@ export default class Component {
     }
 
     clone() {
-        return this.ecs.createComponent(
-            this.type,
-            this.serialize()
-        );
+        return this.ecs.createComponent(this.type, this.serialize());
     }
 
     _onEvent(evt) {
