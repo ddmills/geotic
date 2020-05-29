@@ -70,6 +70,64 @@ describe('Component', () => {
         });
     });
 
+    describe('clone', () => {
+        let original, cloned;
+
+        beforeEach(() => {
+            entity.add(TestComponent);
+
+            original = entity.testComponent;
+            cloned = original.clone();
+        });
+
+        it('should not return the same instance', () => {
+            expect(cloned).not.toBe(original);
+        });
+
+        it('should not set the isDestroyed flag', () => {
+            expect(cloned.isDestroyed).toBe(false);
+        });
+
+        it('should set the cloned component "entity" to null', () => {
+            expect(cloned.entity).toBeNull();
+        });
+
+        it('should set cloned componnt "isAttached" to false', () => {
+            expect(cloned.isAttached).toBe(false);
+        });
+
+        it('should have the same property values', () => {
+            expect(cloned.serialize()).toStrictEqual(original.serialize());
+        });
+
+        describe('re-attaching', () => {
+            let newEntity;
+
+            beforeEach(() => {
+                onAttachedStub.mockReset();
+                newEntity = engine.createEntity();
+                newEntity.attach(cloned);
+            });
+
+            it('should call the onAttached handler', () => {
+                expect(onAttachedStub).toHaveBeenCalledTimes(1);
+                expect(onAttachedStub).toHaveBeenCalledWith();
+            });
+
+            it('should set the entity', () => {
+                expect(cloned.entity).toBe(newEntity);
+            });
+
+            it('should set the isAttached flag to true', () => {
+                expect(cloned.isAttached).toBe(true);
+            });
+
+            it('should not change the isDestroyed flag', () => {
+                expect(cloned.isDestroyed).toBe(false);
+            });
+        });
+    });
+
     describe('remove', () => {
         let component;
 

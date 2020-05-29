@@ -167,6 +167,7 @@ Component properties and methods:
 -   **properties** returns the properties
 -   **serialize()** serialize just this component
 -   **destroy()** remove and destroy this component
+-   **clone()** clone this component, returns an identical component instance that is detached
 -   **remove(destroy = true)** remove this component. if `destroy=true` then this behaves the same as `destroy()`
 -   **onAttached()** override this method to add behavior when this component is attached (added) to an entity
 -   **onDetached()** override this method to add behavior when this component is detached (removed) to an entity
@@ -252,6 +253,19 @@ player.equipmentSlot.rightHand.item.destroy();
 // remove and destroy the `rightHand` equipment slot
 player.remove(EquipmentSlot, 'rightHand');
 
+```
+
+#### Cloning components
+
+```js
+const playerA = ecs.createEntity();
+const playerB = ecs.createEntity();
+
+playerA.add(someComponent);
+
+const clonedComponent = player.someComponent.clone();
+
+playerB.attach(clonedComponent); // note the use of `attach` here
 ```
 
 ### queries
@@ -474,7 +488,8 @@ const warrior2 = ecs.createPrefab('HumanWarrior', {
         -   ✓ ensure works with key components
     -   ✓ destroy()
     -   ✓ onDestroyed()
-    -   clone
+    -   ✓ clone
+        -   .clone(propertyOverrides)
     -   ✓ allowMultiple without specifying keyProperty
     -   ✓ rename accessor to `key`
     -   rename `type` to `definitionType`

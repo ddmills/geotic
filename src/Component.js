@@ -116,6 +116,13 @@ export default class Component {
         this.remove(true);
     }
 
+    clone() {
+        return this.ecs.createComponent(
+            this.type,
+            this.serialize()
+        );
+    }
+
     _onEvent(evt) {
         this.onEvent(evt);
 
