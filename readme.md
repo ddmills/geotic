@@ -20,6 +20,8 @@ This library is _heavily_ inspired by ECS in Caves of Qud:
 npm install geotic
 ```
 
+For a full-fledged example, checkout [snail6](https://github.com/luetkemj/snail6), a roguelike that makes use of geotic, by @luetkemj.
+
 Below is a contrived example which shows the absolute basics of geotic. [A larger example
 with pixi, rollup, and babel, can be found here.](https://github.com/ddmills/geotic-example)
 
