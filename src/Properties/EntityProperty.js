@@ -1,7 +1,9 @@
-import Property from './Property';
+import Property from '../Property';
 
 export default class EntityProperty extends Property {
     id;
+
+    static tag = 'Entity';
 
     set(value) {
         if (this.id && (!value || value.id !== this.id || value !== this.id)) {

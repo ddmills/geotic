@@ -1,7 +1,9 @@
-import Property from './Property';
+import Property from '../Property';
 
 export default class EntityArrayProperty extends Property {
     proxy = [];
+
+    static tag = 'EntityArray';
 
     constructor(component) {
         super(component);
@@ -43,6 +45,7 @@ export default class EntityArrayProperty extends Property {
                 return Reflect.deleteProperty(target, prop);
             },
         });
+        this.set([]);
     }
 
     set(values = []) {

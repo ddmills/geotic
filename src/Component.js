@@ -1,5 +1,6 @@
 import camelcase from 'camelcase';
-import PropertyFactory from './Properties/PropertyFactory';
+import SimpleProperty from './Properties/SimpleProperty';
+import PropertyRegistry from './Registries/PropertyRegistry';
 
 export default class Component {
     #entity = null;
@@ -59,7 +60,7 @@ export default class Component {
 
     constructor(ecs, properties = {}) {
         this.#ecs = ecs;
-        this._defineProxies(properties);
+        this._definePropertyProxies(properties);
     }
 
     serialize() {
@@ -132,33 +133,20 @@ export default class Component {
 
     onEvent(evt) {}
 
-    _defaultPropertyValue(propertyName) {
-        const value = this.constructor.properties[propertyName];
-
-        if (value === '<EntityArray>') {
-            return [];
-        }
-
-        if (value === '<Entity>') {
-            return undefined;
-        }
-
-        return value;
-    }
-
-    _defineProxies(initialProperties) {
+    _definePropertyProxies(initialPropertyValues) {
         for (const key in this.constructor.properties) {
-            const initialValue = initialProperties.hasOwnProperty(key)
-                ? initialProperties[key]
-                : this._defaultPropertyValue(key);
-            const property = PropertyFactory.create(
-                this,
-                this.constructor.properties[key]
-            );
+            const baseValue = this.constructor.properties[key];
+            const propertyType = this.#ecs.properties.getByBaseValue(baseValue);
+
+            const property = new propertyType(this);
 
             this.#props[key] = property;
+
             Object.defineProperty(this, key, property.descriptor);
-            property.set(initialValue);
+
+            if (initialPropertyValues.hasOwnProperty(key)) {
+                property.set(initialPropertyValues[key]);
+            }
         }
     }
 }

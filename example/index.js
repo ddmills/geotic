@@ -6,10 +6,15 @@ import Action from './components/Action';
 import BeingPrefab from './prefabs/BeingPrefab';
 import HumanPrefab from './prefabs/HumanPrefab';
 import EquipmentSlot from './components/EquipmentSlot';
+import CoordinateProperty from './properties/CoordinateProperty';
 import { Engine } from '../build';
+import { Coordinate } from './custom/Coordinate';
 
 const ecs = new Engine();
 const ecs2 = new Engine();
+
+ecs.registerProperty(CoordinateProperty);
+ecs2.registerProperty(CoordinateProperty);
 
 ecs.registerComponent(EquipmentSlot);
 ecs.registerComponent(Material);
@@ -31,7 +36,10 @@ const player = ecs.createEntity();
 const sword = ecs.createEntity();
 
 sword.add(Material, { name: 'bronze' });
-player.add(Position, { x: 4, y: 12 });
+player.add(Position, {
+    local: { x: 1, y: 4},
+    global: new Coordinate(5, 7)
+});
 player.add('EquipmentSlot', {
     name: 'leftHand',
     allowedTypes: ['hand'],
@@ -41,13 +49,24 @@ player.add(EquipmentSlot, {
     allowedTypes: ['hand'],
 });
 
+console.log(player.position.local.summation());
+console.log(player.position.global.summation());
 console.log(player.serialize());
 
-const q = ecs.createQuery({
-    all: [Position],
-});
+const data = ecs.serialize();
+ecs2.deserialize(data);
 
-q.get().forEach((e) => console.log(e.position));
+const player2 = ecs2.getEntity(player.id);
+
+console.log(player2.position.local.summation());
+console.log(player2.position.global.summation());
+console.log(player2.serialize());
+
+// const q = ecs.createQuery({
+//     all: [Position],
+// });
+
+// q.get().forEach((e) => console.log(e.position));
 
 // query = ecs.createQuery({
 //     all: [Action], // entity must have all of these

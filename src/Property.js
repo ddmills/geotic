@@ -5,6 +5,24 @@ export default class Property {
         this.component = component;
     }
 
+    serialize(value) {
+        return value;
+    }
+
+    deserialize(value) {
+        this.set(value)
+    }
+
+    static tag = this.name;
+
+    get tag() {
+        return this.constructor.tag;
+    }
+
+    serialize() {
+        return this.constructor.serialize(this);
+    }
+
     get ecs() {
         return this.component.ecs;
     }
@@ -17,15 +35,9 @@ export default class Property {
         };
     }
 
-    get() {
-        return undefined;
-    }
+    get() {}
 
     set(value) {}
-
-    serialize() {
-        return undefined;
-    }
 
     onDestroyed() {}
 

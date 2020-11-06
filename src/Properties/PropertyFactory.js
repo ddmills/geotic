@@ -1,4 +1,3 @@
-import Property from './Property';
 import SimpleProperty from './SimpleProperty';
 import EntityProperty from './EntityProperty';
 import EntityArrayProperty from './EntityArrayProperty';

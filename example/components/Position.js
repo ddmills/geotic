@@ -1,8 +1,9 @@
 import { Component } from '../../build';
+import CoordinateProperty from '../properties/CoordinateProperty';
 
 export default class Position extends Component {
     static properties = {
-        x: 0,
-        y: 0,
+        local: '<Coordinate>',
+        global: '<Coordinate>'
     };
 }

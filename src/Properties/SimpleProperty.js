@@ -1,4 +1,4 @@
-import Property from './Property';
+import Property from '../Property';
 
 export default class SimpleProperty extends Property {
     value = null;

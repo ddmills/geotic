@@ -3,6 +3,7 @@ import PrefabRegistry from './registries/PrefabRegistry';
 import { nanoid } from 'nanoid/non-secure';
 import EntityRegistry from './registries/EntityRegistry';
 import QueryRegistry from './registries/QueryRegistry';
+import PropertyRegistry from './Registries/PropertyRegistry';
 
 export default class Engine {
     constructor() {
@@ -11,6 +12,7 @@ export default class Engine {
         this.prefabs = new PrefabRegistry(this);
         this.entities = new EntityRegistry(this);
         this.queries = new QueryRegistry(this);
+        this.properties = new PropertyRegistry(this);
     }
 
     generateId() {
@@ -35,6 +37,10 @@ export default class Engine {
 
     registerComponent(component) {
         this.components.register(component);
+    }
+
+    registerProperty(property) {
+        this.properties.register(property);
     }
 
     getEntity(id) {
