@@ -8,22 +8,24 @@ _adjective_ physically concerning land or its inhabitants.
 -   **prefab** a pre-defined collection of components and even other prefabs to quickly build entities
 -   **event** a message to an entity and it's components
 
-This library is _heavily_ inspired by ECS in Caves of Qud:
+This library is _heavily_ inspired by ECS in *Caves of Qud*:
 
 -   [Thomas Biskup - There be dragons: Entity Component Systems for Roguelikes](https://www.youtube.com/watch?v=fGLJC5UY2o4&t=1534s)
 -   [Brian Bucklew - AI in Qud and Sproggiwood](https://www.youtube.com/watch?v=4uxN5GqXcaA)
 -   [Brian Bucklew - Data-Driven Engines of Qud and Sproggiwood](https://www.youtube.com/watch?v=U03XXzcThGU)
 
-### usage
+### usage and examples
 
 ```
 npm install geotic
 ```
 
-For a full-fledged example, checkout [snail6](https://github.com/luetkemj/snail6), a roguelike that makes use of geotic, by @luetkemj.
+-   [basic example using pixijs]((https://github.com/ddmills/geotic-example))
+-   [snail6](https://github.com/luetkemj/snail6) a bloody roguelike by @luetkemj
+-   [Gobs O' Goblins](https://github.com/luetkemj/gobs-o-goblins) by @luetkemj
+-   [Javascript Roguelike Tutorial](https://github.com/luetkemj/jsrlt) by @luetkemj
 
-Below is a contrived example which shows the absolute basics of geotic. [A larger example
-with pixi, rollup, and babel, can be found here.](https://github.com/ddmills/geotic-example)
+Below is a contrived example which shows the absolute basics of geotic:
 
 ```js
 import { Engine, Component, Prefab } from 'geotic';
