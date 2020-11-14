@@ -3,6 +3,8 @@ import merge from 'deepmerge';
 export default class Query {
     #ecs;
     #filter;
+    #onEntityAddedCallbacks = [];
+    #onEntityRemovedCallbacks = [];
     #cache = new Set();
 
     constructor(ecs, filter = {}) {
@@ -21,13 +23,35 @@ export default class Query {
         return hasAny && hasAll && hasNone;
     }
 
+    onEntityAdded(fn) {
+        this.#onEntityAddedCallbacks.push(fn);
+    }
+
+    onEntityRemoved(fn) {
+        this.#onEntityRemovedCallbacks.push(fn);
+    }
+
+    has(entity) {
+        return this.#cache.has(entity);
+    }
+
     candidate(entity) {
+        const isTracking = this.has(entity);
+
         if (this.isMatch(entity)) {
-            this.#cache.add(entity);
+            if (!isTracking) {
+                this.#cache.add(entity);
+                this.#onEntityAddedCallbacks.forEach((cb) => cb(entity));
+            }
+
             return true;
         }
 
-        this.#cache.delete(entity);
+        if (isTracking) {
+            this.#cache.delete(entity);
+            this.#onEntityRemovedCallbacks.forEach((cb) => cb(entity));
+        }
+
         return false;
     }
 
@@ -36,6 +60,7 @@ export default class Query {
     }
 
     _onComponentAdded(entity) {
+        console.log('component added to entity', entity);
         this.candidate(entity);
     }
 
@@ -44,7 +69,10 @@ export default class Query {
     }
 
     _onEntityDestroyed(entity) {
-        this.#cache.delete(entity);
+        if (this.has(entity)) {
+            this.#cache.delete(entity);
+            this.#onEntityRemovedCallbacks.forEach((cb) => cb(entity));
+        }
     }
 
     bustCache() {
