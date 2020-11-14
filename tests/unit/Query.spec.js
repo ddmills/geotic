@@ -268,4 +268,38 @@ describe('Query', () => {
             expect(result).toBe(false);
         });
     });
+
+    describe('callbacks', () => {
+        it('should invoke multiple callback', () => {
+            query = new Query(engine, {
+                any: [ComponentA]
+            });
+
+            const onAddedCb1 = jest.fn();
+            const onAddedCb2 = jest.fn();
+            const onRemovedCb1 = jest.fn();
+            const onRemovedCb2 = jest.fn();
+
+            query.onEntityAdded(onAddedCb1);
+            query.onEntityAdded(onAddedCb2);
+            query.onEntityRemoved(onRemovedCb1);
+            query.onEntityRemoved(onRemovedCb2);
+
+            entity.add(ComponentA);
+            query.candidate(entity);
+
+            expect(onAddedCb1).toHaveBeenCalledTimes(1);
+            expect(onAddedCb1).toHaveBeenCalledWith(entity);
+            expect(onAddedCb2).toHaveBeenCalledTimes(1);
+            expect(onAddedCb2).toHaveBeenCalledWith(entity);
+
+            entity.remove(ComponentA);
+            query.candidate(entity);
+
+            expect(onRemovedCb1).toHaveBeenCalledTimes(1);
+            expect(onRemovedCb1).toHaveBeenCalledWith(entity);
+            expect(onRemovedCb2).toHaveBeenCalledTimes(1);
+            expect(onRemovedCb2).toHaveBeenCalledWith(entity);
+        });
+    });
 });

@@ -4,7 +4,7 @@ _adjective_ physically concerning land or its inhabitants.
 
 -   **entity** a unique id and a collection of components
 -   **component** a data container
--   **query** a way to gather collections of entities that match some criteria, for use in systems.
+-   **query** a way to gather collections of entities that match some criteria, for use in systems
 -   **prefab** a pre-defined collection of components and even other prefabs to quickly build entities
 -   **event** a message to an entity and it's components
 
@@ -20,10 +20,10 @@ This library is _heavily_ inspired by ECS in *Caves of Qud*:
 npm install geotic
 ```
 
--   [basic example using pixijs]((https://github.com/ddmills/geotic-example))
 -   [snail6](https://github.com/luetkemj/snail6) a bloody roguelike by @luetkemj
 -   [Gobs O' Goblins](https://github.com/luetkemj/gobs-o-goblins) by @luetkemj
 -   [Javascript Roguelike Tutorial](https://github.com/luetkemj/jsrlt) by @luetkemj
+-   [basic example](https://github.com/ddmills/geotic-example) using pixijs
 
 Below is a contrived example which shows the absolute basics of geotic:
 
@@ -283,12 +283,22 @@ const query = ecs.createQuery({
     none: [E, F], // exclude entities that have E OR F
 });
 
-query.get().forEach((entity) => ...);
+query.get().forEach((entity) => ...); // loop over the latest set of entites that match
+
+// alternatively, listen for when an individual entity is created/updated that matches
+query.onEntityAdded((entity) => {
+    console.log('an entity was updated or created that matches the query!', entity)l
+});
+
+query.onEntityRemoved((entity) => {
+    console.log('an entity was updated or destroyed that previously matched the query!', entity)l
+});
 ```
 
 -   **query.get()** get the result [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) of the query
--   **isMatch(entity)** returns `true` if the given `entity` matches this query. Mostly used internally.
--   **bustCache()** manually bust the query cache. Not recommended, as the query should always be up to date.
+-   **onEntityAdded(fn)** add a callback for when an entity is created or updated to match the query
+-   **onEntityRemoved(fn)** add a callback for when an entity is removed or updated to no longer match the query
+-   **isMatch(entity)** returns `true` if the given `entity` matches this query. Mostly used internally
 
 ### serialization
 
@@ -460,8 +470,8 @@ const warrior2 = ecs.createPrefab('HumanWarrior', {
         -   ✓ all
         -   ✓ none
     -   ✓ query.get
-    -   query.onEntityIncluded(e)
-    -   query.onEntityRemoved(e)
+    -   ✓ query.onEntityAdded(e)
+    -   ✓ query.onEntityRemoved(e)
 -   logging configuration
     -   route all console logs to logger
     -   check all console log statements
