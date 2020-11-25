@@ -49,9 +49,9 @@ export default class Engine {
         return this.queries.create(filters);
     }
 
-    serialize() {
+    serialize(entities) {
         return {
-            entities: this.entities.serialize(),
+            entities: this.entities.serialize(entities),
         };
     }
 

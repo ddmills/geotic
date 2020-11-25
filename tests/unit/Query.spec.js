@@ -272,7 +272,7 @@ describe('Query', () => {
     describe('callbacks', () => {
         it('should invoke multiple callback', () => {
             query = new Query(engine, {
-                any: [ComponentA]
+                any: [ComponentA],
             });
 
             const onAddedCb1 = jest.fn();

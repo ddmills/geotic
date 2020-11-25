@@ -2,7 +2,13 @@ import Engine from '../../src/Engine';
 import Component from '../../src/Component';
 
 describe('Query', () => {
-    let engine, entityA, entityB, result, query, onAddCallback, onRemoveCallback;
+    let engine,
+        entityA,
+        entityB,
+        result,
+        query,
+        onAddCallback,
+        onRemoveCallback;
 
     class ComponentA extends Component {}
     class ComponentB extends Component {}

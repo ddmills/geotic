@@ -1,6 +1,4 @@
 import Engine from '../../src/Engine';
-import { EmptyComponent } from '../data/components';
-import Component from '../../src/Component';
 
 describe('Engine', () => {
     let engine;
