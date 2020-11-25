@@ -12,14 +12,35 @@ describe('Engine', () => {
     describe('createEntity', () => {
         let entity;
 
-        beforeEach(() => {
-            entity = engine.createEntity();
+        describe('without an ID', () => {
+            beforeEach(() => {
+                entity = engine.createEntity();
+            });
+
+            it('should be able to recall the entity by id', () => {
+                const result = engine.getEntity(entity.id);
+
+                expect(result).toBe(entity);
+            });
         });
 
-        it('should be able to recall the entity by id', () => {
-            const result = engine.getEntity(entity.id);
+        describe('with an ID', () => {
+            let givenId;
 
-            expect(result).toBe(entity);
+            beforeEach(() => {
+                givenId = chance.guid();
+                entity = engine.createEntity(givenId);
+            });
+
+            it('should assign the ID to the entity', () => {
+                expect(entity.id).toBe(givenId);
+            });
+
+            it('should be able to recall the entity by id', () => {
+                const result = engine.getEntity(givenId);
+
+                expect(result).toBe(entity);
+            });
         });
     });
 
