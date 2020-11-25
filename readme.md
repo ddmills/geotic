@@ -8,7 +8,7 @@ _adjective_ physically concerning land or its inhabitants.
 -   **prefab** a pre-defined collection of components and even other prefabs to quickly build entities
 -   **event** a message to an entity and it's components
 
-This library is _heavily_ inspired by ECS in *Caves of Qud*:
+This library is _heavily_ inspired by ECS in _Caves of Qud_:
 
 -   [Thomas Biskup - There be dragons: Entity Component Systems for Roguelikes](https://www.youtube.com/watch?v=fGLJC5UY2o4&t=1534s)
 -   [Brian Bucklew - AI in Qud and Sproggiwood](https://www.youtube.com/watch?v=4uxN5GqXcaA)
@@ -101,7 +101,7 @@ Engine properties and methods:
 -   **generateId()**: Generates an entity ID (invokes and returns `idGenerator`)
 -   **createEntity(id = null)**: create an `Entity`. optionally provide an ID
 -   **destroyEntity(entity)**: destroys an entity. functionally equivilant to `entity.destroy()`
--   **serialize()**: serialize and return all entity data into an object
+-   **serialize(entities = null)**: serialize and return all entity data into an object. optionally specify a list of entities to serialize
 -   **deserialize(data)**: deserialize an object
 -   **deserializeEntity(data)**: deserialize a specific entity object (see `entity.serialize()`
 
@@ -468,7 +468,7 @@ const warrior2 = ecs.createPrefab('HumanWarrior', {
     -   ✓ onAttached safely access entity
 -   ✓ serialize
     -   only serialize if value is different from default (?)
-    -   serialize given list of entities
+    -   ✓ serialize given list of entities
 -   prefab
     -   ✓ prefab base class
     -   ✓ prefab registry
@@ -481,7 +481,7 @@ const warrior2 = ecs.createPrefab('HumanWarrior', {
     -   reference prefab chain on entity
         -   entity.is(prefab)
         -   Prefab.matches(entity)
-            - strict vs non-strict (component data matches vs component types)
+            -   strict vs non-strict (component data matches vs component types)
     -   ✓ allow overrides on prefab instantiation
     -   https://www.youtube.com/watch?v=fGLJC5UY2o4
 -   ✓ query

@@ -83,10 +83,11 @@ export default class EntityRegistry {
         }
     }
 
-    serialize() {
+    serialize(entities) {
         const json = [];
+        const list = entities ? entities : this.#entities;
 
-        this.#entities.forEach((entity) => {
+        list.forEach((entity) => {
             json.push(entity.serialize());
         });
 

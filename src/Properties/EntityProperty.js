@@ -42,7 +42,8 @@ export default class EntityProperty extends Property {
             this.id = undefined;
         } else {
             console.warn(
-                `Property in unclean state. A reference to an entity "${entity.id}" was never cleaned up.`
+                `Property in unclean state. A reference to an entity "${entity.id}" was never cleaned up.`,
+                entity
             );
         }
     }

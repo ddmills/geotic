@@ -50,42 +50,103 @@ describe('Serialization', () => {
             entity.add(EntityRefArrayComponent, {
                 otherEntities: [entityArrRefA, entityArrRefB],
             });
-
-            json = engine.serialize();
         });
 
-        it('should save all entities and component data', () => {
-            expect(json).toEqual({
-                entities: [
-                    { id: entityRef.id },
-                    { id: entityArrRefA.id },
-                    { id: entityArrRefB.id },
-                    {
-                        id: entity.id,
-                        emptyComponent: {},
-                        simpleComponent: {
-                            testProp: entity.simpleComponent.testProp,
-                        },
-                        arrayComponent: [
-                            {
-                                name: entity.arrayComponent[0].name,
-                                hello: 'world',
+        describe('when no entities are specified', () => {
+            beforeEach(() => {
+                json = engine.serialize();
+            });
+
+            it('should save all entities and component data', () => {
+                expect(json).toEqual({
+                    entities: [
+                        { id: entityRef.id },
+                        { id: entityArrRefA.id },
+                        { id: entityArrRefB.id },
+                        {
+                            id: entity.id,
+                            emptyComponent: {},
+                            simpleComponent: {
+                                testProp: entity.simpleComponent.testProp,
                             },
-                            {
-                                name: entity.arrayComponent[1].name,
-                                hello: 'world',
+                            arrayComponent: [
+                                {
+                                    name: entity.arrayComponent[0].name,
+                                    hello: 'world',
+                                },
+                                {
+                                    name: entity.arrayComponent[1].name,
+                                    hello: 'world',
+                                },
+                            ],
+                            nestedComponent: {
+                                [nestedKeyA]: {
+                                    name: nestedKeyA,
+                                    hello: 'world',
+                                },
+                                [nestedKeyB]: {
+                                    name: nestedKeyB,
+                                    hello: 'world',
+                                },
                             },
-                        ],
-                        nestedComponent: {
-                            [nestedKeyA]: { name: nestedKeyA, hello: 'world' },
-                            [nestedKeyB]: { name: nestedKeyB, hello: 'world' },
+                            entityRefComponent: { otherEntity: entityRef.id },
+                            entityRefArrayComponent: {
+                                otherEntities: [
+                                    entityArrRefA.id,
+                                    entityArrRefB.id,
+                                ],
+                            },
                         },
-                        entityRefComponent: { otherEntity: entityRef.id },
-                        entityRefArrayComponent: {
-                            otherEntities: [entityArrRefA.id, entityArrRefB.id],
+                    ],
+                });
+            });
+        });
+
+        describe('when a list of entities is specified', () => {
+            beforeEach(() => {
+                json = engine.serialize([entityArrRefA, entity]);
+            });
+
+            it('should keep all refs', () => {
+                expect(json).toEqual({
+                    entities: [
+                        { id: entityArrRefA.id },
+                        {
+                            id: entity.id,
+                            emptyComponent: {},
+                            simpleComponent: {
+                                testProp: entity.simpleComponent.testProp,
+                            },
+                            arrayComponent: [
+                                {
+                                    name: entity.arrayComponent[0].name,
+                                    hello: 'world',
+                                },
+                                {
+                                    name: entity.arrayComponent[1].name,
+                                    hello: 'world',
+                                },
+                            ],
+                            nestedComponent: {
+                                [nestedKeyA]: {
+                                    name: nestedKeyA,
+                                    hello: 'world',
+                                },
+                                [nestedKeyB]: {
+                                    name: nestedKeyB,
+                                    hello: 'world',
+                                },
+                            },
+                            entityRefComponent: { otherEntity: entityRef.id },
+                            entityRefArrayComponent: {
+                                otherEntities: [
+                                    entityArrRefA.id,
+                                    entityArrRefB.id,
+                                ],
+                            },
                         },
-                    },
-                ],
+                    ],
+                });
             });
         });
     });
