@@ -17,8 +17,8 @@ export default class Engine {
         return this.idGenerator();
     }
 
-    createEntity() {
-        return this.entities.create();
+    createEntity(id) {
+        return this.entities.create(id);
     }
 
     createPrefab(nameOrClass, initialProps = {}) {

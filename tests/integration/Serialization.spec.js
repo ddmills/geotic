@@ -7,7 +7,6 @@ import {
     EntityRefComponent,
     EntityRefArrayComponent,
 } from '../data/components';
-import Component from '../../src/Component';
 
 describe('Serialization', () => {
     let engine;

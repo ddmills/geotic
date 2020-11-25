@@ -84,6 +84,27 @@ ecs.deserialize(data); // convert the serialized data back into entities and com
 
 ```
 
+### Engine
+
+```js
+import { Engine } from 'geotic';
+
+const ecs = new Engine();
+```
+
+Engine properties and methods:
+
+-   **ecs**: the geotic Engine instance
+-   **isDestroyed**: returns `true` if this entity is destroyed
+-   **components**: all component instances attached to this entity
+-   **idGenerator**: A function which is invoked when generating an ID. Defaults to [nanoid](https://www.npmjs.com/package/nanoid) non-secure
+-   **generateId()**: Generates an entity ID (invokes and returns `idGenerator`)
+-   **createEntity(id = null)**: create an `Entity`. optionally provide an ID
+-   **destroyEntity(entity)**: destroys an entity. functionally equivilant to `entity.destroy()`
+-   **serialize()**: serialize and return all entity data into an object
+-   **deserialize(data)**: deserialize an object
+-   **deserializeEntity(data)**: deserialize a specific entity object (see `entity.serialize()`
+
 ### entities
 
 > a unique id and a collection of components
@@ -447,6 +468,7 @@ const warrior2 = ecs.createPrefab('HumanWarrior', {
     -   ✓ onAttached safely access entity
 -   ✓ serialize
     -   only serialize if value is different from default (?)
+    -   serialize given list of entities
 -   prefab
     -   ✓ prefab base class
     -   ✓ prefab registry
@@ -458,6 +480,8 @@ const warrior2 = ecs.createPrefab('HumanWarrior', {
         -   ✓ applyToEntity(entity)
     -   reference prefab chain on entity
         -   entity.is(prefab)
+        -   Prefab.matches(entity)
+            - strict vs non-strict (component data matches vs component types)
     -   ✓ allow overrides on prefab instantiation
     -   https://www.youtube.com/watch?v=fGLJC5UY2o4
 -   ✓ query
@@ -518,6 +542,7 @@ const warrior2 = ecs.createPrefab('HumanWarrior', {
     -   ✓ destroy()
         -   ✓ component.onDestroy()
         -   ✓ property.onDestroy() (do ref cleanup)
+        -   soft-destroy (do not remove refs) danger!
     -   removing keyed component without key should remove all
     -   ✓ add(type, properties);
     -   control how components are named
