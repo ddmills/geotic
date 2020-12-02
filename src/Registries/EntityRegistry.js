@@ -1,5 +1,5 @@
+import { pascalString } from '../util/string-util';
 import Entity from '../Entity';
-import camelcase from 'camelcase';
 
 export default class EntityRegistry {
     #entities = new Map();
@@ -109,7 +109,7 @@ export default class EntityRegistry {
         const entity = this.createOrGetById(id);
 
         Object.entries(componentData).forEach(([key, value]) => {
-            const type = camelcase(key, { pascalCase: true });
+            const type = pascalString(key);
             const definition = this.#ecs.components.get(type);
 
             if (definition.allowMultiple) {

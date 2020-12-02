@@ -1,8 +1,7 @@
 import Component from '../Component';
-import camelcase from 'camelcase';
+import { camelString } from '../util/string-util';
 
 export default class ComponentRegistry {
-    #nameCache = new Map();
     #definitions = new Map();
     #ecs = null;
 
@@ -12,15 +11,11 @@ export default class ComponentRegistry {
 
     register(component) {
         this.#definitions.set(component.name, component);
-        this.#nameCache.set(component.name, camelcase(component.name));
+        camelString(component.name); // prime camelcase cache
     }
 
     getAccessor(type) {
-        if (this.#nameCache.has(type)) {
-            return this.#nameCache.get(type);
-        }
-
-        this.#nameCache.set(type, camelcase(type));
+        return camelString(type);
     }
 
     get(typeOrClassOrComponent) {
