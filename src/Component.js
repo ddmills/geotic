@@ -1,4 +1,4 @@
-import camelcase from 'camelcase';
+import { camelString } from './util/string-util';
 import PropertyFactory from './Properties/PropertyFactory';
 
 export default class Component {
@@ -123,7 +123,7 @@ export default class Component {
     _onEvent(evt) {
         this.onEvent(evt);
 
-        const handlerName = camelcase(`on ${evt.name}`);
+        const handlerName = camelString(`on ${evt.name}`);
 
         if (typeof this[handlerName] === 'function') {
             this[handlerName](evt);
