@@ -1,14 +1,14 @@
 export default class EntityEvent {
     data = {};
-    #prevented = false;
-    #handled = false;
+    _prevented = false;
+    _handled = false;
 
     get prevented() {
-        return this.#prevented;
+        return this._prevented;
     }
 
     get handled() {
-        return this.#handled;
+        return this._handled;
     }
 
     constructor(name, data = {}) {
@@ -21,11 +21,11 @@ export default class EntityEvent {
     }
 
     handle() {
-        this.#handled = true;
-        this.#prevented = true;
+        this._handled = true;
+        this._prevented = true;
     }
 
     prevent() {
-        this.#prevented = true;
+        this._prevented = true;
     }
 }

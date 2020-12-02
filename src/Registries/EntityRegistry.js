@@ -2,26 +2,26 @@ import { pascalString } from '../util/string-util';
 import Entity from '../Entity';
 
 export default class EntityRegistry {
-    #entities = new Map();
-    #ecs = null;
-    #refs = new Map();
+    _entities = new Map();
+    _ecs = null;
+    _refs = new Map();
 
     constructor(ecs) {
-        this.#ecs = ecs;
+        this._ecs = ecs;
     }
 
     get all() {
-        return this.#entities.values();
+        return this._entities.values();
     }
 
     register(entity) {
-        this.#entities.set(entity.id, entity);
+        this._entities.set(entity.id, entity);
 
         return entity;
     }
 
     get(id) {
-        return this.#entities.get(id);
+        return this._entities.get(id);
     }
 
     createOrGetById(id) {
@@ -35,11 +35,11 @@ export default class EntityRegistry {
     }
 
     create(id = undefined) {
-        const entity = new Entity(this.#ecs, id);
+        const entity = new Entity(this._ecs, id);
 
         this.register(entity);
 
-        this.#ecs.queries.onEntityCreated(entity);
+        this._ecs.queries.onEntityCreated(entity);
 
         return entity;
     }
@@ -50,12 +50,12 @@ export default class EntityRegistry {
 
     onEntityDestroyed(entity) {
         this.cleanupRefs(entity);
-        this.#entities.delete(entity.id);
-        this.#ecs.queries.onEntityDestroyed(entity);
+        this._entities.delete(entity.id);
+        this._ecs.queries.onEntityDestroyed(entity);
     }
 
     cleanupRefs(entity) {
-        const refs = this.#refs.get(entity.id);
+        const refs = this._refs.get(entity.id);
 
         if (!refs) {
             return;
@@ -65,27 +65,27 @@ export default class EntityRegistry {
             ref.cleanupReference(entity);
         }
 
-        delete this.#refs[entity.id];
+        delete this._refs[entity.id];
     }
 
     addRef(entityId, property) {
-        if (!this.#refs.has(entityId)) {
-            this.#refs.set(entityId, new Set([property]));
+        if (!this._refs.has(entityId)) {
+            this._refs.set(entityId, new Set([property]));
             return;
         }
 
-        this.#refs.get(entityId).add(property);
+        this._refs.get(entityId).add(property);
     }
 
     removeRef(entityId, property) {
-        if (this.#refs.has(entityId)) {
-            this.#refs.get(entityId).delete(property);
+        if (this._refs.has(entityId)) {
+            this._refs.get(entityId).delete(property);
         }
     }
 
     serialize(entities) {
         const json = [];
-        const list = entities ? entities : this.#entities;
+        const list = entities ? entities : this._entities;
 
         list.forEach((entity) => {
             json.push(entity.serialize());
@@ -110,7 +110,7 @@ export default class EntityRegistry {
 
         Object.entries(componentData).forEach(([key, value]) => {
             const type = pascalString(key);
-            const definition = this.#ecs.components.get(type);
+            const definition = this._ecs.components.get(type);
 
             if (definition.allowMultiple) {
                 Object.values(value).forEach((d) => {
