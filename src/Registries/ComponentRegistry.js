@@ -2,15 +2,15 @@ import Component from '../Component';
 import { camelString } from '../util/string-util';
 
 export default class ComponentRegistry {
-    #definitions = new Map();
-    #ecs = null;
+    _definitions = new Map();
+    _ecs = null;
 
     constructor(ecs) {
-        this.#ecs = ecs;
+        this._ecs = ecs;
     }
 
     register(component) {
-        this.#definitions.set(component.name, component);
+        this._definitions.set(component.name, component);
         camelString(component.name); // prime camelcase cache
     }
 
@@ -28,14 +28,14 @@ export default class ComponentRegistry {
             return null;
         }
 
-        return this.#definitions.get(type);
+        return this._definitions.get(type);
     }
 
     create(typeOrClass, properties = {}) {
         const definition = this.get(typeOrClass);
 
         if (definition) {
-            return new definition(this.#ecs, properties);
+            return new definition(this._ecs, properties);
         }
 
         console.warn(

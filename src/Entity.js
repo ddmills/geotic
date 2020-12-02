@@ -2,31 +2,18 @@ import Component from './Component';
 import EntityEvent from './EntityEvent';
 
 export default class Entity {
-    #id = null;
-    #components = {};
-    #ecs = null;
-    #isDestroyed = false;
-
-    get ecs() {
-        return this.#ecs;
-    }
-
-    get components() {
-        return this.#components;
-    }
+    id = null;
+    components = {};
+    ecs = null;
+    _isDestroyed = false;
 
     get isDestroyed() {
-        return this.#isDestroyed;
+        return this._isDestroyed;
     }
 
     constructor(ecs, id = null) {
-        this.#ecs = ecs;
-        this.#id = id || ecs.generateId();
-        Object.defineProperty(this, 'id', {
-            value: this.#id,
-            enumerable: true,
-            writable: false,
-        });
+        this.ecs = ecs;
+        this.id = id || ecs.generateId();
     }
 
     has(typeOrClass, key = null) {
@@ -54,7 +41,7 @@ export default class Entity {
     }
 
     destroy() {
-        this.#isDestroyed = true;
+        this._isDestroyed = true;
 
         for (const component of Object.values(this.components)) {
             if (component instanceof Component) {

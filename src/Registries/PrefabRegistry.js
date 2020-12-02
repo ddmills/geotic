@@ -3,11 +3,11 @@ import PrefabComponent from '../PrefabComponent';
 import Prefab from '../Prefab';
 
 export default class PrefabRegistry {
-    #prefabs = {};
-    #ecs = null;
+    _prefabs = {};
+    _ecs = null;
 
     constructor(ecs) {
-        this.#ecs = ecs;
+        this._ecs = ecs;
     }
 
     deserialize(data) {
@@ -17,7 +17,7 @@ export default class PrefabRegistry {
             return registered;
         }
 
-        const prefab = new Prefab(this.#ecs, data.name);
+        const prefab = new Prefab(this._ecs, data.name);
 
         let inherit;
 
@@ -49,13 +49,13 @@ export default class PrefabRegistry {
                 typeof componentData === 'string' ||
                 componentData.prototype instanceof Component
             ) {
-                const def = this.#ecs.components.get(componentData);
+                const def = this._ecs.components.get(componentData);
                 if (def) {
                     prefab.addComponent(new PrefabComponent(def));
                 }
             } else if (typeof componentData === 'object') {
                 const type = componentData.type;
-                const def = this.#ecs.components.get(type);
+                const def = this._ecs.components.get(type);
                 if (def) {
                     prefab.addComponent(
                         new PrefabComponent(
@@ -78,13 +78,13 @@ export default class PrefabRegistry {
     }
 
     register(prefab) {
-        this.#prefabs[prefab.name] = prefab;
+        this._prefabs[prefab.name] = prefab;
     }
 
     get(nameOrClassOrPrefab) {
         const name = PrefabRegistry._getName(nameOrClassOrPrefab);
 
-        return this.#prefabs[name];
+        return this._prefabs[name];
     }
 
     create(nameOrClass, initialProps = {}) {
@@ -98,7 +98,7 @@ export default class PrefabRegistry {
             return;
         }
 
-        const entity = this.#ecs.createEntity();
+        const entity = this._ecs.createEntity();
         prefab.applyToEntity(entity, initialProps);
 
         return entity;

@@ -1,34 +1,34 @@
 import Query from '../Query';
 
 export default class QueryRegistry {
-    #ecs;
-    #queries = [];
+    _ecs;
+    _queries = [];
 
     constructor(ecs) {
-        this.#ecs = ecs;
+        this._ecs = ecs;
     }
 
     create(filters) {
-        const query = new Query(this.#ecs, filters);
+        const query = new Query(this._ecs, filters);
 
-        this.#queries.push(query);
+        this._queries.push(query);
 
         return query;
     }
 
     onComponentAdded(entity) {
-        this.#queries.forEach((query) => query._onComponentAdded(entity));
+        this._queries.forEach((query) => query._onComponentAdded(entity));
     }
 
     onComponentRemoved(entity) {
-        this.#queries.forEach((query) => query._onComponentRemoved(entity));
+        this._queries.forEach((query) => query._onComponentRemoved(entity));
     }
 
     onEntityCreated(entity) {
-        this.#queries.forEach((query) => query._onEntityCreated(entity));
+        this._queries.forEach((query) => query._onEntityCreated(entity));
     }
 
     onEntityDestroyed(entity) {
-        this.#queries.forEach((query) => query._onEntityDestroyed(entity));
+        this._queries.forEach((query) => query._onEntityDestroyed(entity));
     }
 }

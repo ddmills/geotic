@@ -127,19 +127,23 @@ describe('Entity', () => {
         });
 
         describe('with initial props', () => {
-            let initialProps;
+            let initialProps, expectedRefEntity, expectedRefArrayEntities;
 
             beforeEach(() => {
+                expectedRefEntity = engine.createEntity();
+                expectedRefArrayEntities = [
+                    engine.createEntity(),
+                    engine.createEntity(),
+                    engine.createEntity(),
+                ];
                 initialProps = {
                     entityRefComponent: {
-                        otherEntity: engine.createEntity(),
+                        otherEntity: expectedRefEntity.id,
                     },
                     entityRefArrayComponent: {
-                        otherEntities: [
-                            engine.createEntity(),
-                            engine.createEntity(),
-                            engine.createEntity(),
-                        ],
+                        otherEntities: expectedRefArrayEntities.map(
+                            (e) => e.id
+                        ),
                     },
                 };
 
@@ -160,11 +164,11 @@ describe('Entity', () => {
 
             it('should assign component prop data from the initial props', () => {
                 expect(entity.entityRefComponent.otherEntity).toStrictEqual(
-                    initialProps.entityRefComponent.otherEntity
+                    expectedRefEntity
                 );
-                expect(entity.entityRefComponent.otherEntities).toStrictEqual(
-                    initialProps.entityRefComponent.otherEntities
-                );
+                expect(
+                    entity.entityRefArrayComponent.otherEntities
+                ).toStrictEqual(expectedRefArrayEntities);
             });
         });
     });

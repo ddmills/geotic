@@ -1,38 +1,38 @@
 import merge from 'deepmerge';
 
 export default class Query {
-    #ecs;
-    #filter;
-    #onEntityAddedCallbacks = [];
-    #onEntityRemovedCallbacks = [];
-    #cache = new Set();
+    _ecs;
+    _filter;
+    _onEntityAddedCallbacks = [];
+    _onEntityRemovedCallbacks = [];
+    _cache = new Set();
 
     constructor(ecs, filter = {}) {
-        this.#ecs = ecs;
-        this.#filter = merge({ any: [], all: [], none: [] }, filter);
+        this._ecs = ecs;
+        this._filter = merge({ any: [], all: [], none: [] }, filter);
         this.bustCache();
     }
 
     isMatch(entity) {
-        const hasAny = this.#filter.any.length
-            ? this.#filter.any.some((c) => entity.has(c))
+        const hasAny = this._filter.any.length
+            ? this._filter.any.some((c) => entity.has(c))
             : true;
-        const hasAll = this.#filter.all.every((c) => entity.has(c));
-        const hasNone = !this.#filter.none.some((c) => entity.has(c));
+        const hasAll = this._filter.all.every((c) => entity.has(c));
+        const hasNone = !this._filter.none.some((c) => entity.has(c));
 
         return hasAny && hasAll && hasNone;
     }
 
     onEntityAdded(fn) {
-        this.#onEntityAddedCallbacks.push(fn);
+        this._onEntityAddedCallbacks.push(fn);
     }
 
     onEntityRemoved(fn) {
-        this.#onEntityRemovedCallbacks.push(fn);
+        this._onEntityRemovedCallbacks.push(fn);
     }
 
     has(entity) {
-        return this.#cache.has(entity);
+        return this._cache.has(entity);
     }
 
     candidate(entity) {
@@ -40,16 +40,16 @@ export default class Query {
 
         if (this.isMatch(entity)) {
             if (!isTracking) {
-                this.#cache.add(entity);
-                this.#onEntityAddedCallbacks.forEach((cb) => cb(entity));
+                this._cache.add(entity);
+                this._onEntityAddedCallbacks.forEach((cb) => cb(entity));
             }
 
             return true;
         }
 
         if (isTracking) {
-            this.#cache.delete(entity);
-            this.#onEntityRemovedCallbacks.forEach((cb) => cb(entity));
+            this._cache.delete(entity);
+            this._onEntityRemovedCallbacks.forEach((cb) => cb(entity));
         }
 
         return false;
@@ -69,22 +69,22 @@ export default class Query {
 
     _onEntityDestroyed(entity) {
         if (this.has(entity)) {
-            this.#cache.delete(entity);
-            this.#onEntityRemovedCallbacks.forEach((cb) => cb(entity));
+            this._cache.delete(entity);
+            this._onEntityRemovedCallbacks.forEach((cb) => cb(entity));
         }
     }
 
     bustCache() {
-        this.#cache.clear();
+        this._cache.clear();
 
-        for (const entity of this.#ecs.entities.all) {
+        for (const entity of this._ecs.entities.all) {
             this.candidate(entity);
         }
 
-        return this.#cache;
+        return this._cache;
     }
 
     get() {
-        return this.#cache;
+        return this._cache;
     }
 }

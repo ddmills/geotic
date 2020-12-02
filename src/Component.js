@@ -2,10 +2,10 @@ import { camelString } from './util/string-util';
 import PropertyFactory from './Properties/PropertyFactory';
 
 export default class Component {
-    #entity = null;
-    #ecs = null;
-    #props = {};
-    #isDestroyed = false;
+    entity = null;
+    ecs = null;
+    _props = {};
+    _isDestroyed = false;
 
     static allowMultiple = false;
     static keyProperty = null;
@@ -13,14 +13,6 @@ export default class Component {
 
     static get type() {
         return this.name;
-    }
-
-    get entity() {
-        return this.#entity;
-    }
-
-    get ecs() {
-        return this.#ecs;
     }
 
     get type() {
@@ -32,7 +24,7 @@ export default class Component {
     }
 
     get isDestroyed() {
-        return this.#isDestroyed;
+        return this._isDestroyed;
     }
 
     get allowMultiple() {
@@ -46,7 +38,7 @@ export default class Component {
     get properties() {
         const ob = {};
 
-        for (const [key, value] of Object.entries(this.#props)) {
+        for (const [key, value] of Object.entries(this._props)) {
             ob[key] = value.get();
         }
 
@@ -58,12 +50,12 @@ export default class Component {
     }
 
     constructor(ecs, properties = {}) {
-        this.#ecs = ecs;
+        this.ecs = ecs;
         this._defineProxies(properties);
     }
 
     serialize() {
-        return Object.entries(this.#props).reduce(
+        return Object.entries(this._props).reduce(
             (o, [key, value]) => ({
                 ...o,
                 [key]: value.serialize(),
@@ -73,7 +65,7 @@ export default class Component {
     }
 
     _onAttached(entity) {
-        this.#entity = entity;
+        this.entity = entity;
         this.ecs.queries.onComponentAdded(entity, this);
         this.onAttached();
     }
@@ -81,18 +73,18 @@ export default class Component {
     _onDetached() {
         if (this.isAttached) {
             this.onDetached();
-            const entity = this.#entity;
+            const entity = this.entity;
 
-            this.#entity = null;
+            this.entity = null;
             this.ecs.queries.onComponentRemoved(entity, this);
         }
     }
 
     _onDestroyed() {
-        this.#isDestroyed = true;
+        this._isDestroyed = true;
         this.onDestroyed();
 
-        for (const prop of Object.values(this.#props)) {
+        for (const prop of Object.values(this._props)) {
             prop.onDestroyed();
         }
     }
@@ -156,7 +148,7 @@ export default class Component {
                 this.constructor.properties[key]
             );
 
-            this.#props[key] = property;
+            this._props[key] = property;
             Object.defineProperty(this, key, property.descriptor);
             property.set(initialValue);
         }
