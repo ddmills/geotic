@@ -73,10 +73,7 @@ export default class Component {
     _onDetached() {
         if (this.isAttached) {
             this.onDetached();
-            const entity = this.entity;
-
             this.entity = null;
-            this.ecs.queries.onComponentRemoved(entity, this);
         }
     }
 

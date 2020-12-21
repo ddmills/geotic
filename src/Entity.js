@@ -102,7 +102,6 @@ export default class Entity {
             });
 
             component._onAttached(this);
-            this.ecs.queries.onComponentAdded(this);
 
             return true;
         }
@@ -122,7 +121,6 @@ export default class Entity {
             this.components[accessor].push(component);
 
             component._onAttached(this);
-            this.ecs.queries.onComponentAdded(this);
 
             return true;
         }
@@ -148,7 +146,6 @@ export default class Entity {
         this.components[accessor][component.key] = component;
 
         component._onAttached(this);
-        this.ecs.queries.onComponentAdded(this, component);
 
         return true;
     }
