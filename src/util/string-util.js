@@ -1,13 +1,13 @@
 import camelcaseSlow from 'camelcase';
 
-const camelCache = new Map();
+const camelCache = {};
 
 export const camelString = (value) => {
-    if (!camelCache.has(value)) {
-        camelCache.set(value, camelcaseSlow(value));
+    if (!camelCache.hasOwnProperty(value)) {
+        camelCache[value] = camelcaseSlow(value);
     }
 
-    return camelCache.get(value);
+    return camelCache[value];
 };
 
 const pascalCache = new Map();
