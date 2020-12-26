@@ -96,9 +96,8 @@ export default class Entity {
             Object.defineProperty(this, accessor, {
                 enumerable: true,
                 configurable: true,
-                get() {
-                    return this.components[accessor];
-                },
+                writable: false,
+                value: this.components[accessor],
             });
 
             component._onAttached(this);
@@ -112,9 +111,8 @@ export default class Entity {
                 Object.defineProperty(this, accessor, {
                     configurable: true,
                     enumerable: true,
-                    get() {
-                        return this.components[accessor];
-                    },
+                    writable: false,
+                    value: this.components[accessor],
                 });
             }
 
@@ -137,9 +135,8 @@ export default class Entity {
             Object.defineProperty(this, accessor, {
                 configurable: true,
                 enumerable: true,
-                get() {
-                    return this.components[accessor];
-                },
+                writable: false,
+                value: this.components[accessor],
             });
         }
 
