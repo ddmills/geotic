@@ -20,6 +20,7 @@ This library is _heavily_ inspired by ECS in _Caves of Qud_:
 npm install geotic
 ```
 
+-   [Sleepy Crawler](https://github.com/ddmills/sleepy) a full fledged roguelike that makes heavy use of geotic by @ddmills
 -   [snail6](https://github.com/luetkemj/snail6) a bloody roguelike by @luetkemj
 -   [Gobs O' Goblins](https://github.com/luetkemj/gobs-o-goblins) by @luetkemj
 -   [Javascript Roguelike Tutorial](https://github.com/luetkemj/jsrlt) by @luetkemj
