@@ -14,6 +14,8 @@ This library is _heavily_ inspired by ECS in _Caves of Qud_:
 -   [Brian Bucklew - AI in Qud and Sproggiwood](https://www.youtube.com/watch?v=4uxN5GqXcaA)
 -   [Brian Bucklew - Data-Driven Engines of Qud and Sproggiwood](https://www.youtube.com/watch?v=U03XXzcThGU)
 
+Python user? Check out the Python port of this library, [ecstremity](https://github.com/krummja/ecstremity).
+
 ### usage and examples
 
 ```
