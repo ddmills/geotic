@@ -1,96 +1,107 @@
-import Material from './components/Material';
-import Position from './components/Position';
-import Listener from './components/Listener';
-import Health from './components/Health';
-import Action from './components/Action';
-import BeingPrefab from './prefabs/BeingPrefab';
-import HumanPrefab from './prefabs/HumanPrefab';
-import EquipmentSlot from './components/EquipmentSlot';
-import { Engine } from '../build';
+import { Component } from '../src/Component';
+import { Engine } from '../src/Engine';
 
-const ecs = new Engine();
-const ecs2 = new Engine();
+const engine = new Engine();
+const world = engine.createWorld();
 
-ecs.registerComponent(EquipmentSlot);
-ecs.registerComponent(Material);
-ecs.registerComponent(Position);
-ecs.registerComponent(Listener);
-ecs.registerComponent(Health);
-ecs.registerComponent(Action);
 
-ecs2.registerComponent(EquipmentSlot);
-ecs2.registerComponent(Material);
-ecs2.registerComponent(Position);
-ecs2.registerComponent(Listener);
-ecs2.registerComponent(Health);
+class Action extends Component {
+    static properties = {
+        name: '',
+        data: {},
+    };
 
-ecs.registerPrefab(BeingPrefab);
-ecs.registerPrefab(HumanPrefab);
+    static allowMultiple = true;
 
-const player = ecs.createEntity();
-const sword = ecs.createEntity();
+    onAttached() {
+        console.log(`action ${this.name} attached`);
+    }
 
-sword.add(Material, { name: 'bronze' });
-player.add(Position, { x: 4, y: 12 });
-player.add('EquipmentSlot', {
-    name: 'leftHand',
-    allowedTypes: ['hand'],
+    onDetached() {
+        console.log(`action ${this.name} detached`);
+    }
+
+    onTesting(evt) {
+        console.log('Action onTesting', evt.data);
+    }
+}
+
+class Slot extends Component {
+    static allowMultiple = true;
+    static keyProperty = 'name';
+    static properties = {
+        name: 'hello',
+    };
+
+    onTesting(evt) {
+        console.log('Slot onTesting', evt.data);
+    }
+}
+
+class Position extends Component {
+    static properties = {
+        x: 0,
+        y: 0,
+    };
+
+    onTesting(evt) {
+        console.log('Position onTesting', evt.data);
+    }
+}
+
+engine.registerComponent(Action);
+engine.registerComponent(Slot);
+engine.registerComponent(Position);
+
+const e = world.createEntity();
+
+e.add(Position, {
+    x: 7,
+    y: 3,
 });
-player.add(EquipmentSlot, {
-    name: 'rightHand',
-    allowedTypes: ['hand'],
+
+e.add(Action, {
+    name: 'actionA',
+    data: {
+        hello: 'world'
+    },
 });
 
-console.log(player.serialize());
-
-const q = ecs.createQuery({
-    all: [Position],
+e.add(Action, {
+    name: 'actionB',
+    data: {
+        hello: 'world'
+    },
 });
 
-q.get().forEach((e) => console.log(e.position));
+e.add(Slot, {
+    name: 'hand',
+});
 
-// query = ecs.createQuery({
-//     all: [Action], // entity must have all of these
-//     any: [Health, Material], // entity must include at least one of these
-//     none: [EquipmentSlot] // entity cannot include any of these
-// });
+e.add(Slot, {
+    name: 'head',
+});
 
-// console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
-// console.log(player.equipmentSlot.rightHand.allowedTypes);
-// player.equipmentSlot.rightHand.content = sword;
+// e.position.destroy();
+// e.action[0].destroy();
+// e.remove(e.action[0]);
+// e.remove(e.action[0]);
+// e.remove(e.slot.hand);
+// e.remove(e.slot.head);
 
-// const data = ecs.serialize();
-// const human = ecs.createPrefab('HumanPrefab');
+e.remove(e.position);
+e.remove(e.slot.hand);
+e.remove(e.action[0]);
+e.remove(e.action[0]);
 
-// ecs2.deserialize(data);
+e.fireEvent('testing', {
+    hello: 'world',
+});
 
-// const query = ecs.createQuery((entity) => entity.has('Position'));
 
-// console.log(Object.keys(query.get()).length);
-// human.remove('Position');
-// console.log(Object.keys(query.get()).length);
-// human.add(Position, { x: 4, y: 12 });
-// console.log(Object.keys(query.get()).length);
-
-// const thing = ecs.createEntity();
-// thing.add('Position');
-
-// console.log(thing.serialize());
-
-// const evt = human.fireEvent('test', { some: 'data' });
-
-// console.log(evt.data);
-// console.log(evt.handled);
-
-// human.add('Action', { name: 'a' });
-// human.add('Action', { name: 'b' });
-// human.add('Action', { name: 'c' });
-
-// human.action[0].remove();
-
-// console.log(human.Action);
-// console.log(human.has('Action'));
-
-// human.remove('Action');
-
-// console.log(human.has('Action'));
+console.log(e._cbits);
+console.log('Slot', Slot.prototype._cbit, e.has(Slot));
+console.log('Position', Position.prototype._cbit, e.has(Position));
+console.log('Action', Action.prototype._cbit, e.has(Action));
+e.destroy();
+console.log(JSON.stringify(e.serialize(), null, 2));

@@ -1,65 +1,14 @@
-import ComponentRegistry from './registries/ComponentRegistry';
-import PrefabRegistry from './registries/PrefabRegistry';
-import { nanoid } from 'nanoid/non-secure';
-import EntityRegistry from './registries/EntityRegistry';
-import QueryRegistry from './registries/QueryRegistry';
+import { ComponentRegistry } from './ComponentRegistry';
+import { World } from './World';
 
-export default class Engine {
-    constructor() {
-        this.idGenerator = () => nanoid();
-        this.components = new ComponentRegistry(this);
-        this.prefabs = new PrefabRegistry(this);
-        this.entities = new EntityRegistry(this);
-        this.queries = new QueryRegistry(this);
+export class Engine {
+    _components = new ComponentRegistry();
+
+    registerComponent(clazz) {
+        this._components.register(clazz);
     }
 
-    generateId() {
-        return this.idGenerator();
-    }
-
-    createEntity(id) {
-        return this.entities.create(id);
-    }
-
-    createPrefab(nameOrClass, initialProps = {}) {
-        return this.prefabs.create(nameOrClass, initialProps);
-    }
-
-    destroyEntity(entity) {
-        return this.entities.destroy(entity);
-    }
-
-    registerPrefab(data) {
-        this.prefabs.deserialize(data);
-    }
-
-    registerComponent(component) {
-        this.components.register(component);
-    }
-
-    getEntity(id) {
-        return this.entities.get(id);
-    }
-
-    createComponent(type, properties) {
-        return this.components.create(type, properties);
-    }
-
-    createQuery(filters) {
-        return this.queries.create(filters);
-    }
-
-    serialize(entities) {
-        return {
-            entities: this.entities.serialize(entities),
-        };
-    }
-
-    deserialize(data) {
-        if (data.id) {
-            return this.entities.deserializeEntity(data);
-        }
-
-        return this.entities.deserialize(data);
+    createWorld() {
+        return new World(this);
     }
 }
