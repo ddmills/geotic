@@ -7,6 +7,8 @@ export const camelString = (value) => {
 
     if (!result) {
         camelCache[value] = camelcaseSlow(value);
+
+        return camelCache[value];
     }
 
     return result;
@@ -19,6 +21,8 @@ export const pascalString = (value) => {
 
     if (!value) {
         pascalCache[value] = camelcaseSlow(value, { pascalCase: true });
+
+        return pascalCache[value];
     }
 
     return result;

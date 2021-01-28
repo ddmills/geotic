@@ -1,19 +1,14 @@
-export default class EntityEvent {
+import { camelString } from './util/string-util';
+
+export class EntityEvent {
     data = {};
-    _prevented = false;
-    _handled = false;
-
-    get prevented() {
-        return this._prevented;
-    }
-
-    get handled() {
-        return this._handled;
-    }
+    prevented = false;
+    handled = false;
 
     constructor(name, data = {}) {
         this.name = name;
         this.data = data;
+        this.handlerName = camelString(`on ${this.name}`);
     }
 
     is(name) {
@@ -21,11 +16,11 @@ export default class EntityEvent {
     }
 
     handle() {
-        this._handled = true;
-        this._prevented = true;
+        this.handled = true;
+        this.prevented = true;
     }
 
     prevent() {
-        this._prevented = true;
+        this.prevented = true;
     }
 }

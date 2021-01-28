@@ -1,4 +1,4 @@
-import { Component } from '../../build';
+import { Component } from '../../../build';
 
 export default class Health extends Component {
     static properties = {

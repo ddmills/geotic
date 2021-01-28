@@ -1,31 +1,7 @@
-import { camelString } from './util/string-util';
-import PropertyFactory from './Properties/PropertyFactory';
-
-export default class Component {
-    entity = null;
-    ecs = null;
-    _props = {};
-    _isDestroyed = false;
-
+export class Component {
     static allowMultiple = false;
     static keyProperty = null;
     static properties = {};
-
-    static get type() {
-        return this.name;
-    }
-
-    get type() {
-        return this.constructor.name;
-    }
-
-    get isAttached() {
-        return Boolean(this.entity);
-    }
-
-    get isDestroyed() {
-        return this._isDestroyed;
-    }
 
     get allowMultiple() {
         return this.constructor.allowMultiple;
@@ -35,119 +11,42 @@ export default class Component {
         return this.constructor.keyProperty;
     }
 
-    get properties() {
-        const ob = {};
-
-        for (const [key, value] of Object.entries(this._props)) {
-            ob[key] = value.get();
-        }
-
-        return ob;
+    constructor(properties = {}) {
+        Object.assign(this, properties);
     }
 
-    get key() {
-        return this[this.keyProperty];
+    remove() {
+        this.entity.remove(this);
     }
 
-    constructor(ecs, properties = {}) {
-        this.ecs = ecs;
-        this._defineProxies(properties);
-    }
-
-    serialize() {
-        return Object.entries(this._props).reduce(
-            (o, [key, value]) => ({
-                ...o,
-                [key]: value.serialize(),
-            }),
-            {}
-        );
-    }
-
-    _onAttached(entity) {
-        this.entity = entity;
-        this.ecs.queries.onComponentAdded(entity, this);
-        this.onAttached();
-    }
-
-    _onDetached() {
-        if (this.isAttached) {
-            this.onDetached();
-            this.entity = null;
-        }
-    }
-
-    _onDestroyed() {
-        this._isDestroyed = true;
-        this.onDestroyed();
-
-        for (const prop of Object.values(this._props)) {
-            prop.onDestroyed();
-        }
-    }
-
-    onAttached() {}
-
-    onDetached() {}
-
-    onDestroyed() {}
-
-    remove(destroy = true) {
-        if (this.isAttached) {
-            this.entity.remove(this);
-        }
-        if (destroy) {
-            this._onDestroyed();
-        }
-    }
-
-    destroy() {
-        this.remove(true);
-    }
-
-    clone() {
-        return this.ecs.createComponent(this.type, this.serialize());
+    _onRemoved() {
+        this.onRemoved();
     }
 
     _onEvent(evt) {
         this.onEvent(evt);
 
-        const handlerName = camelString(`on ${evt.name}`);
-
-        if (typeof this[handlerName] === 'function') {
-            this[handlerName](evt);
+        if (typeof this[evt.handlerName] === 'function') {
+            this[evt.handlerName](evt);
         }
     }
 
-    onEvent(evt) {}
-
-    _defaultPropertyValue(propertyName) {
-        const value = this.constructor.properties[propertyName];
-
-        if (value === '<EntityArray>') {
-            return [];
-        }
-
-        if (value === '<Entity>') {
-            return undefined;
-        }
-
-        return value;
+    _onAttached(entity) {
+        this.entity = entity;
+        this.onAttached(entity);
     }
 
-    _defineProxies(initialProperties) {
+    serialize() {
+        const ob = {};
+
         for (const key in this.constructor.properties) {
-            const initialValue = initialProperties.hasOwnProperty(key)
-                ? initialProperties[key]
-                : this._defaultPropertyValue(key);
-            const property = PropertyFactory.create(
-                this,
-                this.constructor.properties[key]
-            );
-
-            this._props[key] = property;
-            Object.defineProperty(this, key, property.descriptor);
-            property.set(initialValue);
+            ob[key] = this[key];
         }
+
+        return ob;
     }
+
+    onAttached(entity) {}
+    onRemoved() {}
+    onEvent(evt) {}
 }
