@@ -118,7 +118,6 @@ world2.deserialize(world.serialize());
 
 console.log(JSON.stringify(world2.serialize(), null, 2));
 
-
 // console.log(e._cbits);
 // console.log('Slot', Slot.prototype._cbit, e.has(Slot));
 // console.log('Position', Position.prototype._cbit, e.has(Position));

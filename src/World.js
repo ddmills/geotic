@@ -1,6 +1,6 @@
 import { Entity } from './Entity';
 import { Query } from './Query';
-import { camelString, pascalString } from './util/string-util';
+import { camelString } from './util/string-util';
 
 export class World {
     _id = 0;
@@ -12,7 +12,7 @@ export class World {
     }
 
     createId() {
-        return ++this._id;
+        return ++this._id + (Math.random().toString(36)).substr(2, 9);
     }
 
     getEntity(id) {
