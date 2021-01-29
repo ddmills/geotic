@@ -106,9 +106,18 @@ const query = world.createQuery({
 
 console.log(world.serialize());
 
-e.destroy();
+// e.destroy();
 
 console.log(query.has(e));
+
+const world2 = engine.createWorld();
+
+// console.log(JSON.stringify(world.serialize(), null, 2));
+
+world2.deserialize(world.serialize());
+
+console.log(JSON.stringify(world2.serialize(), null, 2));
+
 
 // console.log(e._cbits);
 // console.log('Slot', Slot.prototype._cbit, e.has(Slot));
