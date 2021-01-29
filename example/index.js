@@ -4,7 +4,6 @@ import { Engine } from '../src/Engine';
 const engine = new Engine();
 const world = engine.createWorld();
 
-
 class Action extends Component {
     static properties = {
         name: '',
@@ -90,18 +89,30 @@ e.add(Slot, {
 // e.remove(e.slot.head);
 
 e.remove(e.position);
-e.remove(e.slot.hand);
-e.remove(e.action[0]);
-e.remove(e.action[0]);
+// e.remove(e.slot.hand);
+// e.remove(e.slot.head);
+// e.remove(e.action[0]);
+// e.remove(e.action[0]);
 
 e.fireEvent('testing', {
     hello: 'world',
 });
 
+const query = world.createQuery({
+    any: [Slot],
+    all: [Action],
+    none: [Position]
+});
 
-console.log(e._cbits);
-console.log('Slot', Slot.prototype._cbit, e.has(Slot));
-console.log('Position', Position.prototype._cbit, e.has(Position));
-console.log('Action', Action.prototype._cbit, e.has(Action));
+console.log(world.serialize());
+
 e.destroy();
-console.log(JSON.stringify(e.serialize(), null, 2));
+
+console.log(query.has(e));
+
+// console.log(e._cbits);
+// console.log('Slot', Slot.prototype._cbit, e.has(Slot));
+// console.log('Position', Position.prototype._cbit, e.has(Position));
+// console.log('Action', Action.prototype._cbit, e.has(Action));
+// e.destroy();
+// console.log(JSON.stringify(e.serialize(), null, 2));
