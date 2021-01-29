@@ -1,5 +1,6 @@
 import { Entity } from './Entity';
 import { Query } from './Query';
+import { camelString, pascalString } from './util/string-util';
 
 export class World {
     _id = 0;
@@ -45,6 +46,43 @@ export class World {
         return {
             entities: json
         };
+    }
+
+    deserialize(data) {
+        for (const entityData of data.entities) {
+            this._createOrGetEntityById(entityData.id);
+        }
+
+        for (const entityData of data.entities) {
+            this._deserializeEntity(entityData);
+        }
+    }
+
+    _createOrGetEntityById(id) {
+        return this.getEntity(id) || this.createEntity(id);
+    }
+
+    _deserializeEntity(data) {
+        const { id, components } = data;
+        const entity = this._createOrGetEntityById(id);
+
+        console.log('comp data', components);
+
+        Object.entries(components).forEach(([key, value]) => {
+            const type = camelString(key);
+
+            console.log('lookup', type);
+
+            const def = this.engine._components.get(type);
+
+            if (def.allowMultiple) {
+                Object.values(value).forEach((d) => {
+                    entity.add(def, d);
+                });
+            } else {
+                entity.add(def, value);
+            }
+        });
     }
 
     _candidate(entity) {

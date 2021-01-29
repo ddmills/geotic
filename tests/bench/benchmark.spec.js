@@ -20,13 +20,13 @@ describe('benchmark', () => {
             engine.registerComponent(ComponentA);
             engine.registerComponent(ComponentB);
 
-            // query = engine.createQuery({
-            //     all: [ComponentA, ComponentB]
-            // });
+            world.createQuery({
+                all: [ComponentA]
+            });
 
             const start = performance.now();
 
-            for (let j = 0; j < 10000; j++) {
+            for (let j = 0; j < 1000; j++) {
                 const entity = world.createEntity();
 
                 // entity.add(ComponentA);
