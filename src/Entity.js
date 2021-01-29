@@ -1,5 +1,6 @@
 import { Component } from './Component';
 import { EntityEvent } from './EntityEvent';
+import { addBit, hasBit, subtractBit } from './util/bit-util';
 
 const attachComponent = (entity, component) => {
     const key = component._ckey;
@@ -37,7 +38,7 @@ const removeComponent = (entity, component) => {
 
     delete entity[key];
     delete entity.components[key];
-    entity._cbits = entity._cbits & ~(1n << component._cbit);
+    entity._cbits = subtractBit(entity._cbits, component._cbit);
 };
 
 const removeComponentKeyed = (entity, component) => {
@@ -50,7 +51,7 @@ const removeComponentKeyed = (entity, component) => {
     if (Object.keys(entity[key]).length <= 0) {
         delete entity[key];
         delete entity.components[key];
-        entity._cbits = entity._cbits & ~(1n << component._cbit);
+        entity._cbits = subtractBit(entity._cbits, component._cbit);
     }
 };
 
@@ -64,7 +65,7 @@ const removeComponentArray = (entity, component) => {
     if (entity[key].length <= 0) {
         delete entity[key];
         delete entity.components[key];
-        entity._cbits = entity._cbits & ~(1n << component._cbit);
+        entity._cbits = subtractBit(entity._cbits, component._cbit);
     }
 };
 
@@ -86,8 +87,6 @@ const serializeComponentKeyed = (ob) => {
     return ser;
 };
 
-const ONE = 1n;
-
 export class Entity {
     _cbits = 0n;
 
@@ -95,6 +94,7 @@ export class Entity {
         this.world = world;
         this.id = id;
         this.components = {};
+        this._isDestroyed = false;
     }
 
     add(clazz, properties) {
@@ -110,13 +110,11 @@ export class Entity {
 
         component._onAttached(this);
 
-        this._cbits = this._cbits | ONE << component._cbit;
+        this._cbits = addBit(this._cbits, component._cbit);
     }
 
     has(clazz) {
-        const bit = clazz.prototype._cbit;
-
-        return ((this._cbits >> bit) % 2n !== 0n);
+        return hasBit(this._cbits, clazz.prototype._cbit);
     }
 
     remove(component) {
@@ -154,6 +152,8 @@ export class Entity {
                 }
             }
         }
+
+        this._isDestroyed = true;
     }
 
     serialize() {

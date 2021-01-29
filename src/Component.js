@@ -21,6 +21,7 @@ export class Component {
 
     _onRemoved() {
         this.onRemoved();
+        this.entity.world._candidate(this.entity);
     }
 
     _onEvent(evt) {
@@ -33,6 +34,7 @@ export class Component {
 
     _onAttached(entity) {
         this.entity = entity;
+        this.entity.world._candidate(this.entity);
         this.onAttached(entity);
     }
 
