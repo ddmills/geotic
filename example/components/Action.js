@@ -1,4 +1,4 @@
-import { Component } from '../../build';
+import { Component } from '../../src/index';
 
 export default class Action extends Component {
     static properties = {
