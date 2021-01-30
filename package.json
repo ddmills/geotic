@@ -8,7 +8,7 @@
         "start": "npm run build && node --enable-source-maps --experimental-modules --es-module-specifier-resolution=node example/index.js",
         "build": "rollup -c",
         "pretty": "prettier --write .",
-        "bench": "node --experimental-modules --es-module-specifier-resolution=node ./benchmark.js",
+        "benchmark": "node --experimental-modules --es-module-specifier-resolution=node ./benchmark.js",
         "test": "jest --config jest.config.json",
         "prepublish": "npm run build"
     },
