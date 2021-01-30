@@ -9,7 +9,7 @@ class ComponentB extends Component {
     static allowMultiple = true;
     static keyProperty = 'k';
     static properties = {
-        k: 0
+        k: 0,
     };
 }
 
@@ -29,15 +29,15 @@ for (let i = 0; i < testCount; i++) {
     engine.registerComponent(ComponentC);
 
     world.createQuery({
-        all: [ComponentA]
+        all: [ComponentA],
     });
 
     world.createQuery({
-        all: [ComponentB]
+        all: [ComponentB],
     });
 
     world.createQuery({
-        all: [ComponentC]
+        all: [ComponentC],
     });
 
     const start = Date.now();

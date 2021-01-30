@@ -145,7 +145,7 @@ export class Entity {
                 for (const component of v) {
                     this._cbits = subtractBit(this._cbits, component._cbit);
                     component._onRemoved();
-                };
+                }
             } else {
                 for (const component of Object.values(v)) {
                     this._cbits = subtractBit(this._cbits, component._cbit);
@@ -202,7 +202,7 @@ export class Entity {
                     if (evt.prevented) {
                         return evt;
                     }
-                };
+                }
             } else {
                 for (const component of Object.values(v)) {
                     component._onEvent(evt);

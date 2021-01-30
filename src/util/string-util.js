@@ -13,17 +13,3 @@ export const camelString = (value) => {
 
     return result;
 };
-
-const pascalCache = {};
-
-export const pascalString = (value) => {
-    const result = pascalCache[value];
-
-    if (!value) {
-        pascalCache[value] = camelcaseSlow(value, { pascalCase: true });
-
-        return pascalCache[value];
-    }
-
-    return result;
-};

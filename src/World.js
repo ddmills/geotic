@@ -12,7 +12,7 @@ export class World {
     }
 
     createId() {
-        return ++this._id + (Math.random().toString(36)).substr(2, 9);
+        return ++this._id + Math.random().toString(36).substr(2, 9);
     }
 
     getEntity(id) {
@@ -48,7 +48,7 @@ export class World {
         });
 
         return {
-            entities: json
+            entities: json,
         };
     }
 
