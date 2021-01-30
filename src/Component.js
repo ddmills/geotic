@@ -15,12 +15,12 @@ export class Component {
         Object.assign(this, this.constructor.properties, properties);
     }
 
-    remove() {
+    destroy() {
         this.entity.remove(this);
     }
 
-    _onRemoved() {
-        this.onRemoved();
+    _onDestroyed() {
+        this.onDestroyed();
         delete this.entity;
     }
 
@@ -48,6 +48,6 @@ export class Component {
     }
 
     onAttached(entity) {}
-    onRemoved() {}
+    onDestroyed() {}
     onEvent(evt) {}
 }

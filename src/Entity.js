@@ -131,7 +131,7 @@ export class Entity {
             removeComponent(this, component);
         }
 
-        component._onRemoved();
+        component._onDestroyed();
     }
 
     destroy() {
@@ -140,16 +140,16 @@ export class Entity {
 
             if (v instanceof Component) {
                 this._cbits = subtractBit(this._cbits, v._cbit);
-                v._onRemoved();
+                v._onDestroyed();
             } else if (v instanceof Array) {
                 for (const component of v) {
                     this._cbits = subtractBit(this._cbits, component._cbit);
-                    component._onRemoved();
+                    component._onDestroyed();
                 }
             } else {
                 for (const component of Object.values(v)) {
                     this._cbits = subtractBit(this._cbits, component._cbit);
-                    component._onRemoved();
+                    component._onDestroyed();
                 }
             }
 
