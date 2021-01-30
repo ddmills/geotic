@@ -113,7 +113,7 @@ Engine properties and methods:
 > a unique id and a collection of components
 
 ```js
-const zombie = engine.createEntity();
+const zombie = world.createEntity();
 
 zombie.add('Name', { value: 'Donnie' });
 zombie.add('Position', { x: 2, y: 0, z: 3 });
