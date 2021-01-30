@@ -60,9 +60,9 @@ engine.registerPrefab({
             properties: {
                 x: 11,
                 y: 12,
-            }
-        }
-    ]
+            },
+        },
+    ],
 });
 
 engine.registerPrefab({
@@ -72,11 +72,11 @@ engine.registerPrefab({
         {
             type: 'Action',
             properties: {
-                name: 'thing'
-            }
+                name: 'thing',
+            },
         },
         'Action',
-    ]
+    ],
 });
 
 const e = world.createEntity();
@@ -89,14 +89,14 @@ e.add(Position, {
 e.add(Action, {
     name: 'actionA',
     data: {
-        hello: 'world'
+        hello: 'world',
     },
 });
 
 e.add(Action, {
     name: 'actionB',
     data: {
-        hello: 'world'
+        hello: 'world',
     },
 });
 
@@ -128,7 +128,7 @@ e.fireEvent('testing', {
 const query = world.createQuery({
     any: [Slot],
     all: [Action],
-    none: [Position]
+    none: [Position],
 });
 
 // console.log(world.serialize());
@@ -139,8 +139,8 @@ const query = world.createQuery({
 
 const e2 = world.createPrefab('Thing', {
     position: {
-        x: 8
-    }
+        x: 8,
+    },
 });
 
 // const e2 = world.createEntity();

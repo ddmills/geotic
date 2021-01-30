@@ -21,7 +21,7 @@ describe('benchmark', () => {
             engine.registerComponent(ComponentB);
 
             world.createQuery({
-                all: [ComponentA]
+                all: [ComponentA],
             });
 
             const start = performance.now();
