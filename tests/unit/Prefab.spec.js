@@ -12,10 +12,10 @@ import {
 } from '../data/prefabs';
 
 describe('Entity', () => {
-    let world;
+    let engine, world;
 
     beforeEach(() => {
-        const engine = new Engine();
+        engine = new Engine();
 
         engine.registerComponent(EmptyComponent);
         engine.registerComponent(SimpleComponent);
@@ -29,7 +29,7 @@ describe('Entity', () => {
         let entity;
 
         beforeEach(() => {
-            world.registerPrefab(EmptyPrefab);
+            engine.registerPrefab(EmptyPrefab);
 
             entity = world.createPrefab('EmptyPrefab');
         });
@@ -43,7 +43,7 @@ describe('Entity', () => {
         let entity;
 
         beforeEach(() => {
-            world.registerPrefab(SimplePrefab);
+            engine.registerPrefab(SimplePrefab);
         });
 
         describe('with no prop overrides', () => {
@@ -56,8 +56,8 @@ describe('Entity', () => {
             });
 
             it('should have the components', () => {
-                expect(entity.has('EmptyComponent')).toBe(true);
-                expect(entity.has('SimpleComponent')).toBe(true);
+                expect(entity.has(EmptyComponent)).toBe(true);
+                expect(entity.has(SimpleComponent)).toBe(true);
             });
 
             it('should assign component prop data from the prefab', () => {
@@ -83,8 +83,8 @@ describe('Entity', () => {
             });
 
             it('should have the components', () => {
-                expect(entity.has('EmptyComponent')).toBe(true);
-                expect(entity.has('SimpleComponent')).toBe(true);
+                expect(entity.has(EmptyComponent)).toBe(true);
+                expect(entity.has(SimpleComponent)).toBe(true);
             });
 
             it('should assign component prop data from the initial props', () => {
@@ -99,7 +99,7 @@ describe('Entity', () => {
         let entity;
 
         beforeEach(() => {
-            world.registerPrefab(PrefabWithKeyedAndArray);
+            engine.registerPrefab(PrefabWithKeyedAndArray);
         });
 
         describe('with no prop overrides', () => {
@@ -112,8 +112,8 @@ describe('Entity', () => {
             });
 
             it('should have the components', () => {
-                expect(entity.has('ArrayComponent')).toBe(true);
-                expect(entity.has('NestedComponent')).toBe(true);
+                expect(entity.has(ArrayComponent)).toBe(true);
+                expect(entity.has(NestedComponent)).toBe(true);
                 expect(entity.arrayComponent).toHaveLength(2);
                 expect(entity.nestedComponent.one).toBeDefined();
                 expect(entity.nestedComponent.two).toBeDefined();
@@ -153,8 +153,8 @@ describe('Entity', () => {
             });
 
             it('should have the components', () => {
-                expect(entity.has('ArrayComponent')).toBe(true);
-                expect(entity.has('NestedComponent')).toBe(true);
+                expect(entity.has(ArrayComponent)).toBe(true);
+                expect(entity.has(NestedComponent)).toBe(true);
                 expect(entity.arrayComponent).toHaveLength(2);
                 expect(entity.nestedComponent.one).toBeDefined();
                 expect(entity.nestedComponent.two).toBeDefined();

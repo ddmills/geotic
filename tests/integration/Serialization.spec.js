@@ -179,16 +179,24 @@ describe('Serialization', () => {
         it('should get component properties correct', () => {
             const entity = world.getEntity(entityId);
 
-            const expected = json.entities[3];
+            const expected = json.entities[0];
 
-            expect(entity.simpleComponent.properties).toEqual(
-                expected.simpleComponent
+            expect(entity.simpleComponent.testProp).toEqual(
+                expected.simpleComponent.testProp
             );
-            expect(entity.nestedComponent[nestedNameA].properties).toEqual(
-                expected.nestedComponent[nestedNameA]
+
+            expect(entity.nestedComponent[nestedNameA].name).toEqual(
+                expected.nestedComponent[nestedNameA].name
             );
-            expect(entity.nestedComponent[nestedNameB].properties).toEqual(
-                expected.nestedComponent[nestedNameB]
+            expect(entity.nestedComponent[nestedNameA].hello).toEqual(
+                expected.nestedComponent[nestedNameA].hello
+            );
+
+            expect(entity.nestedComponent[nestedNameB].name).toEqual(
+                expected.nestedComponent[nestedNameB].name
+            );
+            expect(entity.nestedComponent[nestedNameB].hello).toEqual(
+                expected.nestedComponent[nestedNameB].hello
             );
         });
     });

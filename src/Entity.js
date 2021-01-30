@@ -98,7 +98,7 @@ export class Entity {
         this.world = world;
         this.id = id;
         this.components = {};
-        this._isDestroyed = false;
+        this.isDestroyed = false;
     }
 
     add(clazz, properties) {
@@ -112,10 +112,10 @@ export class Entity {
             attachComponent(this, component);
         }
 
-        this.world._candidate(this);
         this._cbits = addBit(this._cbits, component._cbit);
-
         component._onAttached(this);
+
+        this.world._candidate(this);
     }
 
     has(clazz) {
@@ -158,8 +158,9 @@ export class Entity {
         }
 
         this.world._candidate(this);
+        this.world._destroyed(this.id);
         this.components = {};
-        this._isDestroyed = true;
+        this.isDestroyed = true;
     }
 
     serialize() {
@@ -179,7 +180,7 @@ export class Entity {
 
         return {
             id: this.id,
-            components,
+            ...components,
         };
     }
 

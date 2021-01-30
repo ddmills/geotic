@@ -112,7 +112,7 @@ describe('Query', () => {
 
         describe('when an entity is edited to no longer match', () => {
             beforeEach(() => {
-                entityA.remove(ComponentA);
+                entityA.componentA.destroy();
             });
 
             it('should not be included in result set', () => {
