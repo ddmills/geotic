@@ -27,6 +27,14 @@ export class World {
         return entity;
     }
 
+    destroyEntity(id) {
+        const entity = this.getEntity(id);
+
+        if (entity) {
+            entity.destroy();
+        }
+    }
+
     createQuery(filters) {
         const query = new Query(this, filters);
 
@@ -67,16 +75,11 @@ export class World {
     }
 
     _deserializeEntity(data) {
-        const { id, components } = data;
+        const { id, ...components } = data;
         const entity = this._createOrGetEntityById(id);
-
-        console.log('comp data', components);
 
         Object.entries(components).forEach(([key, value]) => {
             const type = camelString(key);
-
-            console.log('lookup', type);
-
             const def = this.engine._components.get(type);
 
             if (def.allowMultiple) {
@@ -91,5 +94,9 @@ export class World {
 
     _candidate(entity) {
         this._queries.forEach((q) => q.candidate(entity));
+    }
+
+    _destroyed(id) {
+        return this._entities.delete(id);
     }
 }

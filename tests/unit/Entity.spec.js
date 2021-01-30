@@ -69,20 +69,20 @@ describe('Entity', () => {
 
             testComponentDestroySpy = jest.spyOn(
                 entity.testComponent,
-                'destroy'
+                '_onDestroyed'
             );
             emptyComponentDestroySpy = jest.spyOn(
                 entity.emptyComponent,
-                'destroy'
+                '_onDestroyed'
             );
 
             nestedComponentDestroySpy = jest.spyOn(
                 entity.nestedComponent.test,
-                'destroy'
+                '_onDestroyed'
             );
             arrayComponentDestroySpy = jest.spyOn(
                 entity.arrayComponent[0],
-                'destroy'
+                '_onDestroyed'
             );
 
             entity.destroy();
@@ -118,69 +118,20 @@ describe('Entity', () => {
         });
 
         describe('simple components', () => {
-            describe.each([
-                ['class', () => entity.add(TestComponent)],
-                ['type', () => entity.add('TestComponent')],
-                ['instance', () => entity.add(new TestComponent(world))],
-            ])('when added by %s', (def, fn) => {
-                let result;
-
-                beforeEach(() => {
-                    result = fn();
-                });
-
-                it('should add the component to the entity as a camel cased property', () => {
-                    expect(entity.testComponent).toBeDefined();
-                });
-
-                it('should include the component in the entity list', () => {
-                    expect(entity.components.testComponent).toBeTruthy();
-                });
-
-                it('should have the correct type of components', () => {
-                    expect(entity.testComponent).toBeInstanceOf(TestComponent);
-                });
-
-                it('should return TRUE', () => {
-                    expect(result).toBe(true);
-                });
+            beforeEach(() => {
+                entity.add(TestComponent);
             });
 
-            describe('when instance is added', () => {
-                let instance;
+            it('should add the component to the entity as a camel cased property', () => {
+                expect(entity.testComponent).toBeDefined();
+            });
 
-                beforeEach(() => {
-                    instance = new TestComponent(world);
-                });
+            it('should include the component in the entity list', () => {
+                expect(entity.components.testComponent).toBeTruthy();
+            });
 
-                describe('when instance is not attached to an entity', () => {
-                    beforeEach(() => {
-                        entity.add(instance);
-                    });
-
-                    it('should attach the same exact instance', () => {
-                        expect(entity.testComponent).toBe(instance);
-                    });
-                });
-
-                describe('when instance is already attached to an entity', () => {
-                    let result;
-
-                    beforeEach(() => {
-                        world.createEntity().add(instance);
-
-                        result = entity.add(instance);
-                    });
-
-                    it('should not attach the instance', () => {
-                        expect(entity.has(TestComponent)).toBe(false);
-                        expect(entity.components.testComponent).toBeUndefined();
-                    });
-
-                    it('should return false', () => {
-                        expect(result).toBe(false);
-                    });
-                });
+            it('should have the correct type of components', () => {
+                expect(entity.testComponent).toBeInstanceOf(TestComponent);
             });
         });
 
@@ -190,107 +141,28 @@ describe('Entity', () => {
             beforeEach(() => {
                 nameA = chance.word();
                 nameB = chance.word();
+
+                entity.add(NestedComponent, { name: nameA });
+                entity.add(NestedComponent, { name: nameB });
             });
 
-            describe.each([
-                [
-                    'class',
-                    () => [
-                        entity.add(NestedComponent, { name: nameA }),
-                        entity.add(NestedComponent, { name: nameB }),
-                    ],
-                ],
-                [
-                    'type',
-                    () => [
-                        entity.add('NestedComponent', { name: nameA }),
-                        entity.add('NestedComponent', { name: nameB }),
-                    ],
-                ],
-                [
-                    'instance',
-                    () => [
-                        entity.add(
-                            new NestedComponent(world, { name: nameA })
-                        ),
-                        entity.add(
-                            new NestedComponent(world, { name: nameB })
-                        ),
-                    ],
-                ],
-            ])('when added by %s', (def, fn) => {
-                let result;
-
-                beforeEach(() => {
-                    result = fn();
-                });
-
-                it('should add the components to the entity as a camel cased property', () => {
-                    expect(entity.nestedComponent[nameA]).toBeDefined();
-                    expect(entity.nestedComponent[nameB]).toBeDefined();
-                });
-
-                it('should have the correct type of components', () => {
-                    expect(entity.nestedComponent[nameA]).toBeInstanceOf(
-                        NestedComponent
-                    );
-                    expect(entity.nestedComponent[nameB]).toBeInstanceOf(
-                        NestedComponent
-                    );
-                });
-
-                it('should set component properties', () => {
-                    expect(entity.nestedComponent[nameA].name).toBe(nameA);
-                    expect(entity.nestedComponent[nameB].name).toBe(nameB);
-                });
-
-                it('should return TRUE', () => {
-                    expect(result[0]).toBe(true);
-                    expect(result[1]).toBe(true);
-                });
+            it('should add the components to the entity as a camel cased property', () => {
+                expect(entity.nestedComponent[nameA]).toBeDefined();
+                expect(entity.nestedComponent[nameB]).toBeDefined();
             });
 
-            describe('when instances are added', () => {
-                let instanceA, instanceB;
+            it('should have the correct type of components', () => {
+                expect(entity.nestedComponent[nameA]).toBeInstanceOf(
+                    NestedComponent
+                );
+                expect(entity.nestedComponent[nameB]).toBeInstanceOf(
+                    NestedComponent
+                );
+            });
 
-                beforeEach(() => {
-                    instanceA = new NestedComponent(world, { name: nameA });
-                    instanceB = new NestedComponent(world, { name: nameB });
-                });
-
-                describe('when instances are not attached to an entity', () => {
-                    beforeEach(() => {
-                        entity.add(instanceA);
-                        entity.add(instanceB);
-                    });
-
-                    it('should attach the same exact instances', () => {
-                        expect(entity.nestedComponent[nameA]).toBe(instanceA);
-                        expect(entity.nestedComponent[nameB]).toBe(instanceB);
-                    });
-                });
-
-                describe('when instances are already attached to an entity', () => {
-                    let result;
-
-                    beforeEach(() => {
-                        world.createEntity().add(instanceA);
-                        world.createEntity().add(instanceB);
-
-                        result = [entity.add(instanceA), entity.add(instanceB)];
-                    });
-
-                    it('should not attach the instances', () => {
-                        expect(entity.has(NestedComponent)).toBe(false);
-                        expect(
-                            entity.components.nestedComponent
-                        ).toBeUndefined();
-                    });
-
-                    it('should return false', () => {
-                        expect(result).toStrictEqual([false, false]);
-                    });
-                });
+            it('should set component properties', () => {
+                expect(entity.nestedComponent[nameA].name).toBe(nameA);
+                expect(entity.nestedComponent[nameB].name).toBe(nameB);
             });
         });
 
@@ -300,114 +172,39 @@ describe('Entity', () => {
             beforeEach(() => {
                 nameA = chance.word();
                 nameB = chance.word();
+
+                entity.add(ArrayComponent, { name: nameA });
+                entity.add(ArrayComponent, { name: nameB });
             });
 
-            describe.each([
-                [
-                    'class',
-                    () => [
-                        entity.add(ArrayComponent, { name: nameA }),
-                        entity.add(ArrayComponent, { name: nameB }),
-                    ],
-                ],
-                [
-                    'type',
-                    () => [
-                        entity.add('ArrayComponent', { name: nameA }),
-                        entity.add('ArrayComponent', { name: nameB }),
-                    ],
-                ],
-                [
-                    'instance',
-                    () => [
-                        entity.add(new ArrayComponent(world, { name: nameA })),
-                        entity.add(new ArrayComponent(world, { name: nameB })),
-                    ],
-                ],
-            ])('when added by %s', (def, fn) => {
-                let result;
-
-                beforeEach(() => {
-                    result = fn();
-                });
-
-                it('should add the components to the entity as a camel cased array property', () => {
-                    expect(entity.arrayComponent).toBeDefined();
-                    expect(entity.arrayComponent).toHaveLength(2);
-                    expect(entity.arrayComponent[0].name).toBe(nameA);
-                    expect(entity.arrayComponent[1].name).toBe(nameB);
-                });
-
-                it('should mark the components as "attached"', () => {
-                    expect(entity.arrayComponent[0].isAttached).toBe(true);
-                    expect(entity.arrayComponent[1].isAttached).toBe(true);
-                });
-
-                it('should include the components in the entity list', () => {
-                    expect(entity.components.arrayComponent).toHaveLength(2);
-                });
-
-                it('should have the correct type of components', () => {
-                    expect(entity.arrayComponent[0]).toBeInstanceOf(
-                        ArrayComponent
-                    );
-                    expect(entity.arrayComponent[1]).toBeInstanceOf(
-                        ArrayComponent
-                    );
-                });
-
-                it('should set component properties', () => {
-                    expect(entity.arrayComponent[0].name).toBe(nameA);
-                    expect(entity.arrayComponent[1].name).toBe(nameB);
-                });
-
-                it('should return TRUE', () => {
-                    expect(result[0]).toBe(true);
-                    expect(result[1]).toBe(true);
-                });
+            it('should add the components to the entity as a camel cased array property', () => {
+                expect(entity.arrayComponent).toBeDefined();
+                expect(entity.arrayComponent).toHaveLength(2);
+                expect(entity.arrayComponent[0].name).toBe(nameA);
+                expect(entity.arrayComponent[1].name).toBe(nameB);
             });
 
-            describe('when instances are added', () => {
-                let instanceA, instanceB;
+            it('should assign the entity', () => {
+                expect(entity.arrayComponent[0].entity).toBe(entity);
+                expect(entity.arrayComponent[1].entity).toBe(entity);
+            });
 
-                beforeEach(() => {
-                    instanceA = new ArrayComponent(world, { name: nameA });
-                    instanceB = new ArrayComponent(world, { name: nameB });
-                });
+            it('should include the components in the entity list', () => {
+                expect(entity.components.arrayComponent).toHaveLength(2);
+            });
 
-                describe('when instances are not attached to an entity', () => {
-                    beforeEach(() => {
-                        entity.add(instanceA);
-                        entity.add(instanceB);
-                    });
+            it('should have the correct type of components', () => {
+                expect(entity.arrayComponent[0]).toBeInstanceOf(
+                    ArrayComponent
+                );
+                expect(entity.arrayComponent[1]).toBeInstanceOf(
+                    ArrayComponent
+                );
+            });
 
-                    it('should attach the same exact instances', () => {
-                        expect(entity.arrayComponent[0]).toBe(instanceA);
-                        expect(entity.arrayComponent[1]).toBe(instanceB);
-                    });
-                });
-
-                describe('when instances are already attached to an entity', () => {
-                    let result;
-
-                    beforeEach(() => {
-                        world.createEntity().add(instanceA);
-                        world.createEntity().add(instanceB);
-
-                        result = [entity.add(instanceA), entity.add(instanceB)];
-                    });
-
-                    it('should not attach the instances', () => {
-                        expect(entity.has(ArrayComponent)).toBe(false);
-                        expect(
-                            entity.components.arrayComponent
-                        ).toBeUndefined();
-                    });
-
-                    it('should return false', () => {
-                        expect(result).toStrictEqual([false, false]);
-                    });
-                });
+            it('should set component properties', () => {
+                expect(entity.arrayComponent[0].name).toBe(nameA);
+                expect(entity.arrayComponent[1].name).toBe(nameB);
             });
         });
     });
@@ -422,38 +219,11 @@ describe('Entity', () => {
         describe('simple components', () => {
             beforeEach(() => {
                 entity.add(TestComponent);
+                entity.remove(entity.testComponent);
             });
 
-            describe('when removed by class', () => {
-                beforeEach(() => {
-                    entity.remove(TestComponent);
-                });
-
-                it('should set the component to undefined', () => {
-                    expect(entity.testComponent).toBeUndefined();
-                });
-            });
-
-            describe('when removed by type', () => {
-                beforeEach(() => {
-                    entity.remove('TestComponent');
-                });
-
-                it('should set the component to undefined', () => {
-                    expect(entity.testComponent).toBeUndefined();
-                });
-            });
-
-            describe('when removed by instance', () => {
-                beforeEach(() => {
-                    const instance = entity.testComponent;
-
-                    entity.remove(instance);
-                });
-
-                it('should set the component to undefined', () => {
-                    expect(entity.testComponent).toBeUndefined();
-                });
+            it('should set the component to undefined', () => {
+                expect(entity.testComponent).toBeUndefined();
             });
         });
 
@@ -464,82 +234,23 @@ describe('Entity', () => {
             });
 
             describe('when one of them is removed', () => {
-                describe('when removed by class', () => {
-                    beforeEach(() => {
-                        entity.remove(NestedComponent, 'b');
-                    });
-
-                    it('should set the component to undefined', () => {
-                        expect(entity.nestedComponent.b).toBeUndefined();
-                    });
-
-                    it('should not delete the other component', () => {
-                        expect(entity.nestedComponent.a).toBeDefined();
-                    });
+                beforeEach(() => {
+                    entity.remove(entity.nestedComponent.b);
                 });
 
-                describe('when removed by type', () => {
-                    beforeEach(() => {
-                        entity.remove('NestedComponent', 'b');
-                    });
-
-                    it('should set the component to undefined', () => {
-                        expect(entity.nestedComponent.b).toBeUndefined();
-                    });
-
-                    it('should not remove the other component', () => {
-                        expect(entity.nestedComponent.a).toBeDefined();
-                    });
-                });
-
-                describe('when removed by instance', () => {
-                    beforeEach(() => {
-                        const instance = entity.nestedComponent.b;
-
-                        entity.remove(instance);
-                    });
-
-                    it('should set the component to undefined', () => {
-                        expect(entity.testComponent).toBeUndefined();
-                    });
+                it('should set the component to undefined', () => {
+                    expect(entity.testComponent).toBeUndefined();
                 });
             });
 
             describe('when both are removed', () => {
-                describe('when removed by class', () => {
-                    beforeEach(() => {
-                        entity.remove(NestedComponent, 'a');
-                        entity.remove(NestedComponent, 'b');
-                    });
-
-                    it('should set it to undefined', () => {
-                        expect(entity.nestedComponent).toBeUndefined();
-                    });
+                beforeEach(() => {
+                    entity.remove(entity.nestedComponent.a);
+                    entity.remove(entity.nestedComponent.b);
                 });
 
-                describe('when removed by type', () => {
-                    beforeEach(() => {
-                        entity.remove('NestedComponent', 'a');
-                        entity.remove('NestedComponent', 'b');
-                    });
-
-                    it('should set it to undefined', () => {
-                        expect(entity.nestedComponent).toBeUndefined();
-                    });
-                });
-
-                describe('when removed by instance', () => {
-                    beforeEach(() => {
-                        const instanceA = entity.nestedComponent.a;
-                        const instanceB = entity.nestedComponent.b;
-
-                        entity.remove(instanceA);
-                        entity.remove(instanceB);
-                    });
-
-                    it('should set it to undefined', () => {
-                        expect(entity.nestedComponent).toBeUndefined();
-                    });
+                it('should set it to undefined', () => {
+                    expect(entity.nestedComponent).toBeUndefined();
                 });
             });
         });
@@ -567,38 +278,16 @@ describe('Entity', () => {
             });
 
             describe('when both are removed', () => {
-                describe('when removed by class', () => {
-                    beforeEach(() => {
-                        entity.remove(ArrayComponent);
-                    });
+                beforeEach(() => {
+                    const instanceA = entity.arrayComponent[0];
+                    const instanceB = entity.arrayComponent[1];
 
-                    it('should set it to undefined', () => {
-                        expect(entity.arrayComponent).toBeUndefined();
-                    });
+                    entity.remove(instanceA);
+                    entity.remove(instanceB);
                 });
 
-                describe('when removed by type', () => {
-                    beforeEach(() => {
-                        entity.remove('ArrayComponent');
-                    });
-
-                    it('should set it to undefined', () => {
-                        expect(entity.arrayComponent).toBeUndefined();
-                    });
-                });
-
-                describe('when removed by instance', () => {
-                    beforeEach(() => {
-                        const instanceA = entity.arrayComponent[0];
-                        const instanceB = entity.arrayComponent[1];
-
-                        entity.remove(instanceA);
-                        entity.remove(instanceB);
-                    });
-
-                    it('should set it to undefined', () => {
-                        expect(entity.arrayComponent).toBeUndefined();
-                    });
+                it('should set it to undefined', () => {
+                    expect(entity.arrayComponent).toBeUndefined();
                 });
             });
         });

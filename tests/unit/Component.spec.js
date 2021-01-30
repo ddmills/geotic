@@ -84,10 +84,6 @@ describe('Component', () => {
                 expect(entity.has(TestComponent)).toBe(false);
             });
 
-            it('should set the isDestroyed flag to true', () => {
-                expect(component.isDestroyed).toBe(true);
-            });
-
             it('should call the "onDestroyed" handler', () => {
                 expect(onDestroyedStub).toHaveBeenCalledTimes(1);
                 expect(onDestroyedStub).toHaveBeenCalledWith();
@@ -99,7 +95,7 @@ describe('Component', () => {
             });
 
             it('should set the component "entity" to null', () => {
-                expect(component.entity).toBeNull();
+                expect(component.entity).toBeUndefined();
             });
         });
 
@@ -117,12 +113,8 @@ describe('Component', () => {
                 expect(entity.nestedComponent.a).toBeDefined();
             });
 
-            it('should set the isDestroyed flag to true', () => {
-                expect(component.isDestroyed).toBe(true);
-            });
-
             it('should set the component "entity" to null', () => {
-                expect(component.entity).toBeNull();
+                expect(component.entity).toBeUndefined();
             });
         });
 
@@ -140,12 +132,8 @@ describe('Component', () => {
                 expect(entity.arrayComponent[0]).toBeDefined();
             });
 
-            it('should set the isDestroyed flag to true', () => {
-                expect(component.isDestroyed).toBe(true);
-            });
-
             it('should set the component "entity" to null', () => {
-                expect(component.entity).toBeNull();
+                expect(component.entity).toBeUndefined();
             });
         });
     });

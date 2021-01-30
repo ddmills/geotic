@@ -284,15 +284,13 @@ describe('Query', () => {
             query.onEntityRemoved(onRemovedCb2);
 
             entity.add(ComponentA);
-            query.candidate(entity);
 
             expect(onAddedCb1).toHaveBeenCalledTimes(1);
             expect(onAddedCb1).toHaveBeenCalledWith(entity);
             expect(onAddedCb2).toHaveBeenCalledTimes(1);
             expect(onAddedCb2).toHaveBeenCalledWith(entity);
 
-            entity.remove(ComponentA);
-            query.candidate(entity);
+            entity.componentA.destroy();
 
             expect(onRemovedCb1).toHaveBeenCalledTimes(1);
             expect(onRemovedCb1).toHaveBeenCalledWith(entity);
