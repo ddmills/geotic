@@ -6,7 +6,7 @@ const world = engine.createWorld();
 
 class Action extends Component {
     static properties = {
-        name: '',
+        name: 'testtst',
         data: {},
     };
 
@@ -51,6 +51,33 @@ class Position extends Component {
 engine.registerComponent(Action);
 engine.registerComponent(Slot);
 engine.registerComponent(Position);
+
+engine.registerPrefab({
+    name: 'Base',
+    components: [
+        {
+            type: 'Position',
+            properties: {
+                x: 11,
+                y: 12,
+            }
+        }
+    ]
+});
+
+engine.registerPrefab({
+    name: 'Thing',
+    inherit: ['Base'],
+    components: [
+        {
+            type: 'Action',
+            properties: {
+                name: 'thing'
+            }
+        },
+        'Action',
+    ]
+});
 
 const e = world.createEntity();
 
@@ -104,19 +131,30 @@ const query = world.createQuery({
     none: [Position]
 });
 
-console.log(world.serialize());
+// console.log(world.serialize());
 
 // e.destroy();
 
-console.log(query.has(e));
+// console.log(e.serialize());
 
-const world2 = engine.createWorld();
+const e2 = world.createPrefab('Thing', {
+    position: {
+        x: 8
+    }
+});
+
+// const e2 = world.createEntity();
+// e2.add(Action);
+
+console.log(JSON.stringify(e2.serialize(), null, 2));
+
+// const world2 = engine.createWorld();
 
 // console.log(JSON.stringify(world.serialize(), null, 2));
 
-world2.deserialize(world.serialize());
+// world2.deserialize(world.serialize());
 
-console.log(JSON.stringify(world2.serialize(), null, 2));
+// console.log(JSON.stringify(world2.serialize(), null, 2));
 
 // console.log(e._cbits);
 // console.log('Slot', Slot.prototype._cbit, e.has(Slot));
