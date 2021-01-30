@@ -29,10 +29,10 @@ describe('benchmark', () => {
             for (let j = 0; j < 10000; j++) {
                 const entity = world.createEntity();
 
-                // entity.add(ComponentA);
-                // entity.add(ComponentA);
+                entity.add(ComponentA);
+                entity.add(ComponentA);
                 entity.add(ComponentB);
-                // entity.destroy();
+                entity.destroy();
             }
 
             const end = performance.now();

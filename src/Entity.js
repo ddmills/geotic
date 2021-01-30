@@ -38,7 +38,9 @@ const removeComponent = (entity, component) => {
 
     delete entity[key];
     delete entity.components[key];
+
     entity._cbits = subtractBit(entity._cbits, component._cbit);
+    entity.world._candidate(entity);
 };
 
 const removeComponentKeyed = (entity, component) => {
@@ -52,6 +54,7 @@ const removeComponentKeyed = (entity, component) => {
         delete entity[key];
         delete entity.components[key];
         entity._cbits = subtractBit(entity._cbits, component._cbit);
+        entity.world._candidate(entity);
     }
 };
 
@@ -66,6 +69,7 @@ const removeComponentArray = (entity, component) => {
         delete entity[key];
         delete entity.components[key];
         entity._cbits = subtractBit(entity._cbits, component._cbit);
+        entity.world._candidate(entity);
     }
 };
 
@@ -108,9 +112,10 @@ export class Entity {
             attachComponent(this, component);
         }
 
-        component._onAttached(this);
-
+        this.world._candidate(this);
         this._cbits = addBit(this._cbits, component._cbit);
+
+        component._onAttached(this);
     }
 
     has(clazz) {
@@ -134,25 +139,26 @@ export class Entity {
             const v = this.components[k];
 
             if (v instanceof Component) {
-                removeComponent(this, v);
+                this._cbits = subtractBit(this._cbits, v._cbit);
                 v._onRemoved();
             } else if (v instanceof Array) {
-                const len = v.length;
-
-                for (let i = 0; i < len; i++) {
-                    const component = v[0];
-
-                    removeComponentArray(this, component);
+                for (const component of v) {
+                    this._cbits = subtractBit(this._cbits, component._cbit);
                     component._onRemoved();
                 };
             } else {
                 for (const component of Object.values(v)) {
-                    removeComponentKeyed(this, component);
+                    this._cbits = subtractBit(this._cbits, component._cbit);
                     component._onRemoved();
                 }
             }
+
+            delete this[k];
+            delete this.components[k];
         }
 
+        this.world._candidate(this);
+        this.components = {};
         this._isDestroyed = true;
     }
 

@@ -35,6 +35,10 @@ export class World {
         return query;
     }
 
+    createPrefab(name, properties = {}) {
+        return this.engine._prefabs.create(this, name, properties);
+    }
+
     serialize(entities) {
         const json = [];
         const list = entities || this._entities;
