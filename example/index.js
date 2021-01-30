@@ -1,164 +1,90 @@
-import { Component } from '../src/Component';
-import { Engine } from '../src/Engine';
+import Material from './components/Material';
+import Position from './components/Position';
+import Listener from './components/Listener';
+import Health from './components/Health';
+import Action from './components/Action';
+import BeingPrefab from './prefabs/BeingPrefab';
+import HumanPrefab from './prefabs/HumanPrefab';
+import EquipmentSlot from './components/EquipmentSlot';
+import { Engine } from '../src/index';
 
-const engine = new Engine();
-const world = engine.createWorld();
+const ecs = new Engine();
+const world = ecs.createWorld();
 
-class Action extends Component {
-    static properties = {
-        name: 'testtst',
-        data: {},
-    };
+ecs.registerComponent(EquipmentSlot);
+ecs.registerComponent(Material);
+ecs.registerComponent(Position);
+ecs.registerComponent(Listener);
+ecs.registerComponent(Health);
+ecs.registerComponent(Action);
 
-    static allowMultiple = true;
+ecs.registerPrefab(BeingPrefab);
+ecs.registerPrefab(HumanPrefab);
 
-    onAttached() {
-        console.log(`action ${this.name} attached`);
-    }
+const player = world.createEntity();
+const sword = world.createEntity();
 
-    onDetached() {
-        console.log(`action ${this.name} detached`);
-    }
-
-    onTesting(evt) {
-        console.log('Action onTesting', evt.data);
-    }
-}
-
-class Slot extends Component {
-    static allowMultiple = true;
-    static keyProperty = 'name';
-    static properties = {
-        name: 'hello',
-    };
-
-    onTesting(evt) {
-        console.log('Slot onTesting', evt.data);
-    }
-}
-
-class Position extends Component {
-    static properties = {
-        x: 0,
-        y: 0,
-    };
-
-    onTesting(evt) {
-        console.log('Position onTesting', evt.data);
-    }
-}
-
-engine.registerComponent(Action);
-engine.registerComponent(Slot);
-engine.registerComponent(Position);
-
-engine.registerPrefab({
-    name: 'Base',
-    components: [
-        {
-            type: 'Position',
-            properties: {
-                x: 11,
-                y: 12,
-            },
-        },
-    ],
+sword.add(Material, { name: 'bronze' });
+player.add(Position, { x: 4, y: 12 });
+player.add(EquipmentSlot, {
+    name: 'leftHand',
+    allowedTypes: ['hand'],
+});
+player.add(EquipmentSlot, {
+    name: 'rightHand',
+    allowedTypes: ['hand'],
 });
 
-engine.registerPrefab({
-    name: 'Thing',
-    inherit: ['Base'],
-    components: [
-        {
-            type: 'Action',
-            properties: {
-                name: 'thing',
-            },
-        },
-        'Action',
-    ],
+console.log(player.serialize());
+
+const q = world.createQuery({
+    all: [Position],
 });
 
-const e = world.createEntity();
+q.get().forEach((e) => console.log(e.position));
 
-e.add(Position, {
-    x: 7,
-    y: 3,
-});
+// query = ecs.createQuery({
+//     all: [Action], // entity must have all of these
+//     any: [Health, Material], // entity must include at least one of these
+//     none: [EquipmentSlot] // entity cannot include any of these
+// });
 
-e.add(Action, {
-    name: 'actionA',
-    data: {
-        hello: 'world',
-    },
-});
+// console.log(player.get('EquipmentSlot', 'leftHand').allowedTypes);
+// console.log(player.equipmentSlot.rightHand.allowedTypes);
+// player.equipmentSlot.rightHand.content = sword;
 
-e.add(Action, {
-    name: 'actionB',
-    data: {
-        hello: 'world',
-    },
-});
+// const data = ecs.serialize();
+// const human = ecs.createPrefab('HumanPrefab');
 
-e.add(Slot, {
-    name: 'hand',
-});
+// ecs2.deserialize(data);
 
-e.add(Slot, {
-    name: 'head',
-});
+// const query = ecs.createQuery((entity) => entity.has('Position'));
 
-// e.position.destroy();
-// e.action[0].destroy();
-// e.remove(e.action[0]);
-// e.remove(e.action[0]);
-// e.remove(e.slot.hand);
-// e.remove(e.slot.head);
+// console.log(Object.keys(query.get()).length);
+// human.remove('Position');
+// console.log(Object.keys(query.get()).length);
+// human.add(Position, { x: 4, y: 12 });
+// console.log(Object.keys(query.get()).length);
 
-e.remove(e.position);
-// e.remove(e.slot.hand);
-// e.remove(e.slot.head);
-// e.remove(e.action[0]);
-// e.remove(e.action[0]);
+// const thing = ecs.createEntity();
+// thing.add('Position');
 
-e.fireEvent('testing', {
-    hello: 'world',
-});
+// console.log(thing.serialize());
 
-const query = world.createQuery({
-    any: [Slot],
-    all: [Action],
-    none: [Position],
-});
+// const evt = human.fireEvent('test', { some: 'data' });
 
-// console.log(world.serialize());
+// console.log(evt.data);
+// console.log(evt.handled);
 
-// e.destroy();
+// human.add('Action', { name: 'a' });
+// human.add('Action', { name: 'b' });
+// human.add('Action', { name: 'c' });
 
-// console.log(e.serialize());
+// human.action[0].remove();
 
-const e2 = world.createPrefab('Thing', {
-    position: {
-        x: 8,
-    },
-});
+// console.log(human.Action);
+// console.log(human.has('Action'));
 
-// const e2 = world.createEntity();
-// e2.add(Action);
+// human.remove('Action');
 
-console.log(JSON.stringify(e2.serialize(), null, 2));
-
-// const world2 = engine.createWorld();
-
-// console.log(JSON.stringify(world.serialize(), null, 2));
-
-// world2.deserialize(world.serialize());
-
-// console.log(JSON.stringify(world2.serialize(), null, 2));
-
-// console.log(e._cbits);
-// console.log('Slot', Slot.prototype._cbit, e.has(Slot));
-// console.log('Position', Position.prototype._cbit, e.has(Position));
-// console.log('Action', Action.prototype._cbit, e.has(Action));
-// e.destroy();
-// console.log(JSON.stringify(e.serialize(), null, 2));
+// console.log(human.has('Action'));

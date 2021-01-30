@@ -1,4 +1,4 @@
-import { Component } from '../../build';
+import { Component } from '../../src/index';
 
 export default class Position extends Component {
     static properties = {

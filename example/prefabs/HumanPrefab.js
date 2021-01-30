@@ -1,5 +1,3 @@
-import EquipmentSlot from '../components/EquipmentSlot';
-
 export default {
     name: 'HumanPrefab',
     inherit: 'BeingPrefab',
@@ -12,7 +10,7 @@ export default {
             },
         },
         {
-            type: EquipmentSlot,
+            type: 'EquipmentSlot',
             properties: {
                 name: 'legs',
                 allowedTypes: ['pants'],
