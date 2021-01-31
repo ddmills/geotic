@@ -17,4 +17,8 @@ export class Engine {
     createWorld() {
         return new World(this);
     }
+
+    destroyWorld(world) {
+        world.destroy();
+    }
 }
