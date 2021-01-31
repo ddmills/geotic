@@ -75,6 +75,6 @@ export class Query {
     }
 
     get() {
-        return this._cache;
+        return Array.from(this._cache);
     }
 }

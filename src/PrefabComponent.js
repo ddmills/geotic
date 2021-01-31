@@ -13,7 +13,9 @@ export default class PrefabComponent {
                 return;
             }
 
-            entity.remove(this.clazz);
+            const comp = entity[this.clazz.prototype._ckey];
+
+            entity.remove(comp);
         }
 
         const props = merge(this.properties, initialProps);
