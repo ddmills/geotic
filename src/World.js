@@ -19,6 +19,10 @@ export class World {
         return this._entities.get(id);
     }
 
+    getEntities() {
+        return this._entities.values();
+    }
+
     createEntity(id = this.createId()) {
         const entity = new Entity(this, id);
 
@@ -33,6 +37,19 @@ export class World {
         if (entity) {
             entity.destroy();
         }
+    }
+
+    destroyEntities() {
+        this._entities.forEach((entity) => {
+            entity.destroy();
+        });
+    }
+
+    destroy() {
+        this.destroyEntities();
+        this._id = 0;
+        this._queries = [];
+        this._entities = new Map();
     }
 
     createQuery(filters) {
