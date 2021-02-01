@@ -2,19 +2,22 @@
 
 _adjective_ physically concerning land or its inhabitants.
 
+Geotic is an ECS library focused on **performance**, **features**, and **non-intrusive design**. Geotic [is consistantly one of the fastest js ecs libraries](https://github.com/ddmills/js-ecs-benchmarks), especially when it comes to large numbers of entities.
+
 -   **entity** a unique id and a collection of components
 -   **component** a data container
 -   **query** a way to gather collections of entities that match some criteria, for use in systems
--   **prefab** a pre-defined collection of components and even other prefabs to quickly build entities
+-   **world** a container for entities and queries
+-   **prefab** a template of components to define entities as JSON
 -   **event** a message to an entity and it's components
 
-This library is _heavily_ inspired by ECS in _Caves of Qud_:
+This library is _heavily_ inspired by ECS in _Caves of Qud_. Watch these talks to get inspired!
 
 -   [Thomas Biskup - There be dragons: Entity Component Systems for Roguelikes](https://www.youtube.com/watch?v=fGLJC5UY2o4&t=1534s)
 -   [Brian Bucklew - AI in Qud and Sproggiwood](https://www.youtube.com/watch?v=4uxN5GqXcaA)
 -   [Brian Bucklew - Data-Driven Engines of Qud and Sproggiwood](https://www.youtube.com/watch?v=U03XXzcThGU)
 
-Python user? Check out the Python port of this library, [ecstremity](https://github.com/krummja/ecstremity).
+Python user? Check out the Python port of this library, [ecstremity](https://github.com/krummja/ecstremity)!
 
 ### usage and examples
 
@@ -28,12 +31,10 @@ npm install geotic
 -   [Javascript Roguelike Tutorial](https://github.com/luetkemj/jsrlt) by @luetkemj
 -   [basic example](https://github.com/ddmills/geotic-example) using pixijs
 
-Below is a contrived example which shows the absolute basics of geotic:
+Below is a contrived example which shows the basics of geotic:
 
 ```js
-import { Engine, Component, Prefab } from 'geotic';
-
-const ecs = new Engine();
+import { Engine, Component } from 'geotic';
 
 // define some simple components
 class Position extends Component {
@@ -45,30 +46,35 @@ class Velocity extends Component {
 class Frozen extends Component {
 }
 
+const engine = new Engine();
+
 // all Components and Prefabs must be `registered` by the engine
-ecs.registerComponent(Position);
-ecs.registerComponent(Velocity);
-ecs.registerComponent(Frozen);
+engine.registerComponent(Position);
+engine.registerComponent(Velocity);
+engine.registerComponent(Frozen);
 
 ...
+// create a world to hold and create entities and queries
+const world = engine.createWorld();
 
 // Create an empty entity. Call `entity.id` to get the unique ID.
-const entity = ecs.createEntity();
+const entity = world.createEntity();
 
-// add Position and Velocity components to this entity
+// add some components to the entity
 entity.addComponent(Position, { x: 4, y: 10 });
 entity.addComponent(Velocity, { x: 1, y: .25 });
 
 // create a query that tracks all components that have both a `Position`
 // and `Velocity` component but not a `Frozen` component. A query can
 // have any combination of `all`, `none` and `any`
-const kinematics = ecs.createQuery({
+const kinematics = world.createQuery({
     all: [Position, Velocity],
     none: [Frozen]
 });
 
 ...
 
+// geotic does not dictate how your game loop should behave
 const loop = (dt) => {
     // loop over the result set to update the position for all entities
     // in the query. The query will always return an up-to-date `Set`
@@ -79,70 +85,126 @@ const loop = (dt) => {
     });
 };
 
-const data = ecs.serialize(); // serialize the game state into a javascript object
+...
+
+// serialize all world entities into a JS object
+const data = world.serialize();
 
 ...
 
-ecs.deserialize(data); // convert the serialized data back into entities and components
+// convert the serialized data back into entities and components
+world.deserialize(data);
 
 ```
 
 ### Engine
 
+The `Engine` class is used to register all components and prefabs, and create new Worlds.
+
 ```js
 import { Engine } from 'geotic';
 
-const ecs = new Engine();
+const engine = new Engine();
+
+engine.registerComponent(clazz);
+engine.registerPrefab({ ... });
+engine.destroyWorld(world);
 ```
 
 Engine properties and methods:
 
--   **ecs**: the geotic Engine instance
--   **isDestroyed**: returns `true` if this entity is destroyed
--   **components**: all component instances attached to this entity
--   **idGenerator**: A function which is invoked when generating an ID. Defaults to [nanoid](https://www.npmjs.com/package/nanoid) non-secure
--   **generateId()**: Generates an entity ID (invokes and returns `idGenerator`)
+-   **registerComponent(clazz)**: register a Component so it can be used by entities
+-   **regsterPrefab(data)**: register a Prefab to create pre-defined entities
+-   **destroyWorld(world)**: destroy a world instance
+
+### World
+
+The `World` class is a container for entities. Usually only one instance is needed,
+but it can be useful to spin up more for offscreen work.
+
+```js
+import { Engine } from 'geotic';
+
+const engine = new Engine();
+const world = engine.createWorld();
+
+// create/destroy entities
+world.createEntity();
+world.getEntity(entityId);
+world.getEntities();
+world.destroyEntity(entityId);
+world.destroyEntities();
+
+// create queries
+world.createQuery({ ... });
+
+// create entity from prefab
+world.createPrefab('PrefabName', { ... });
+
+// serialize/deserialize entities
+world.serialize();
+world.serialize(entities);
+world.deserialize(data);
+
+// generate unique entity id
+world.createId();
+
+// destroy all entities and queries
+world.destroy();
+```
+
+World properties and methods:
 -   **createEntity(id = null)**: create an `Entity`. optionally provide an ID
+-   **getEntity(id)**: get an `Entity` by ID
+-   **getEntities()**: get _all_ entities in this world
+-   **createPrefab(name, properties = {})**: create an entity from the registered prefab
 -   **destroyEntity(entity)**: destroys an entity. functionally equivilant to `entity.destroy()`
+-   **destroyEntities()**: destroys all entities in this world instance
 -   **serialize(entities = null)**: serialize and return all entity data into an object. optionally specify a list of entities to serialize
 -   **deserialize(data)**: deserialize an object
--   **deserializeEntity(data)**: deserialize a specific entity object (see `entity.serialize()`
+-   **createId()**: Generates a unique ID
+-   **destroy()**: destroy all entities and queries in the world
 
-### entities
+### Entity
 
-> a unique id and a collection of components
+A unique id and a collection of components.
 
 ```js
 const zombie = world.createEntity();
 
-zombie.add('Name', { value: 'Donnie' });
-zombie.add('Position', { x: 2, y: 0, z: 3 });
-zombie.add('Velocity', { x: 0, y: 0, z: 1 });
-zombie.add('Health', { value: 200 });
-zombie.add('Enemy');
+zombie.add(Name, { value: 'Donnie' });
+zombie.add(Position, { x: 2, y: 0, z: 3 });
+zombie.add(Velocity, { x: 0, y: 0, z: 1 });
+zombie.add(Health, { value: 200 });
+zombie.add(Enemy);
+
+zombie.name.value = 'George';
+zombie.velocity.x += 12;
+
+zombie.fireEvent('hit', { damage: 12 });
+
+if (zombie.health.value <= 0) {
+    zombie.destroy();
+}
 ```
 
 Entity properties and methods:
 
--   **id**: the entities' unique id. Generated by the engine.
--   **ecs**: the geotic Engine instance
+-   **id**: the entities' unique id
+-   **world**: the geotic World instance
 -   **isDestroyed**: returns `true` if this entity is destroyed
 -   **components**: all component instances attached to this entity
--   **add(componentName, props={})**: create and add registered component to the entity. A component instance can also be supplied.
--   **has(componentName, key='')**: returns true if entity has component
--   **get(componentName, key='')**: get a component attached to this entity
+-   **add(ComponentClazz, props={})**: create and add the registered component to the entity
+-   **has(ComponentClazz)**: returns true if the entity has component
 -   **owns(component)**: returns `true` if the specified component belongs to this entity
+-   **remove(component)**: remove the component from the entity and destroy it
 -   **destroy()**: destroy the entity and all of it's components
--   **remove(componentName, key='')**: remove (detach) component from the entity
--   _DEPRECIATED_ **attach(component)**: attach a component that has been removed. _DEPRECIATED_: Use `.add(instance)` instead!
 -   **serialize()**: serialize this entity and it's components
 -   **fireEvent(name, data={})**: send an event to all components on the entity
 
-### components
+### Component
 
-> a data container
-
-A component must be defined and then registered with the Engine. This example defines a simple `Health` component:
+Components hold entity data. A component must be defined and then registered with the Engine. This example defines a simple `Health` component:
 
 ```js
 import { Component } from 'geotic';
@@ -161,6 +223,14 @@ class Health extends Component {
         return this.current > 0;
     }
 
+    reduce(amount) {
+        this.current = Math.max(this.current - amount, 0);
+    }
+
+    heal(amount) {
+        this.current = Math.min(this.current + amount, this.maximum);
+    }
+
     // This is automatically invoked when a `damage-taken` event is fired
     // on the entity: `entity.fireEvent('damage-taken', { damage: 12 })`
     // the `camelcase` library is used to map event names to methods
@@ -173,14 +243,6 @@ class Health extends Component {
         // to any other components on the entity
         evt.handle();
     }
-
-    reduce(amount) {
-        this.current = Math.max(this.current - amount, 0);
-    }
-
-    heal(amount) {
-        this.current = Math.min(this.current + amount, this.maximum);
-    }
 }
 ```
 
@@ -190,17 +252,15 @@ Component properties and methods:
     an array of entites by setting the default value to `<Entity>` and `<EntityArray>` respectively!
 -   **static allowMultiple = false** are multiple of this component type allowed? If true, components will either be stored as an object or array on the entity, depending on `keyProperty`.
 -   **static keyProperty = null** what property should be used as the key for accessing this component. if `allowMultiple` is false, this has no effect. If this property is omitted, it will be stored as an array on the component.
--   **isAttached** returns `true` if this component is attached to an entity
+-   **entity** returns the Entity this component is attached to
+-   **world** returns the World this component is in
 -   **isDestroyed** returns `true` if this component is destroyed
--   **properties** returns the properties
--   **serialize()** serialize just this component
--   **destroy()** remove and destroy this component
--   **clone()** clone this component, returns an identical component instance that is detached
--   **remove(destroy = true)** remove this component. if `destroy=true` then this behaves the same as `destroy()`
+-   **serialize()** serialize the component properties
+-   **destroy()** remove this and destroy this component
 -   **onAttached()** override this method to add behavior when this component is attached (added) to an entity
--   **onDetached()** override this method to add behavior when this component is detached (removed) to an entity
--   **onDestroyed()** override this method to add behavior when this component is destroyed
+-   **onDestroyed()** override this method to add behavior when this component is removed & destroyed
 -   **onEvent(evt)** override this method to capture all events coming to this component
+-   **on\[EventName\](evt)** add these methods to capture the specific event
 
 This example shows how `allowMultiple` and `keyProperty` work:
 
@@ -224,33 +284,38 @@ player.add(Impulse, { x: 5, y: 6 });
 
 ...
 
-// returns the array of Impulse components. Same as `player.impulse`
-player.get(Impulse);
-// returns the Impulse at position `2`. Similar to `player.impulse[2]`,
-// but will exit early if the entity does not have the `Impulse` component.
-player.get(Impulse, 2);
+// returns the array of Impulse components
+player.impulse;
+// returns the Impulse at position `2`
+player.impulse[2];
 // returns `true` if the component has an `Impulse` component
 player.has(Impulse);
-// returns `true` if the component has a third `Impulse` component
-player.has(Impulse, 2);
 
 // the `player.impulse` property is an array
 player.impulse.forEach((impulse) => {
     console.log(impulse.x, impulse.y);
 });
 
-// remove and destroy all `Impulse` components attached to this entity
-player.remove(Impulse);
+// remove and destroy the first impulse
+player.impulse[0].destroy();
 
 ...
 
 class EquipmentSlot extends Component {
     static properties = {
         name: 'hand',
-        item: '<Entity>', // this is a special property which can reference other Entities
+        itemId: 0,
     };
     static allowMultiple = true;
     static keyProperty = 'name';
+
+    get item() {
+        return this.world.getEntity(this.itemId);
+    }
+
+    set item(entity) {
+        return this.itemId = entity.id;
+    }
 }
 
 ecs.registerComponent(EquipmentSlot);
@@ -261,47 +326,33 @@ const player = ecs.createEntity();
 const helmet = ecs.createEntity();
 const sword = ecs.createEntity();
 
-// add equipment slot components to the player. Notice that the `item`
-// property can be assigned an entity
+// add multiple equipment slot components to the player
 player.add(EquipmentSlot, { name: 'rightHand' });
-player.add(EquipmentSlot, { name: 'leftHand', item: sword });
-player.add(EquipmentSlot, { name: 'head', item: helmet });
+player.add(EquipmentSlot, { name: 'leftHand', itemId: sword.id });
+player.add(EquipmentSlot, { name: 'head', itemId: helmet.id });
+
 ...
 
 // since the `EquipmentSlot` had a `keyProperty=name`, the `name`
 // is used to access them
 player.equipmentSlot.head;
-player.get(EquipmentSlot, 'head'); // same as above
-player.has(EquipmentSlot, 'head'); // true
+player.equipmentSlot.rightHand;
 
 // this will `destroy` the `sword` entity and automatically
 // set the `rightHand.item` property to `null`
 player.equipmentSlot.rightHand.item.destroy();
 
 // remove and destroy the `rightHand` equipment slot
-player.remove(EquipmentSlot, 'rightHand');
+player.equipmentSlot.rightHand.destroy();
 
 ```
 
-#### Cloning components
+### Query
+
+Queries keep track of sets of entities defined by component types. They are limited to the world they're created in.
 
 ```js
-const playerA = ecs.createEntity();
-const playerB = ecs.createEntity();
-
-playerA.add(someComponent);
-
-const clonedComponent = playerA.someComponent.clone();
-
-playerB.add(clonedComponent);
-```
-
-### queries
-
-Queries keep track of sets of entities defined by component types.
-
-```js
-const query = ecs.createQuery({
+const query = world.createQuery({
     any: [A, B], // exclude any entity that does not have at least one of A OR B.
     all: [C, D], // exclude entities that don't have both C AND D
     none: [E, F], // exclude entities that have E OR F
@@ -311,18 +362,19 @@ query.get().forEach((entity) => ...); // loop over the latest set of entites tha
 
 // alternatively, listen for when an individual entity is created/updated that matches
 query.onEntityAdded((entity) => {
-    console.log('an entity was updated or created that matches the query!', entity)l
+    console.log('an entity was updated or created that matches the query!', entity);
 });
 
 query.onEntityRemoved((entity) => {
-    console.log('an entity was updated or destroyed that previously matched the query!', entity)l
+    console.log('an entity was updated or destroyed that previously matched the query!', entity);
 });
 ```
 
 -   **query.get()** get the result [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) of the query
 -   **onEntityAdded(fn)** add a callback for when an entity is created or updated to match the query
 -   **onEntityRemoved(fn)** add a callback for when an entity is removed or updated to no longer match the query
--   **isMatch(entity)** returns `true` if the given `entity` matches this query. Mostly used internally
+-   **has(entity)** returns `true` if the given `entity` is being tracked by the query. Mostly used internally
+-   **refresh()** re-check all entities to see if they match. Very expensive, and only used internally
 
 ### serialization
 
@@ -330,7 +382,7 @@ query.onEntityRemoved((entity) => {
 
 ```js
 const saveGame = () => {
-    const data = ecs.serialize();
+    const data = world.serialize();
     localStorage.setItem('savegame', data);
 };
 
@@ -338,13 +390,13 @@ const saveGame = () => {
 
 const loadGame = () => {
     const data = localStorage.getItem('savegame');
-    ecs.deserialize(data);
+    world.deserialize(data);
 };
 ```
 
-### event
+### Event
 
-> message sent to all components on an entity
+Events are used to send a message to all components on an entity. Components can attach data to the event and prevent it from continuing to other entities.
 
 The geotic event system is modelled aver this talk by [Brian Bucklew - AI in Qud and Sproggiwood](https://www.youtube.com/watch?v=4uxN5GqXcaA).
 
@@ -385,15 +437,15 @@ console.log(evt.is('take-damage')); // simple name check
 
 ```
 
-### prefab
+### Prefab
 
-> a predefined collection of components
+Prefabs are a pre-defined template of components.
 
 The prefab system is modelled after this talk by [Thomas Biskup - There be dragons: Entity Component Systems for Roguelikes](https://www.youtube.com/watch?v=fGLJC5UY2o4&t=1534s).
 
 ```js
 // prefabs must be registered before they can be instantiated
-ecs.registerPrefab({
+engine.registerPrefab({
     name: 'Being',
     components: [
         {
@@ -415,12 +467,12 @@ ecs.registerPrefab({
 ecs.registerPrefab({
     // name used when creating the prefab
     name: 'HumanWarrior',
-    // an array of other prefabs of which this one derives.
+    // an array of other prefabs of which this one derives. Note they must be registered in order.
     inherit: ['Being', 'Warrior'],
     // an array of components to attach
     components: [
         {
-            // this can be a constructor name, or a reference directly to the component class
+            // this should be a component constructor name
             type: 'EquipmentSlot',
             // what properties should be assigned to the component
             properties: {
@@ -448,13 +500,13 @@ ecs.registerPrefab({
 
 ...
 
-const warrior1 = ecs.createPrefab('HumanWarrior');
+const warrior1 = world.createPrefab('HumanWarrior');
 
 // property overrides can be provided as the second argument
-const warrior2 = ecs.createPrefab('HumanWarrior', {
+const warrior2 = world.createPrefab('HumanWarrior', {
     equipmentSlot: {
         head: {
-            item: ecs.createPrefab('Helmet')
+            itemId: world.createPrefab('Helmet').id
         },
     },
     position: {
@@ -463,97 +515,3 @@ const warrior2 = ecs.createPrefab('HumanWarrior', {
     },
 });
 ```
-
-## Dev notes
-
--   ✓ deserialize
-    -   ✓ basic serialize/deserialize from object
-    -   ✓ onAttached safely access entity
--   ✓ serialize
-    -   only serialize if value is different from default (?)
-    -   ✓ serialize given list of entities
--   prefab
-    -   ✓ prefab base class
-    -   ✓ prefab registry
-    -   ✓ poly inherit
-    -   ✓ PrefabComponent types
-        -   ✓ component definition
-        -   ✓ initial props
-        -   ✓ should overwrite or replace
-        -   ✓ applyToEntity(entity)
-    -   reference prefab chain on entity
-        -   entity.is(prefab)
-        -   Prefab.matches(entity)
-            -   strict vs non-strict (component data matches vs component types)
-    -   ✓ allow overrides on prefab instantiation
-    -   https://www.youtube.com/watch?v=fGLJC5UY2o4
--   ✓ query
-    -   ✓ cache
-    -   ✓ filter
-    -   ✓ return Set instead of Object
-    -   ✓ filter destroyed entities by default
-    -   ✓ query definition
-        -   ✓ any
-        -   ✓ all
-        -   ✓ none
-    -   ✓ query.get
-    -   ✓ query.onEntityAdded(e)
-    -   ✓ query.onEntityRemoved(e)
--   logging configuration
-    -   route all console logs to logger
-    -   check all console log statements
--   tags
--   properties
-    -   ✓ EntityArray
-    -   EntitySet
-    -   Prefab
-    -   PrefabSet
--   ✓ events
-    -   ✓ https://www.youtube.com/watch?v=4uxN5GqXcaA
-    -   ✓ entity.sendEvent(event)
-    -   ✓ component.handleEvent(event)
-    -   ✓ an event to an entity will send it to all child components
-    -   ✓ child component can "cancel" the event to prevent it bubbling (?)
-    -   ✓ component eventMap
-    -   ✓ replace eventMap with direct method calls
-    -   global events (sent from Engine)
--   dev
-    -   ✓ sourcemaps
-    -   ✓ prettier
-    -   ✓ rollup
-    -   github npm deploy action
--   component
-    -   ✓ default property values
-    -   ✓ property.deserialize(data)
-    -   ✓ remove()
-        -   ✓ ensure works with key components
-    -   ✓ destroy()
-    -   ✓ onDestroyed()
-    -   ✓ clone
-        -   .clone(propertyOverrides)
-    -   ✓ allowMultiple without specifying keyProperty
-    -   ✓ rename accessor to `key`
-    -   rename `type` to `definitionType`
--   registry
-    -   warn if component malformed (?)
--   prefab caching
-    -   only instantiate components when different from defaults
-    -   less instances
--   ✓ Entity registry
--   Entity
-    -   ✓ keep track of refs
-    -   ✓ destroy()
-        -   ✓ component.onDestroy()
-        -   ✓ property.onDestroy() (do ref cleanup)
-        -   soft-destroy (do not remove refs) danger!
-    -   removing keyed component without key should remove all
-    -   ✓ add(type, properties);
-    -   control how components are named
-    -   ✓ camelCase component access
--   Performance
-    -   Use raw for loops
-    -   ✓ store entities as array instead of object (?)
-    -   ✓ use Map for component registry
-    -   rapid entity add/remove
-        -   ✓ cache camel case results
-    -   cache event name map

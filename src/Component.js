@@ -3,6 +3,10 @@ export class Component {
     static keyProperty = null;
     static properties = {};
 
+    get world() {
+        return this.entity.world;
+    }
+
     get allowMultiple() {
         return this.constructor.allowMultiple;
     }
