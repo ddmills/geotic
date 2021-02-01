@@ -40,7 +40,7 @@ const removeComponent = (entity, component) => {
     delete entity.components[key];
 
     entity._cbits = subtractBit(entity._cbits, component._cbit);
-    entity.world._candidate(entity);
+    entity._candidacy();
 };
 
 const removeComponentKeyed = (entity, component) => {
@@ -54,7 +54,7 @@ const removeComponentKeyed = (entity, component) => {
         delete entity[key];
         delete entity.components[key];
         entity._cbits = subtractBit(entity._cbits, component._cbit);
-        entity.world._candidate(entity);
+        entity._candidacy();
     }
 };
 
@@ -69,7 +69,7 @@ const removeComponentArray = (entity, component) => {
         delete entity[key];
         delete entity.components[key];
         entity._cbits = subtractBit(entity._cbits, component._cbit);
-        entity.world._candidate(entity);
+        entity._candidacy()
     }
 };
 
@@ -93,12 +93,19 @@ const serializeComponentKeyed = (ob) => {
 
 export class Entity {
     _cbits = 0n;
+    _qeligible = true;
 
     constructor(world, id) {
         this.world = world;
         this.id = id;
         this.components = {};
         this.isDestroyed = false;
+    }
+
+    _candidacy() {
+        if (this._qeligible) {
+            this.world._candidate(this);
+        }
     }
 
     add(clazz, properties) {
@@ -115,7 +122,7 @@ export class Entity {
         this._cbits = addBit(this._cbits, component._cbit);
         component._onAttached(this);
 
-        this.world._candidate(this);
+        this._candidacy();
     }
 
     has(clazz) {
@@ -157,7 +164,7 @@ export class Entity {
             delete this.components[k];
         }
 
-        this.world._candidate(this);
+        this._candidacy();
         this.world._destroyed(this.id);
         this.components = {};
         this.isDestroyed = true;

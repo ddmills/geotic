@@ -104,7 +104,12 @@ export class PrefabRegistry {
 
         const entity = world.createEntity();
 
+        entity._qeligible = false;
+
         prefab.applyToEntity(entity, properties);
+
+        entity._qeligible = true;
+        entity._candidacy();
 
         return entity;
     }
