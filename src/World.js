@@ -94,6 +94,7 @@ export class World {
     _deserializeEntity(data) {
         const { id, ...components } = data;
         const entity = this._createOrGetEntityById(id);
+        entity._qeligible = false;
 
         Object.entries(components).forEach(([key, value]) => {
             const type = camelString(key);
@@ -107,6 +108,9 @@ export class World {
                 entity.add(def, value);
             }
         });
+
+        entity._qeligible = true;
+        entity._candidacy();
     }
 
     _candidate(entity) {
