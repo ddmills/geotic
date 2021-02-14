@@ -2,14 +2,14 @@
 
 _adjective_ physically concerning land or its inhabitants.
 
-Geotic is an ECS library focused on **performance**, **features**, and **non-intrusive design**. Geotic [is consistantly one of the fastest js ecs libraries](https://github.com/ddmills/js-ecs-benchmarks), especially when it comes to large numbers of entities.
+Geotic is an ECS library focused on **performance**, **features**, and **non-intrusive design**. Geotic [is consistantly one of the fastest js ecs libraries](https://github.com/ddmills/js-ecs-benchmarks), especially when it comes to large numbers of entities and queries.
 
--   **entity** a unique id and a collection of components
--   **component** a data container
--   **query** a way to gather collections of entities that match some criteria, for use in systems
--   **world** a container for entities and queries
--   **prefab** a template of components to define entities as JSON
--   **event** a message to an entity and it's components
+-   [**entity**](#entity) a unique id and a collection of components
+-   [**component**](#component) a data container
+-   [**query**](#query) a way to gather collections of entities that match some criteria, for use in systems
+-   [**world**](#world) a container for entities and queries
+-   [**prefab**](#prefab) a template of components to define entities as JSON
+-   [**event**](#event) a message to an entity and it's components
 
 This library is _heavily_ inspired by ECS in _Caves of Qud_. Watch these talks to get inspired!
 
@@ -25,10 +25,10 @@ Python user? Check out the Python port of this library, [ecstremity](https://git
 npm install geotic
 ```
 
--   [Sleepy Crawler](https://github.com/ddmills/sleepy) a full fledged roguelike that makes heavy use of geotic by @ddmills
--   [snail6](https://github.com/luetkemj/snail6) a bloody roguelike by @luetkemj
--   [Gobs O' Goblins](https://github.com/luetkemj/gobs-o-goblins) by @luetkemj
--   [Javascript Roguelike Tutorial](https://github.com/luetkemj/jsrlt) by @luetkemj
+-   [Sleepy Crawler](https://github.com/ddmills/sleepy) a full fledged roguelike that makes heavy use of geotic by [@ddmills](https://github.com/ddmills)
+-   [snail6](https://github.com/luetkemj/snail6) a bloody roguelike by [@luetkemj](https://github.com/luetkemj)
+-   [Gobs O' Goblins](https://github.com/luetkemj/gobs-o-goblins) by [@luetkemj](https://github.com/luetkemj)
+-   [Javascript Roguelike Tutorial](https://github.com/luetkemj/jsrlt) by [@luetkemj](https://github.com/luetkemj)
 -   [basic example](https://github.com/ddmills/geotic-example) using pixijs
 
 Below is a contrived example which shows the basics of geotic:
@@ -38,20 +38,27 @@ import { Engine, Component } from 'geotic';
 
 // define some simple components
 class Position extends Component {
-    static properties { x: 0, y: 0 };
+    static properties {
+        x: 0,
+        y: 0,
+    };
 }
+
 class Velocity extends Component {
-    static properties { x: 0, y: 0 };
+    static properties {
+        x: 0,
+        y: 0,
+    };
 }
-class Frozen extends Component {
-}
+
+class IsFrozen extends Component {}
 
 const engine = new Engine();
 
 // all Components and Prefabs must be `registered` by the engine
 engine.registerComponent(Position);
 engine.registerComponent(Velocity);
-engine.registerComponent(Frozen);
+engine.registerComponent(IsFrozen);
 
 ...
 // create a world to hold and create entities and queries
@@ -65,11 +72,11 @@ entity.addComponent(Position, { x: 4, y: 10 });
 entity.addComponent(Velocity, { x: 1, y: .25 });
 
 // create a query that tracks all components that have both a `Position`
-// and `Velocity` component but not a `Frozen` component. A query can
+// and `Velocity` component but not a `IsFrozen` component. A query can
 // have any combination of `all`, `none` and `any`
 const kinematics = world.createQuery({
     all: [Position, Velocity],
-    none: [Frozen]
+    none: [IsFrozen]
 });
 
 ...
@@ -77,7 +84,7 @@ const kinematics = world.createQuery({
 // geotic does not dictate how your game loop should behave
 const loop = (dt) => {
     // loop over the result set to update the position for all entities
-    // in the query. The query will always return an up-to-date `Set`
+    // in the query. The query will always return an up-to-date array
     // containing entities that match
     kinematics.get().forEach((entity) => {
         entity.position.x += entity.velocity.x * dt;
@@ -358,7 +365,7 @@ const query = world.createQuery({
     none: [E, F], // exclude entities that have E OR F
 });
 
-query.get().forEach((entity) => ...); // loop over the latest set of entites that match
+query.get().forEach((entity) => ...); // loop over the latest set (array) of entites that match
 
 // alternatively, listen for when an individual entity is created/updated that matches
 query.onEntityAdded((entity) => {
@@ -370,7 +377,7 @@ query.onEntityRemoved((entity) => {
 });
 ```
 
--   **query.get()** get the result [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) of the query
+-   **query.get()** get the result array of the query. **This array should not be modified in place**. For performance reasons, the result array that is exposed is the working internal query array.
 -   **onEntityAdded(fn)** add a callback for when an entity is created or updated to match the query
 -   **onEntityRemoved(fn)** add a callback for when an entity is removed or updated to no longer match the query
 -   **has(entity)** returns `true` if the given `entity` is being tracked by the query. Mostly used internally

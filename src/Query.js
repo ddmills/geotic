@@ -1,7 +1,7 @@
 import { addBit, bitIntersection } from './util/bit-util';
 
 export class Query {
-    _cache = new Set();
+    _cache = [];
     _onAddListeners = [];
     _onRemoveListeners = [];
 
@@ -39,6 +39,10 @@ export class Query {
         return this._cache.has(entity);
     }
 
+    idx(entity) {
+        return this._cache.indexOf(entity);
+    }
+
     matches(entity) {
         const bits = entity._cbits;
 
@@ -50,17 +54,19 @@ export class Query {
     }
 
     candidate(entity) {
-        const isTracking = this.has(entity);
+        const idx = this._cache.indexOf(entity);
+        const isTracking = idx >= 0;
 
         if (!this.isTracking && !entity.isDestroyed && this.matches(entity)) {
-            this._cache.add(entity);
+            this._cache.push(entity);
+
             this._onAddListeners.forEach((cb) => cb(entity));
 
             return true;
         }
 
         if (isTracking) {
-            this._cache.delete(entity);
+            this._cache.splice(idx, 1);
             this._onRemoveListeners.forEach((cb) => cb(entity));
         }
 
@@ -68,13 +74,13 @@ export class Query {
     }
 
     refresh() {
-        this._cache.clear();
+        this._cache = [];
         this._world._entities.forEach((entity) => {
             this.candidate(entity);
         });
     }
 
     get() {
-        return Array.from(this._cache);
+        return this._cache;
     }
 }
