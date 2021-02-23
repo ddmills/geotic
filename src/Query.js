@@ -36,7 +36,7 @@ export class Query {
     }
 
     has(entity) {
-        return this._cache.has(entity);
+        return this.idx(entity) >= 0;
     }
 
     idx(entity) {
@@ -54,13 +54,14 @@ export class Query {
     }
 
     candidate(entity) {
-        const idx = this._cache.indexOf(entity);
+        const idx = this.idx(entity);
         const isTracking = idx >= 0;
 
-        if (!this.isTracking && !entity.isDestroyed && this.matches(entity)) {
-            this._cache.push(entity);
-
-            this._onAddListeners.forEach((cb) => cb(entity));
+        if (!entity.isDestroyed && this.matches(entity)) {
+            if (!isTracking) {
+                this._cache.push(entity);
+                this._onAddListeners.forEach((cb) => cb(entity));
+            }
 
             return true;
         }

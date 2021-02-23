@@ -1,4 +1,5 @@
 import { Engine, Component } from '../../src/index';
+import { bitIntersection } from '../../src/util/bit-util';
 
 describe('Query', () => {
     let world, entity, result, query;
@@ -24,9 +25,7 @@ describe('Query', () => {
                 any: [ComponentA],
             });
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(false);
+            expect(query.has(entity)).toBe(false);
         });
 
         it('should return true if the entity has it', () => {
@@ -36,9 +35,7 @@ describe('Query', () => {
 
             entity.add(ComponentA);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(true);
+            expect(query.has(entity)).toBe(true);
         });
 
         it('should return true if the entity has at least one of them', () => {
@@ -48,9 +45,7 @@ describe('Query', () => {
 
             entity.add(ComponentC);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(true);
+            expect(query.has(entity)).toBe(true);
         });
 
         it('should return false if the entity does not have it', () => {
@@ -60,9 +55,7 @@ describe('Query', () => {
 
             entity.add(ComponentB);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(false);
+            expect(query.has(entity)).toBe(false);
         });
     });
 
@@ -72,9 +65,7 @@ describe('Query', () => {
                 all: [ComponentA],
             });
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(false);
+            expect(query.has(entity)).toBe(false);
         });
 
         it('should return true if the entity has it', () => {
@@ -84,9 +75,7 @@ describe('Query', () => {
 
             entity.add(ComponentA);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(true);
+            expect(query.has(entity)).toBe(true);
         });
 
         it('should return true if the entity has all of them', () => {
@@ -98,9 +87,7 @@ describe('Query', () => {
             entity.add(ComponentB);
             entity.add(ComponentC);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(true);
+            expect(query.has(entity)).toBe(true);
         });
 
         it('should return false if the entity is missing one of them', () => {
@@ -111,9 +98,7 @@ describe('Query', () => {
             entity.add(ComponentA);
             entity.add(ComponentB);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(false);
+            expect(query.has(entity)).toBe(false);
         });
     });
 
@@ -123,9 +108,7 @@ describe('Query', () => {
                 none: [ComponentA],
             });
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(true);
+            expect(query.has(entity)).toBe(true);
         });
 
         it('should return false if the entity has it', () => {
@@ -135,9 +118,7 @@ describe('Query', () => {
 
             entity.add(ComponentA);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(false);
+            expect(query.has(entity)).toBe(false);
         });
 
         it('should return false if the entity has all of them', () => {
@@ -149,9 +130,7 @@ describe('Query', () => {
             entity.add(ComponentB);
             entity.add(ComponentC);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(false);
+            expect(query.has(entity)).toBe(false);
         });
 
         it('should return false if the entity is missing one of them', () => {
@@ -162,9 +141,7 @@ describe('Query', () => {
             entity.add(ComponentA);
             entity.add(ComponentB);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(false);
+            expect(query.has(entity)).toBe(false);
         });
 
         it('should return false if the entity has one of them', () => {
@@ -174,9 +151,7 @@ describe('Query', () => {
 
             entity.add(ComponentA);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(false);
+            expect(query.has(entity)).toBe(false);
         });
     });
 
@@ -191,9 +166,7 @@ describe('Query', () => {
             entity.add(ComponentB);
             entity.add(ComponentC);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(true);
+            expect(query.has(entity)).toBe(true);
         });
 
         it('should return true if it matches criteria', () => {
@@ -205,9 +178,7 @@ describe('Query', () => {
             entity.add(ComponentA);
             entity.add(ComponentC);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(true);
+            expect(query.has(entity)).toBe(true);
         });
 
         it('should return true if it matches criteria', () => {
@@ -219,9 +190,7 @@ describe('Query', () => {
             entity.add(ComponentA);
             entity.add(ComponentB);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(true);
+            expect(query.has(entity)).toBe(true);
         });
 
         it('should return false if it does not match criteria', () => {
@@ -233,9 +202,7 @@ describe('Query', () => {
             entity.add(ComponentA);
             entity.add(ComponentB);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(false);
+            expect(query.has(entity)).toBe(false);
         });
 
         it('should return false if it does not match criteria', () => {
@@ -246,9 +213,7 @@ describe('Query', () => {
 
             entity.add(ComponentC);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(false);
+            expect(query.has(entity)).toBe(false);
         });
 
         it('should return false if it does not match criteria', () => {
@@ -261,9 +226,7 @@ describe('Query', () => {
             entity.add(ComponentB);
             entity.add(ComponentC);
 
-            result = query.candidate(entity);
-
-            expect(result).toBe(false);
+            expect(query.has(entity)).toBe(false);
         });
     });
 
