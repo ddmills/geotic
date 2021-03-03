@@ -13,7 +13,7 @@
         "prepublish": "npm run build"
     },
     "author": "Dalton Mills <mills.dalton@gmail.com> (http://www.ddmills.com)",
-    "license": "ISC",
+    "license": "MIT",
     "bugs": {
         "url": "https://github.com/ddmills/geotic/issues"
     },
