@@ -255,8 +255,7 @@ class Health extends Component {
 
 Component properties and methods:
 
--   **static properties = {}** object that defines the properties of the component. These can also reference an entity or
-    an array of entites by setting the default value to `<Entity>` and `<EntityArray>` respectively!
+-   **static properties = {}** object that defines the properties of the component. These can also reference an entity.
 -   **static allowMultiple = false** are multiple of this component type allowed? If true, components will either be stored as an object or array on the entity, depending on `keyProperty`.
 -   **static keyProperty = null** what property should be used as the key for accessing this component. if `allowMultiple` is false, this has no effect. If this property is omitted, it will be stored as an array on the component.
 -   **entity** returns the Entity this component is attached to
@@ -351,6 +350,52 @@ player.equipmentSlot.rightHand.item.destroy();
 
 // remove and destroy the `rightHand` equipment slot
 player.equipmentSlot.rightHand.destroy();
+
+```
+
+This can also be done with an array as the following example shows.
+
+```js
+export class Inventory extends Component {
+  static properties = {
+    list: [],
+  };
+
+  onPickUp(event) {
+    this.list.push(event.data);
+
+    if (event.data.position) {
+      event.data.remove(event.data.position);
+    }
+  }
+
+  onDrop(event) {
+    remove(this.list, (item) => item.id === event.data.id);
+    event.data.add(Position, this.entity.position);
+  }
+}
+```
+
+Here it shows how consumption of an item would remove it from the inventory
+```js
+const entity = player.inventory.list[selectedInventoryIndex];
+
+if (entity) {
+    if (entity.has(Effects)) {
+        entity.effects.forEach((x) =>
+        player.add(ActiveEffects, { ...x.serialize() })
+        );
+    }
+
+    // it's best to filter the array down and overwrite the old one
+    // if you use the destroy() method, the item would still linger in the inventory, marked as destroyed.
+    player.inventory.list = player.inventory.list.filter(
+        (item) => item.id !== entity.id
+    );
+
+    if (selectedInventoryIndex > player.inventory.list.length - 1)
+        selectedInventoryIndex = player.inventory.list.length - 1;
+}
 
 ```
 
