@@ -384,6 +384,21 @@ query.onEntityRemoved((entity) => {
 -   **has(entity)** returns `true` if the given `entity` is being tracked by the query. Mostly used internally
 -   **refresh()** re-check all entities to see if they match. Very expensive, and only used internally
 
+#### Performance enhancement
+
+Set the `immutableResults` option to `false` if you are not modifying the result set. This option defaults to `true`. **WARNING**: When this option is set to `false`, strange behaviour can occur if you modify the results. See issue #55.
+
+```js
+const query = world.createQuery({
+    all: [A, B],
+    immutableResult: false, // defaults to TRUE
+});
+
+const results = query.get();
+
+results.splice(0, 1); // DANGER! do not modify results if immutableResult is false!
+```
+
 ### serialization
 
 **example** Save game state by serializing all entities and components

@@ -4,6 +4,7 @@ export class Query {
     _cache = [];
     _onAddListeners = [];
     _onRemoveListeners = [];
+    _immutableResult = true;
 
     constructor(world, filters) {
         this._world = world;
@@ -23,6 +24,11 @@ export class Query {
         this._none = none.reduce((s, c) => {
             return addBit(s, c.prototype._cbit);
         }, 0n);
+
+        this._immutableResult =
+            filters.immutableResult == undefined
+                ? true
+                : filters.immutableResult;
 
         this.refresh();
     }
@@ -82,6 +88,6 @@ export class Query {
     }
 
     get() {
-        return this._cache;
+        return this._immutableResult ? [...this._cache] : this._cache;
     }
 }

@@ -140,4 +140,50 @@ describe('Query', () => {
             });
         });
     });
+
+    describe('immutableResult', () => {
+        describe('when immutableResult is true', () => {
+            beforeEach(() => {
+                entityA.add(ComponentA);
+                entityB.add(ComponentA);
+
+                query = world.createQuery({
+                    any: [ComponentA],
+                    immutableResult: true,
+                });
+            });
+
+            it('should not modify the query cache when results are modified', () => {
+                result = query.get();
+
+                expect(query.get()).toHaveLength(2);
+
+                result.splice(0, 1);
+
+                expect(query.get()).toHaveLength(2);
+            });
+        });
+
+        describe('when immutableResult is false', () => {
+            beforeEach(() => {
+                entityA.add(ComponentA);
+                entityB.add(ComponentA);
+
+                query = world.createQuery({
+                    any: [ComponentA],
+                    immutableResult: false,
+                });
+            });
+
+            it('should modify the query cache when results are modified', () => {
+                result = query.get();
+
+                expect(query.get()).toHaveLength(2);
+
+                result.splice(0, 1);
+
+                expect(query.get()).toHaveLength(1);
+            });
+        });
+    });
 });
