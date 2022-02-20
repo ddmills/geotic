@@ -194,12 +194,8 @@ describe('Entity', () => {
             });
 
             it('should have the correct type of components', () => {
-                expect(entity.arrayComponent[0]).toBeInstanceOf(
-                    ArrayComponent
-                );
-                expect(entity.arrayComponent[1]).toBeInstanceOf(
-                    ArrayComponent
-                );
+                expect(entity.arrayComponent[0]).toBeInstanceOf(ArrayComponent);
+                expect(entity.arrayComponent[1]).toBeInstanceOf(ArrayComponent);
             });
 
             it('should set component properties', () => {

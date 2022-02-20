@@ -3,12 +3,12 @@ import {
     EmptyComponent,
     SimpleComponent,
     ArrayComponent,
-    NestedComponent
+    NestedComponent,
 } from '../data/components';
 import {
     SimplePrefab,
     EmptyPrefab,
-    PrefabWithKeyedAndArray
+    PrefabWithKeyedAndArray,
 } from '../data/prefabs';
 
 describe('Entity', () => {

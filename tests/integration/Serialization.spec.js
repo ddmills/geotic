@@ -21,10 +21,7 @@ describe('Serialization', () => {
     });
 
     describe('serializing', () => {
-        let entity,
-            json,
-            nestedKeyA,
-            nestedKeyB;
+        let entity, json, nestedKeyA, nestedKeyB;
 
         beforeEach(() => {
             nestedKeyA = chance.word();
@@ -72,7 +69,7 @@ describe('Serialization', () => {
                                     name: nestedKeyB,
                                     hello: 'world',
                                 },
-                            }
+                            },
                         },
                     ],
                 });
@@ -117,7 +114,7 @@ describe('Serialization', () => {
                                     name: nestedKeyB,
                                     hello: 'world',
                                 },
-                            }
+                            },
                         },
                     ],
                 });
@@ -126,10 +123,7 @@ describe('Serialization', () => {
     });
 
     describe('deserializing', () => {
-        let json,
-            entityId,
-            nestedNameA,
-            nestedNameB;
+        let json, entityId, nestedNameA, nestedNameB;
 
         beforeEach(() => {
             entityId = chance.guid();
@@ -155,7 +149,7 @@ describe('Serialization', () => {
                                 name: nestedNameB,
                                 hello: chance.word(),
                             },
-                        }
+                        },
                     },
                 ],
             };

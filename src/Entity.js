@@ -69,7 +69,7 @@ const removeComponentArray = (entity, component) => {
         delete entity[key];
         delete entity.components[key];
         entity._cbits = subtractBit(entity._cbits, component._cbit);
-        entity._candidacy()
+        entity._candidacy();
     }
 };
 

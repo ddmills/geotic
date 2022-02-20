@@ -161,6 +161,7 @@ world.destroy();
 ```
 
 World properties and methods:
+
 -   **createEntity(id = null)**: create an `Entity`. optionally provide an ID
 -   **getEntity(id)**: get an `Entity` by ID
 -   **getEntities()**: get _all_ entities in this world
