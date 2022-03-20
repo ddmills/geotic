@@ -191,6 +191,10 @@ export class Entity {
         };
     }
 
+    clone() {
+        return this.world.cloneEntity(this);
+    }
+
     fireEvent(name, data) {
         const evt = new EntityEvent(name, data);
 

@@ -153,6 +153,9 @@ world.serialize();
 world.serialize(entities);
 world.deserialize(data);
 
+// create an entity with a new ID and identical components & properties
+world.cloneEntity(entity);
+
 // generate unique entity id
 world.createId();
 
@@ -170,6 +173,7 @@ World properties and methods:
 -   **destroyEntities()**: destroys all entities in this world instance
 -   **serialize(entities = null)**: serialize and return all entity data into an object. optionally specify a list of entities to serialize
 -   **deserialize(data)**: deserialize an object
+-   **cloneEntity(entity)**: clone an entity
 -   **createId()**: Generates a unique ID
 -   **destroy()**: destroy all entities and queries in the world
 
@@ -208,6 +212,7 @@ Entity properties and methods:
 -   **remove(component)**: remove the component from the entity and destroy it
 -   **destroy()**: destroy the entity and all of it's components
 -   **serialize()**: serialize this entity and it's components
+-   **clone()**: returns an new entity with a new unique ID and identical components & properties
 -   **fireEvent(name, data={})**: send an event to all components on the entity
 
 ### Component

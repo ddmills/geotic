@@ -14,6 +14,10 @@ export class NestedComponent extends Component {
     static properties = {
         name: 'test',
         hello: 'world',
+        obprop: {
+            key: 'value',
+            arr: [1, 2, 3],
+        },
     };
 }
 

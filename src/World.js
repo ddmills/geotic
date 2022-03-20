@@ -77,6 +77,14 @@ export class World {
         };
     }
 
+    cloneEntity(entity) {
+        const data = entity.serialize();
+
+        data.id = this.createId();
+
+        return this._deserializeEntity(data);
+    }
+
     deserialize(data) {
         for (const entityData of data.entities) {
             this._createOrGetEntityById(entityData.id);
@@ -111,6 +119,8 @@ export class World {
 
         entity._qeligible = true;
         entity._candidacy();
+
+        return entity;
     }
 
     _candidate(entity) {
