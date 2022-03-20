@@ -45,7 +45,11 @@ export class PrefabRegistry {
         const comps = data.components || [];
 
         comps.forEach((componentData) => {
+            let componentName = 'unknown';
+
             if (typeof componentData === 'string') {
+                componentName = componentData;
+
                 const ckey = camelString(componentData);
                 const clazz = this._engine._components.get(ckey);
 
@@ -57,6 +61,8 @@ export class PrefabRegistry {
             }
 
             if (typeof componentData === 'object') {
+                componentName = componentData.type || 'unknown';
+
                 const ckey = camelString(componentData.type);
                 const clazz = this._engine._components.get(ckey);
 
@@ -74,7 +80,8 @@ export class PrefabRegistry {
             }
 
             console.warn(
-                `Unrecognized component reference "${componentData}" in prefab "${data.name}". Ensure the component is registered before the prefab.`
+                `Unrecognized component reference "${componentName}" in prefab "${data.name}". Ensure the component is registered before the prefab.`,
+                componentData
             );
         });
 
