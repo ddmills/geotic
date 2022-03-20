@@ -447,7 +447,7 @@ class Health extends Component {
 
 entity.add(Health);
 
-const evt = entity.sendEvent('take-damage', { amount: 12 });
+const evt = entity.fireEvent('take-damage', { amount: 12 });
 
 console.log(evt.name); // return the name of the event. "take-damage"
 console.log(evt.data); // return the arbitrary data object attached. { amount: 12 }
