@@ -1,3 +1,5 @@
+import { deepClone } from './util/deep-clone';
+
 export class Component {
     static allowMultiple = false;
     static keyProperty = null;
@@ -16,7 +18,9 @@ export class Component {
     }
 
     constructor(properties = {}) {
-        Object.assign(this, this.constructor.properties, properties);
+        const intrinsics = deepClone(this.constructor.properties);
+
+        Object.assign(this, intrinsics, properties);
     }
 
     destroy() {
@@ -48,7 +52,7 @@ export class Component {
             ob[key] = this[key];
         }
 
-        return ob;
+        return deepClone(ob);
     }
 
     onAttached(entity) {}

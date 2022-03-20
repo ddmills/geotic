@@ -1,8 +1,9 @@
+import { Chance } from 'chance';
 import { Engine, Component } from '../../src/index';
 import { EmptyComponent } from '../data/components';
 
 describe('Component', () => {
-    let world, entity, onDestroyedStub, onAttachedStub;
+    let engine, world, entity, onDestroyedStub, onAttachedStub;
 
     class TestComponent extends Component {
         onAttached() {
@@ -29,7 +30,7 @@ describe('Component', () => {
     }
 
     beforeEach(() => {
-        const engine = new Engine();
+        engine = new Engine();
 
         world = engine.createWorld();
 
@@ -135,6 +136,46 @@ describe('Component', () => {
             it('should set the component "entity" to null', () => {
                 expect(component.entity).toBeUndefined();
             });
+        });
+    });
+
+    describe('properties', () => {
+        class PropertyComponent extends Component {
+            static properties = {
+                name: 'test',
+                arr: ['value', 2, null, true],
+                ob: {
+                    key: 'test',
+                    obarr: [6, null, false, 'value'],
+                },
+            };
+        }
+        let entity1, entity2;
+
+        beforeEach(() => {
+            engine.registerComponent(PropertyComponent);
+
+            entity1 = world.createEntity();
+            entity2 = world.createEntity();
+        });
+
+        it('should deep-clone properties on construction', () => {
+            entity1.add(PropertyComponent);
+            entity2.add(PropertyComponent);
+
+            expect(entity1.propertyComponent.arr).not.toBe(
+                entity2.propertyComponent.arr
+            );
+            expect(entity1.propertyComponent.arr).toEqual(
+                entity2.propertyComponent.arr
+            );
+
+            expect(entity1.propertyComponent.ob).not.toBe(
+                entity2.propertyComponent.ob
+            );
+            expect(entity1.propertyComponent.ob).toEqual(
+                entity2.propertyComponent.ob
+            );
         });
     });
 });

@@ -256,8 +256,7 @@ class Health extends Component {
 
 Component properties and methods:
 
--   **static properties = {}** object that defines the properties of the component. These can also reference an entity or
-    an array of entites by setting the default value to `<Entity>` and `<EntityArray>` respectively!
+-   **static properties = {}** object that defines the properties of the component. Properties must be json serializable and de-serializable!
 -   **static allowMultiple = false** are multiple of this component type allowed? If true, components will either be stored as an object or array on the entity, depending on `keyProperty`.
 -   **static keyProperty = null** what property should be used as the key for accessing this component. if `allowMultiple` is false, this has no effect. If this property is omitted, it will be stored as an array on the component.
 -   **entity** returns the Entity this component is attached to
