@@ -38,14 +38,14 @@ import { Engine, Component } from 'geotic';
 
 // define some simple components
 class Position extends Component {
-    static properties {
+    static properties = {
         x: 0,
         y: 0,
     };
 }
 
 class Velocity extends Component {
-    static properties {
+    static properties = {
         x: 0,
         y: 0,
     };
@@ -225,7 +225,7 @@ import { Component } from 'geotic';
 class Health extends Component {
     // these props are defaulting to 10
     // anything defined here will be serialized
-    static properties {
+    static properties = {
         current: 10,
         maximum: 10,
     };
