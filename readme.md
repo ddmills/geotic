@@ -2,7 +2,7 @@
 
 _adjective_ physically concerning land or its inhabitants.
 
-Geotic is an ECS library focused on **performance**, **features**, and **non-intrusive design**. Geotic [is consistantly one of the fastest js ecs libraries](https://github.com/ddmills/js-ecs-benchmarks), especially when it comes to large numbers of entities and queries.
+Geotic is an ECS library focused on **performance**, **features**, and **non-intrusive design**. [View benchmarks](https://github.com/ddmills/js-ecs-benchmarks).
 
 -   [**entity**](#entity) a unique id and a collection of components
 -   [**component**](#component) a data container
